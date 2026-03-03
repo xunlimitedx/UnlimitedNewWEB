@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { FeedProduct } from '@/types';
 
+const UBOSS_FEED_URL =
+  'https://app.uboss.co.za/api/inventory/feed?token=f2f8bc7927670589ccc49d3047053f32a7573201ccfac64a73fa30e31ebadd920f3ebdac7b2e4e92ce75bb276db34625&format=json';
+
+const ESQUIRE_FEED_URL =
+  'https://api.esquire.co.za/api/DataFeed?u=info@unlimitedits.co.za&p=Unlimited@4833&t=json&m=0&o=ascending&r=RoundNone&rm=0&min=0';
+
 function generateSlug(name: string): string {
   return name
     .toLowerCase()
@@ -18,6 +24,59 @@ function applyMarkup(
     return Math.round((costPrice * (1 + markupValue / 100)) * 100) / 100;
   }
   return Math.round((costPrice + markupValue) * 100) / 100;
+}
+
+async function fetchFeedProducts(supplier: string): Promise<{ products: FeedProduct[]; categories: string[] }> {
+  if (supplier === 'uboss') {
+    const response = await fetch(UBOSS_FEED_URL, {
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) throw new Error(`Uboss API returned ${response.status}`);
+    const data = await response.json();
+    const items = data.items || [];
+    const products: FeedProduct[] = items.map((item: Record<string, unknown>) => ({
+      sku: (item.sku as string) || '',
+      name: (item.name as string) || '',
+      description: (item.description as string) || '',
+      category: (item.category as string) || 'Uncategorized',
+      price: (item.price as number) || 0,
+      costPrice: (item.price as number) || 0,
+      stock: item.quantity_on_hand != null ? Math.max(0, item.quantity_on_hand as number) : null,
+      inStock: item.in_stock as boolean,
+      isActive: item.is_active as boolean,
+      imageUrl: (item.image_url as string) || '',
+      supplier: 'Uboss',
+      barcode: (item.barcode as string) || '',
+      lastUpdated: (item.last_updated as string) || '',
+    }));
+    const categories = Array.from(new Set(products.map((p) => p.category))).sort();
+    return { products, categories };
+  } else {
+    const response = await fetch(ESQUIRE_FEED_URL, {
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) throw new Error(`Esquire API returned ${response.status}`);
+    const items: Record<string, unknown>[] = await response.json();
+    const products: FeedProduct[] = items.map((item) => {
+      const inStock = ((item.availableQty as string) || '').toLowerCase() === 'yes';
+      return {
+        sku: (item.productCode as string) || '',
+        name: (item.productName as string) || '',
+        description: (item.productSummary as string) || '',
+        category: (item.category as string) || 'Uncategorized',
+        price: (item.price as number) || 0,
+        costPrice: (item.price as number) || 0,
+        stock: inStock ? 1 : 0,
+        inStock,
+        isActive: (item.status as number) === 1,
+        imageUrl: (item.image as string) || '',
+        supplier: 'Esquire',
+        lastUpdated: new Date().toISOString(),
+      };
+    });
+    const categories = Array.from(new Set(products.map((p) => p.category).filter(Boolean))).sort();
+    return { products, categories };
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -40,19 +99,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fetch feed data from our internal API
-    const feedUrl = `${request.nextUrl.origin}/api/feeds/${supplier}`;
-    const feedResponse = await fetch(feedUrl);
-    const feedData = await feedResponse.json();
-
-    if (!feedData.success) {
-      return NextResponse.json(
-        { success: false, error: `Failed to fetch ${supplier} feed` },
-        { status: 502 }
-      );
-    }
-
-    let products: FeedProduct[] = feedData.data.products;
+    // Fetch feed data directly from supplier API
+    const feedData = await fetchFeedProducts(supplier);
+    let products: FeedProduct[] = feedData.products;
 
     // Apply filters
     if (excludeZeroPrice) {
@@ -103,9 +152,9 @@ export async function POST(request: NextRequest) {
         success: true,
         data: {
           supplier,
-          totalInFeed: feedData.data.products.length,
+          totalInFeed: feedData.products.length,
           afterFilters: importProducts.length,
-          categories: feedData.data.categories,
+          categories: feedData.categories,
           previewProducts: importProducts.slice(0, 20),
           markupApplied: { type: markupType, value: markupValue },
         },
