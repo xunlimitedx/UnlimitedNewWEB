@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const newProfile: Omit<UserProfile, 'id'> = {
             email: firebaseUser.email || '',
             displayName: firebaseUser.displayName || '',
-            photoURL: firebaseUser.photoURL || undefined,
+            ...(firebaseUser.photoURL ? { photoURL: firebaseUser.photoURL } : {}),
             addresses: [],
             createdAt: new Date().toISOString(),
           };

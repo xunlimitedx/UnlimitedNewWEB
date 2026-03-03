@@ -78,7 +78,6 @@ export async function POST(request: NextRequest) {
         description: p.description,
         shortDescription: p.description.substring(0, 200),
         price: sellingPrice,
-        compareAtPrice: undefined,
         costPrice: p.costPrice,
         category: p.category,
         brand: p.supplier,

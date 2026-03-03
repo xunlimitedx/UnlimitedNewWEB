@@ -279,7 +279,7 @@ export default function DataFeedsPage() {
                   price: product.price,
                   stock: product.stock,
                   isActive: product.isActive,
-                  images: product.images.length > 0 ? product.images : undefined,
+                  ...(product.images.length > 0 ? { images: product.images } : {}),
                   updatedAt: new Date().toISOString(),
                 });
                 imported++;

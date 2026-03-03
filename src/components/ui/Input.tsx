@@ -29,6 +29,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             id={inputId}
             ref={ref}
+            autoComplete={
+              props.autoComplete ||
+              (props.type === 'email' ? 'email' :
+               props.type === 'password' && props.name?.includes('confirm') ? 'new-password' :
+               props.type === 'password' && props.placeholder?.toLowerCase().includes('new') ? 'new-password' :
+               props.type === 'password' && props.placeholder?.toLowerCase().includes('least') ? 'new-password' :
+               props.type === 'password' ? 'current-password' :
+               undefined)
+            }
             className={cn(
               'flex h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm',
               'placeholder:text-gray-400',
