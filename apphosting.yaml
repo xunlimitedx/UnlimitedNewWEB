@@ -23,10 +23,8 @@ env:
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
     value: 1:283510648039:web:cb95762e4763c98055c642
 
-  # Server-side secrets — stored in Cloud Secret Manager
-  - variable: FIREBASE_ADMIN_PROJECT_ID
-    secret: FIREBASE_ADMIN_PROJECT_ID
-  - variable: FIREBASE_ADMIN_CLIENT_EMAIL
-    secret: FIREBASE_ADMIN_CLIENT_EMAIL
-  - variable: FIREBASE_ADMIN_PRIVATE_KEY
-    secret: FIREBASE_ADMIN_PRIVATE_KEY
+  # Server-side secrets — add these later via:
+  # firebase apphosting:secrets:set FIREBASE_ADMIN_PROJECT_ID
+  # firebase apphosting:secrets:set FIREBASE_ADMIN_CLIENT_EMAIL
+  # firebase apphosting:secrets:set FIREBASE_ADMIN_PRIVATE_KEY
+  # firebase apphosting:secrets:set OPENAI_API_KEY
