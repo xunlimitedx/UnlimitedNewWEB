@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button, Input, Select } from '@/components/ui';
 import { useCartStore } from '@/store/cartStore';
 import { useAuth } from '@/context/AuthContext';
-import { addDocument } from '@/lib/firebase';
+import { addDocument, getDocument } from '@/lib/firebase';
 import { formatCurrency, PROVINCES } from '@/lib/utils';
+import type { PaymentSettings } from '@/types';
 import {
   ShoppingBag,
   MapPin,
@@ -18,10 +19,20 @@ import {
   ArrowLeft,
   Shield,
   Lock,
+  Banknote,
+  Truck,
+  Loader2,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 type Step = 'shipping' | 'payment' | 'review';
+
+interface PaymentOption {
+  value: string;
+  label: string;
+  desc: string;
+  icon: React.ElementType;
+}
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -29,6 +40,9 @@ export default function CheckoutPage() {
   const { items, getSubtotal, clearCart } = useCartStore();
   const [step, setStep] = useState<Step>('shipping');
   const [loading, setLoading] = useState(false);
+  const [paymentConfig, setPaymentConfig] = useState<PaymentSettings | null>(null);
+  const [paymentLoading, setPaymentLoading] = useState(true);
+  const payfastFormRef = useRef<HTMLFormElement>(null);
 
   const [shippingAddress, setShippingAddress] = useState({
     firstName: '',
@@ -41,7 +55,68 @@ export default function CheckoutPage() {
     phone: '',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [paymentMethod, setPaymentMethod] = useState('');
+
+  // Fetch enabled payment methods
+  useEffect(() => {
+    async function loadPaymentConfig() {
+      try {
+        const data = await getDocument('settings', 'payment');
+        if (data) {
+          setPaymentConfig(data as unknown as PaymentSettings);
+        }
+      } catch (err) {
+        console.error('Failed to load payment config:', err);
+      } finally {
+        setPaymentLoading(false);
+      }
+    }
+    loadPaymentConfig();
+  }, []);
+
+  // Build available payment options based on config
+  const availablePaymentMethods: PaymentOption[] = [];
+  if (paymentConfig?.payfast?.enabled) {
+    availablePaymentMethods.push({
+      value: 'payfast',
+      label: 'PayFast',
+      desc: 'Credit/debit cards, instant EFT, SnapScan, Mobicred',
+      icon: CreditCard,
+    });
+  }
+  if (paymentConfig?.payflex?.enabled) {
+    availablePaymentMethods.push({
+      value: 'payflex',
+      label: 'PayFlex',
+      desc: 'Buy now, pay later — 4 interest-free instalments',
+      icon: Banknote,
+    });
+  }
+  if (paymentConfig?.eft?.enabled) {
+    availablePaymentMethods.push({
+      value: 'eft',
+      label: 'EFT / Bank Transfer',
+      desc: 'Manual bank transfer — order processed after proof of payment',
+      icon: Banknote,
+    });
+  }
+  if (paymentConfig?.cod?.enabled) {
+    availablePaymentMethods.push({
+      value: 'cod',
+      label: 'Cash on Delivery',
+      desc: paymentConfig.cod.surcharge
+        ? `Pay on delivery (+${formatCurrency(paymentConfig.cod.surcharge)} surcharge)`
+        : 'Pay when you receive your order',
+      icon: Truck,
+    });
+  }
+
+  // Set default payment method when config loads
+  useEffect(() => {
+    if (availablePaymentMethods.length > 0 && !paymentMethod) {
+      setPaymentMethod(availablePaymentMethods[0].value);
+    }
+  }, [paymentConfig]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const subtotal = getSubtotal();
   const shipping = subtotal >= 2500 ? 0 : 199;
@@ -78,6 +153,9 @@ export default function CheckoutPage() {
     setStep('review');
   };
 
+  const codSurcharge = paymentMethod === 'cod' && paymentConfig?.cod?.surcharge ? paymentConfig.cod.surcharge : 0;
+  const orderTotal = total + codSurcharge;
+
   const handlePlaceOrder = async () => {
     if (!user) {
       toast.error('Please sign in to place an order');
@@ -89,6 +167,7 @@ export default function CheckoutPage() {
     try {
       const order = {
         userId: user.uid,
+        userEmail: user.email || null,
         items: items.map((item) => ({
           productId: item.productId,
           name: item.name,
@@ -100,7 +179,8 @@ export default function CheckoutPage() {
         subtotal,
         shipping,
         tax,
-        total,
+        ...(codSurcharge > 0 ? { codSurcharge } : {}),
+        total: orderTotal,
         status: 'pending',
         paymentStatus: 'pending',
         paymentMethod,
@@ -112,16 +192,129 @@ export default function CheckoutPage() {
           ...shippingAddress,
           country: 'South Africa',
         },
+        createdAt: new Date().toISOString(),
       };
 
       const docRef = await addDocument('orders', order);
-      clearCart();
-      toast.success('Order placed successfully!');
-      router.push(`/account/orders`);
+      const orderId = docRef.id;
+
+      // Notify admin of new order (fire-and-forget)
+      fetch('/api/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'new-order',
+          data: {
+            orderId,
+            customerEmail: user.email || '',
+            total: formatCurrency(orderTotal),
+            paymentMethod,
+          },
+        }),
+      }).catch(() => {});
+
+      // Handle payment based on method
+      if (paymentMethod === 'payfast') {
+        await handlePayFastPayment(orderId);
+        return; // Don't clear cart here — wait for redirect
+      } else if (paymentMethod === 'payflex') {
+        await handlePayFlexPayment(orderId);
+        return;
+      } else {
+        // EFT or COD — order is placed directly
+        clearCart();
+        toast.success('Order placed successfully!');
+        router.push('/account/orders');
+      }
     } catch {
       toast.error('Failed to place order. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePayFastPayment = async (orderId: string) => {
+    try {
+      const itemNames = items.map((i) => i.name).join(', ');
+      const res = await fetch('/api/payments/payfast', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          amount: orderTotal.toFixed(2),
+          itemName: itemNames.length > 100 ? `Order #${orderId}` : itemNames,
+          firstName: shippingAddress.firstName,
+          lastName: shippingAddress.lastName,
+          email: user?.email || '',
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Payment initiation failed');
+      }
+
+      const { actionUrl, formData } = await res.json();
+
+      // Create a hidden form and submit to PayFast
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = actionUrl;
+      Object.entries(formData).forEach(([key, value]) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value as string;
+        form.appendChild(input);
+      });
+      document.body.appendChild(form);
+      clearCart();
+      form.submit();
+    } catch (error) {
+      console.error('PayFast error:', error);
+      toast.error('Failed to initiate PayFast payment. Your order has been saved.');
+      router.push('/account/orders');
+    }
+  };
+
+  const handlePayFlexPayment = async (orderId: string) => {
+    try {
+      const res = await fetch('/api/payments/payflex', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          amount: orderTotal.toFixed(2),
+          consumer: {
+            firstName: shippingAddress.firstName,
+            lastName: shippingAddress.lastName,
+            email: user?.email || '',
+            phone: shippingAddress.phone,
+          },
+          items: items.map((i) => ({
+            name: i.name,
+            quantity: i.quantity,
+            price: i.price,
+          })),
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'PayFlex initiation failed');
+      }
+
+      const { redirectUrl } = await res.json();
+      if (redirectUrl) {
+        clearCart();
+        window.location.href = redirectUrl;
+      } else {
+        throw new Error('No redirect URL received');
+      }
+    } catch (error) {
+      console.error('PayFlex error:', error);
+      toast.error('Failed to initiate PayFlex payment. Your order has been saved.');
+      router.push('/account/orders');
     }
   };
 
@@ -339,46 +532,115 @@ export default function CheckoutPage() {
                   Payment Method
                 </h2>
                 <form onSubmit={handlePaymentSubmit} className="space-y-4">
-                  <div className="space-y-3">
-                    {[
-                      { value: 'card', label: 'Credit / Debit Card', desc: 'Visa, Mastercard, etc.' },
-                      { value: 'eft', label: 'EFT / Bank Transfer', desc: 'Direct bank payment' },
-                      { value: 'cash', label: 'Cash on Delivery', desc: 'Pay when you receive' },
-                    ].map((method) => (
-                      <label
-                        key={method.value}
-                        className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                          paymentMethod === method.value
-                            ? 'border-primary-600 bg-primary-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="payment"
-                          value={method.value}
-                          checked={paymentMethod === method.value}
-                          onChange={(e) => setPaymentMethod(e.target.value)}
-                          className="w-4 h-4 text-primary-600 focus:ring-primary-500"
-                        />
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            {method.label}
-                          </p>
-                          <p className="text-sm text-gray-500">{method.desc}</p>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
+                  {paymentLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                      <span className="ml-2 text-sm text-gray-500">Loading payment options...</span>
+                    </div>
+                  ) : availablePaymentMethods.length === 0 ? (
+                    <div className="text-center py-8">
+                      <CreditCard className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                      <p className="text-gray-500">No payment methods are currently available.</p>
+                      <p className="text-sm text-gray-400">Please contact the store for assistance.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {availablePaymentMethods.map((method) => {
+                        const Icon = method.icon;
+                        return (
+                          <label
+                            key={method.value}
+                            className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                              paymentMethod === method.value
+                                ? 'border-primary-600 bg-primary-50'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="payment"
+                              value={method.value}
+                              checked={paymentMethod === method.value}
+                              onChange={(e) => setPaymentMethod(e.target.value)}
+                              className="w-4 h-4 text-primary-600 focus:ring-primary-500"
+                            />
+                            <Icon className={`w-5 h-5 ${
+                              paymentMethod === method.value ? 'text-primary-600' : 'text-gray-400'
+                            }`} />
+                            <div className="flex-1">
+                              <p className="font-medium text-gray-900">
+                                {method.label}
+                              </p>
+                              <p className="text-sm text-gray-500">{method.desc}</p>
+                            </div>
+                            {method.value === 'payflex' && (
+                              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-medium">
+                                BNPL
+                              </span>
+                            )}
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
 
-                  {paymentMethod === 'card' && (
-                    <div className="mt-6 p-4 bg-gray-50 rounded-xl space-y-4">
-                      <Input label="Card Number" placeholder="4242 4242 4242 4242" />
-                      <div className="grid grid-cols-2 gap-4">
-                        <Input label="Expiry Date" placeholder="MM/YY" />
-                        <Input label="CVV" placeholder="123" />
+                  {/* PayFlex instalment preview */}
+                  {paymentMethod === 'payflex' && (
+                    <div className="mt-4 p-4 bg-purple-50 rounded-xl border border-purple-100">
+                      <p className="text-sm font-medium text-purple-800 mb-2">
+                        Pay in 4 interest-free instalments
+                      </p>
+                      <div className="grid grid-cols-4 gap-2 text-center">
+                        {[1, 2, 3, 4].map((n) => (
+                          <div key={n} className="bg-white rounded-lg p-2 border border-purple-100">
+                            <p className="text-[10px] text-purple-500 uppercase">
+                              {n === 1 ? 'Today' : `Week ${n * 2}`}
+                            </p>
+                            <p className="text-sm font-semibold text-purple-800">
+                              {formatCurrency(orderTotal / 4)}
+                            </p>
+                          </div>
+                        ))}
                       </div>
-                      <Input label="Name on Card" placeholder="John Doe" />
+                    </div>
+                  )}
+
+                  {/* EFT bank details preview */}
+                  {paymentMethod === 'eft' && paymentConfig?.eft && (
+                    <div className="mt-4 p-4 bg-green-50 rounded-xl border border-green-100">
+                      <p className="text-sm font-medium text-green-800 mb-2">
+                        Bank Transfer Details
+                      </p>
+                      <p className="text-sm text-green-700">
+                        After placing your order, transfer the total amount to the following account.
+                        Your order will be processed once payment is confirmed.
+                      </p>
+                      {paymentConfig.eft.bankName && (
+                        <div className="mt-3 space-y-1 text-sm text-green-800">
+                          <p><span className="font-medium">Bank:</span> {paymentConfig.eft.bankName}</p>
+                          <p><span className="font-medium">Account:</span> {paymentConfig.eft.accountName}</p>
+                          <p><span className="font-medium">Account #:</span> {paymentConfig.eft.accountNumber}</p>
+                          <p><span className="font-medium">Branch:</span> {paymentConfig.eft.branchCode}</p>
+                          <p><span className="font-medium">Reference:</span> {paymentConfig.eft.reference}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* COD notice */}
+                  {paymentMethod === 'cod' && (
+                    <div className="mt-4 p-4 bg-orange-50 rounded-xl border border-orange-100">
+                      <p className="text-sm text-orange-700">
+                        Pay with cash or card when your order is delivered.
+                        {codSurcharge > 0 && (
+                          <span className="font-medium"> A surcharge of {formatCurrency(codSurcharge)} applies.</span>
+                        )}
+                        {paymentConfig?.cod?.maxOrderAmount && orderTotal > paymentConfig.cod.maxOrderAmount && (
+                          <span className="block mt-1 text-red-600 font-medium">
+                            Note: COD is only available for orders up to {formatCurrency(paymentConfig.cod.maxOrderAmount)}.
+                          </span>
+                        )}
+                      </p>
                     </div>
                   )}
 
@@ -391,7 +653,7 @@ export default function CheckoutPage() {
                       <ArrowLeft className="w-4 h-4" />
                       Back
                     </Button>
-                    <Button type="submit" size="lg">
+                    <Button type="submit" size="lg" disabled={!paymentMethod || availablePaymentMethods.length === 0}>
                       Review Order
                       <ChevronRight className="w-4 h-4" />
                     </Button>
@@ -445,8 +707,10 @@ export default function CheckoutPage() {
                     </button>
                   </div>
                   <p className="text-sm text-gray-600 capitalize">
-                    {paymentMethod === 'card'
-                      ? 'Credit / Debit Card'
+                    {paymentMethod === 'payfast'
+                      ? 'PayFast (Cards, EFT, SnapScan)'
+                      : paymentMethod === 'payflex'
+                      ? 'PayFlex (Buy Now Pay Later)'
                       : paymentMethod === 'eft'
                       ? 'EFT / Bank Transfer'
                       : 'Cash on Delivery'}
@@ -505,7 +769,9 @@ export default function CheckoutPage() {
                     loading={loading}
                   >
                     <Shield className="w-5 h-5" />
-                    Place Order - {formatCurrency(total)}
+                    {paymentMethod === 'payfast' || paymentMethod === 'payflex'
+                      ? `Pay ${formatCurrency(orderTotal)}`
+                      : `Place Order - ${formatCurrency(orderTotal)}`}
                   </Button>
                 </div>
               </div>
@@ -537,10 +803,16 @@ export default function CheckoutPage() {
                   <span className="text-gray-500">VAT (15%)</span>
                   <span className="font-medium">{formatCurrency(tax)}</span>
                 </div>
+                {codSurcharge > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">COD Surcharge</span>
+                    <span className="font-medium">{formatCurrency(codSurcharge)}</span>
+                  </div>
+                )}
                 <div className="border-t border-gray-100 pt-3 flex justify-between">
                   <span className="font-semibold text-gray-900">Total</span>
                   <span className="text-xl font-bold text-gray-900">
-                    {formatCurrency(total)}
+                    {formatCurrency(orderTotal)}
                   </span>
                 </div>
               </div>

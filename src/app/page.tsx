@@ -3,7 +3,12 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/components/ui';
+import { Button, Badge } from '@/components/ui';
+import { useProducts } from '@/hooks/useProducts';
+import { useCartStore } from '@/store/cartStore';
+import { formatCurrency } from '@/lib/utils';
+import toast from 'react-hot-toast';
+import type { Product } from '@/types';
 import {
   ArrowRight,
   Laptop,
@@ -17,6 +22,8 @@ import {
   Zap,
   CheckCircle,
   ChevronRight,
+  ShoppingCart,
+  Package,
 } from 'lucide-react';
 
 const categories = [
@@ -99,6 +106,22 @@ const testimonials = [
 ];
 
 export default function HomePage() {
+  const { products: latestProducts, loading: productsLoading } = useProducts({ pageSize: 8, sortBy: 'newest' });
+  const addItem = useCartStore((state) => state.addItem);
+
+  const handleAddToCart = (product: Product) => {
+    addItem({
+      productId: product.id,
+      name: product.name,
+      image: product.images?.[0] || '',
+      price: product.price,
+      quantity: 1,
+      stock: product.stock ?? 999,
+      sku: product.sku || '',
+    });
+    toast.success(`${product.name} added to cart`);
+  };
+
   return (
     <div>
       {/* Hero Section */}
@@ -208,6 +231,117 @@ export default function HomePage() {
                 </div>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Latest Products Section */}
+      <section className="section-padding">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                Latest Products
+              </h2>
+              <p className="text-gray-500">
+                Check out our newest arrivals and top picks.
+              </p>
+            </div>
+            <Link href="/products">
+              <Button variant="outline" className="hidden sm:flex">
+                View All <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+
+          {productsLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
+                  <div className="w-full h-56 bg-gray-200" />
+                  <div className="p-5 space-y-3">
+                    <div className="h-4 bg-gray-200 rounded w-2/3" />
+                    <div className="h-3 bg-gray-200 rounded w-full" />
+                    <div className="h-6 bg-gray-200 rounded w-1/3" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : latestProducts.length === 0 ? (
+            <div className="text-center py-12 text-gray-400">
+              <Package className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+              <p>No products available yet. Check back soon!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {latestProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                >
+                  <Link href={`/products/${product.id}`}>
+                    <div className="relative h-56 bg-gray-100 overflow-hidden">
+                      {product.images?.[0] ? (
+                        <Image
+                          src={product.images[0]}
+                          alt={product.name}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <Package className="w-12 h-12 text-gray-300" />
+                        </div>
+                      )}
+                      {product.compareAtPrice && product.compareAtPrice > product.price && (
+                        <Badge variant="danger" className="absolute top-3 left-3">
+                          -{Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)}%
+                        </Badge>
+                      )}
+                    </div>
+                  </Link>
+                  <div className="p-5">
+                    <Link href={`/products/${product.id}`}>
+                      <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors line-clamp-2 mb-2">
+                        {product.name}
+                      </h3>
+                    </Link>
+                    <div className="flex items-center justify-between mt-3">
+                      <div>
+                        <span className="text-xl font-bold text-gray-900">
+                          {formatCurrency(product.price)}
+                        </span>
+                        {product.compareAtPrice && product.compareAtPrice > product.price && (
+                          <span className="text-sm text-gray-400 line-through ml-2">
+                            {formatCurrency(product.compareAtPrice)}
+                          </span>
+                        )}
+                      </div>
+                      <Button
+                        size="icon"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleAddToCart(product);
+                        }}
+                        disabled={(product.stock ?? 999) <= 0}
+                        aria-label="Add to cart"
+                      >
+                        <ShoppingCart className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="text-center mt-8 sm:hidden">
+            <Link href="/products">
+              <Button variant="outline">
+                View All Products <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

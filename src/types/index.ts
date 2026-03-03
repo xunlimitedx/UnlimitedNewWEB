@@ -221,3 +221,53 @@ export interface ApiResponse<T = unknown> {
   data?: T;
   error?: string;
 }
+
+// Payment Types
+export interface PaymentSettings {
+  payfast: {
+    enabled: boolean;
+    sandbox: boolean;
+    merchantId: string;
+    merchantKey: string;
+    passphrase: string;
+  };
+  payflex: {
+    enabled: boolean;
+    sandbox: boolean;
+    merchantId: string;
+    apiKey: string;
+  };
+  eft: {
+    enabled: boolean;
+    bankName: string;
+    accountName: string;
+    accountNumber: string;
+    branchCode: string;
+    reference: string;
+  };
+  cod: {
+    enabled: boolean;
+    surcharge: number;
+    maxOrderAmount: number;
+  };
+}
+
+// Email / SMTP Types
+export interface EmailSettings {
+  smtp: {
+    host: string;
+    port: number;
+    secure: boolean;
+    user: string;
+    pass: string;
+    fromEmail: string;
+    fromName: string;
+  };
+  notifications: {
+    adminEmail: string;
+    onNewSignup: boolean;
+    onNewOrder: boolean;
+    onPaymentReceived: boolean;
+    onContactForm: boolean;
+  };
+}

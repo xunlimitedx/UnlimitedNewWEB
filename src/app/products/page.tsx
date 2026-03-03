@@ -62,14 +62,17 @@ function ProductsContent() {
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
-      const constraints: QueryConstraint[] = [where('active', '==', true)];
+      const constraints: QueryConstraint[] = [];
 
       if (selectedCategory) {
         constraints.push(where('category', '==', selectedCategory));
       }
 
       const data = await getCollection('products', constraints);
-      let result = data as unknown as Product[];
+      // Filter active products client-side to handle both isActive and active field names
+      let result = (data as unknown as Product[]).filter(
+        (p) => p.isActive !== false && p.active !== false
+      );
 
       // Client-side search
       if (searchQuery) {

@@ -44,6 +44,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           };
           setDocument('users', firebaseUser.uid, newProfile).catch(console.error);
           setUserProfile({ id: firebaseUser.uid, ...newProfile });
+
+          // Notify admin of new signup (fire-and-forget)
+          fetch('/api/notifications', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'new-signup',
+              data: {
+                email: firebaseUser.email || '',
+                displayName: firebaseUser.displayName || '',
+                provider: firebaseUser.providerData?.[0]?.providerId === 'google.com' ? 'Google' : 'Email',
+              },
+            }),
+          }).catch(() => {}); // silent fail
         }
       } else {
         setUserProfile(null);

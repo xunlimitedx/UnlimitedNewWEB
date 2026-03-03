@@ -4,13 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   getCollection,
   getDocument,
-  query,
   where,
-  orderBy,
-  limit,
-  collection,
-  db,
-  getDocs,
 } from '@/lib/firebase';
 import type { Product } from '@/types';
 import { QueryConstraint } from 'firebase/firestore';
@@ -31,39 +25,43 @@ export function useProducts(options: UseProductsOptions = {}) {
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
-      const constraints: QueryConstraint[] = [where('active', '==', true)];
+      const constraints: QueryConstraint[] = [];
 
       if (options.category) {
         constraints.push(where('category', '==', options.category));
       }
 
+      const data = await getCollection('products', constraints);
+      // Filter client-side to handle both isActive and active field names
+      let result = (data as unknown as Product[]).filter(
+        (p) => p.isActive !== false && p.active !== false
+      );
+
       if (options.featured) {
-        constraints.push(where('featured', '==', true));
+        result = result.filter((p) => p.isFeatured === true || p.featured === true);
       }
 
+      // Sort
       if (options.sortBy) {
         switch (options.sortBy) {
           case 'price-asc':
-            constraints.push(orderBy('price', 'asc'));
+            result.sort((a, b) => a.price - b.price);
             break;
           case 'price-desc':
-            constraints.push(orderBy('price', 'desc'));
+            result.sort((a, b) => b.price - a.price);
             break;
           case 'name':
-            constraints.push(orderBy('name', 'asc'));
+            result.sort((a, b) => a.name.localeCompare(b.name));
             break;
           case 'newest':
-            constraints.push(orderBy('createdAt', 'desc'));
+            result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
             break;
         }
       }
 
       if (options.pageSize) {
-        constraints.push(limit(options.pageSize));
+        result = result.slice(0, options.pageSize);
       }
-
-      const data = await getCollection('products', constraints);
-      let result = data as unknown as Product[];
 
       // Client-side search filter
       if (options.searchQuery) {
