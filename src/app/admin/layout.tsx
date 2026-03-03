@@ -17,13 +17,17 @@ import {
   Palette,
   ChevronRight,
   Shield,
+  Truck,
+  DollarSign,
 } from 'lucide-react';
 
 const adminLinks = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/products', label: 'Products', icon: Package },
+  { href: '/admin/pricing', label: 'Pricing', icon: DollarSign },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { href: '/admin/customers', label: 'Customers', icon: Users },
+  { href: '/admin/feeds', label: 'Data Feeds', icon: Truck },
   { href: '/admin/import', label: 'Data Import', icon: Upload },
   { href: '/admin/ai-tools', label: 'AI Tools', icon: Sparkles },
   { href: '/admin/theme', label: 'Theme', icon: Palette },

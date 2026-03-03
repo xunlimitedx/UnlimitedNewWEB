@@ -172,6 +172,49 @@ export interface ShippingQuote {
   };
 }
 
+// Data Feed Types
+export interface FeedConfig {
+  id: string;
+  name: string;
+  supplier: 'uboss' | 'esquire';
+  url: string;
+  enabled: boolean;
+  markupType: 'percentage' | 'fixed';
+  markupValue: number;
+  lastSync?: string;
+  lastSyncCount?: number;
+  categoryFilter?: string[];
+  excludeOutOfStock: boolean;
+  excludeZeroPrice: boolean;
+}
+
+export interface FeedProduct {
+  sku: string;
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  costPrice: number;
+  stock: number | null;
+  inStock: boolean;
+  isActive: boolean;
+  imageUrl: string;
+  supplier: string;
+  barcode?: string;
+  lastUpdated?: string;
+}
+
+export interface FeedSyncResult {
+  supplier: string;
+  total: number;
+  imported: number;
+  updated: number;
+  skipped: number;
+  failed: number;
+  errors: string[];
+  timestamp: string;
+}
+
 // API Response Types
 export interface ApiResponse<T = unknown> {
   success: boolean;
