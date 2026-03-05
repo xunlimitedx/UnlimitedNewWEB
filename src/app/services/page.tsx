@@ -196,7 +196,7 @@ export default function ServicesPage() {
       {/* Brands */}
       <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Brands We Service & Sell</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Some of the Brands We Service &amp; Sell</h2>
           <div className="flex flex-wrap justify-center gap-6 text-gray-500 font-medium">
             {['Dell', 'HP', 'Lenovo', 'ASUS', 'Acer', 'MSI', 'Toshiba', 'Apple', 'Microsoft', 'Adobe', 'PlayStation', 'Xbox', 'Nintendo'].map(
               (brand) => (
