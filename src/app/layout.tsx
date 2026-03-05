@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from './providers';
 import JsonLd from '@/components/JsonLd';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://unlimitedits.co.za'),
@@ -42,6 +43,14 @@ export const metadata: Metadata = {
     title: 'Unlimited IT Solutions | Technology for Tomorrow',
     description:
       'Your one-stop shop for all things tech. From high-performance laptops to essential components.',
+    images: [
+      {
+        url: '/images/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Unlimited IT Solutions',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
@@ -82,6 +91,7 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );

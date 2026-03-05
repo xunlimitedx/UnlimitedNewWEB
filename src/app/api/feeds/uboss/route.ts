@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
 import type { FeedProduct } from '@/types';
 
-const UBOSS_FEED_URL =
-  'https://app.uboss.co.za/api/inventory/feed?token=f2f8bc7927670589ccc49d3047053f32a7573201ccfac64a73fa30e31ebadd920f3ebdac7b2e4e92ce75bb276db34625&format=json';
+function getUbossFeedUrl(): string {
+  const token = process.env.UBOSS_API_TOKEN;
+  if (!token) throw new Error('UBOSS_API_TOKEN not configured');
+  return `https://app.uboss.co.za/api/inventory/feed?token=${encodeURIComponent(token)}&format=json`;
+}
 
 interface UbossItem {
   sku: string;
@@ -42,7 +45,7 @@ function transformUbossItem(item: UbossItem): FeedProduct {
 
 export async function GET() {
   try {
-    const response = await fetch(UBOSS_FEED_URL, {
+    const response = await fetch(getUbossFeedUrl(), {
       next: { revalidate: 0 },
       headers: { Accept: 'application/json' },
     });

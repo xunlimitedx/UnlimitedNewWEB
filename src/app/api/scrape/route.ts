@@ -1,5 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const BLOCKED_HOSTNAMES = ['localhost', '127.0.0.1', '0.0.0.0', '169.254.169.254', 'metadata.google.internal'];
+
+function isUrlSafe(urlString: string): boolean {
+  try {
+    const url = new URL(urlString);
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') return false;
+    if (BLOCKED_HOSTNAMES.includes(url.hostname)) return false;
+    // Block private IPs
+    if (/^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.)/.test(url.hostname)) return false;
+    if (url.hostname.endsWith('.internal') || url.hostname.endsWith('.local')) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -9,6 +25,10 @@ export async function POST(request: NextRequest) {
       const { url } = body;
       if (!url) {
         return NextResponse.json({ error: 'URL is required' }, { status: 400 });
+      }
+
+      if (!isUrlSafe(url)) {
+        return NextResponse.json({ error: 'URL is not allowed. Only public HTTPS/HTTP URLs are permitted.' }, { status: 400 });
       }
 
       const response = await fetch(url, {

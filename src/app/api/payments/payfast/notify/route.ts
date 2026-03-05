@@ -30,7 +30,14 @@ function validateSignature(
     ? `${pfParamString}&passphrase=${encodeURIComponent(passphrase.trim()).replace(/%20/g, '+')}`
     : pfParamString;
   const expectedSignature = crypto.createHash('md5').update(signatureString).digest('hex');
-  return pfData.signature === expectedSignature;
+  try {
+    return crypto.timingSafeEqual(
+      Buffer.from(pfData.signature),
+      Buffer.from(expectedSignature)
+    );
+  } catch {
+    return false;
+  }
 }
 
 export async function POST(request: NextRequest) {

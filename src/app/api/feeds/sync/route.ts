@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { FeedProduct } from '@/types';
 
-const UBOSS_FEED_URL =
-  'https://app.uboss.co.za/api/inventory/feed?token=f2f8bc7927670589ccc49d3047053f32a7573201ccfac64a73fa30e31ebadd920f3ebdac7b2e4e92ce75bb276db34625&format=json';
+function getUbossFeedUrl(): string {
+  const token = process.env.UBOSS_API_TOKEN;
+  if (!token) throw new Error('UBOSS_API_TOKEN not configured');
+  return `https://app.uboss.co.za/api/inventory/feed?token=${encodeURIComponent(token)}&format=json`;
+}
 
-const ESQUIRE_FEED_URL =
-  'https://api.esquire.co.za/api/DataFeed?u=info@unlimitedits.co.za&p=Unlimited@4833&t=json&m=0&o=ascending&r=RoundNone&rm=0&min=0';
+function getEsquireFeedUrl(): string {
+  const user = process.env.ESQUIRE_API_USER;
+  const pass = process.env.ESQUIRE_API_PASS;
+  if (!user || !pass) throw new Error('Esquire API credentials not configured');
+  return `https://api.esquire.co.za/api/DataFeed?u=${encodeURIComponent(user)}&p=${encodeURIComponent(pass)}&t=json&m=0&o=ascending&r=RoundNone&rm=0&min=0`;
+}
 
 function generateSlug(name: string): string {
   return name
@@ -28,7 +35,7 @@ function applyMarkup(
 
 async function fetchFeedProducts(supplier: string): Promise<{ products: FeedProduct[]; categories: string[] }> {
   if (supplier === 'uboss') {
-    const response = await fetch(UBOSS_FEED_URL, {
+    const response = await fetch(getUbossFeedUrl(), {
       headers: { Accept: 'application/json' },
     });
     if (!response.ok) throw new Error(`Uboss API returned ${response.status}`);
@@ -52,7 +59,7 @@ async function fetchFeedProducts(supplier: string): Promise<{ products: FeedProd
     const categories = Array.from(new Set(products.map((p) => p.category))).sort();
     return { products, categories };
   } else {
-    const response = await fetch(ESQUIRE_FEED_URL, {
+    const response = await fetch(getEsquireFeedUrl(), {
       headers: { Accept: 'application/json' },
     });
     if (!response.ok) throw new Error(`Esquire API returned ${response.status}`);

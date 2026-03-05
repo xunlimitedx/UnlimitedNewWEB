@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import type { FeedProduct } from '@/types';
 
-const ESQUIRE_FEED_URL =
-  'https://api.esquire.co.za/api/DataFeed?u=info@unlimitedits.co.za&p=Unlimited@4833&t=json&m=0&o=ascending&r=RoundNone&rm=0&min=0';
+function getEsquireFeedUrl(): string {
+  const user = process.env.ESQUIRE_API_USER;
+  const pass = process.env.ESQUIRE_API_PASS;
+  if (!user || !pass) throw new Error('Esquire API credentials not configured');
+  return `https://api.esquire.co.za/api/DataFeed?u=${encodeURIComponent(user)}&p=${encodeURIComponent(pass)}&t=json&m=0&o=ascending&r=RoundNone&rm=0&min=0`;
+}
 
 interface EsquireItem {
   productName: string;
@@ -36,7 +40,7 @@ function transformEsquireItem(item: EsquireItem): FeedProduct {
 
 export async function GET() {
   try {
-    const response = await fetch(ESQUIRE_FEED_URL, {
+    const response = await fetch(getEsquireFeedUrl(), {
       next: { revalidate: 0 },
       headers: { Accept: 'application/json' },
     });

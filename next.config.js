@@ -10,6 +10,22 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'firebasestorage.googleapis.com',
       },
+      {
+        protocol: 'https',
+        hostname: '*.uboss.co.za',
+      },
+      {
+        protocol: 'https',
+        hostname: 'uboss.co.za',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.esquire.co.za',
+      },
+      {
+        protocol: 'https',
+        hostname: 'esquire.co.za',
+      },
     ],
   },
   async redirects() {

@@ -6,7 +6,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button, Badge, Skeleton } from '@/components/ui';
 import { Textarea } from '@/components/ui';
+import StockNotify from '@/components/ui/StockNotify';
 import { useCartStore } from '@/store/cartStore';
+import { useWishlistStore } from '@/store/wishlistStore';
+import { useCompareStore } from '@/store/compareStore';
+import { useRecentlyViewedStore } from '@/store/recentlyViewedStore';
 import { useAuth } from '@/context/AuthContext';
 import { getDocument, getCollection, addDocument, where, orderBy } from '@/lib/firebase';
 import { formatCurrency, formatDate } from '@/lib/utils';
@@ -23,6 +27,7 @@ import {
   ChevronRight,
   Package,
   Check,
+  GitCompare,
 } from 'lucide-react';
 import type { Product, Review } from '@/types';
 import type { QueryConstraint } from 'firebase/firestore';
@@ -33,8 +38,13 @@ export default function ProductDetailPage() {
   const productId = params.id as string;
   const { user } = useAuth();
   const addItem = useCartStore((s) => s.addItem);
+  const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
+  const { addItem: addToCompare, isInCompare } = useCompareStore();
+  const addToRecentlyViewed = useRecentlyViewedStore((s) => s.addItem);
+  const recentlyViewed = useRecentlyViewedStore((s) => s.items);
 
   const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -56,6 +66,33 @@ export default function ProductDetailPage() {
         ]);
         setProduct(productData as unknown as Product);
         setReviews(reviewsData as unknown as Review[]);
+
+        // Track recently viewed
+        if (productData) {
+          const p = productData as unknown as Product;
+          addToRecentlyViewed({
+            productId: p.id,
+            name: p.name,
+            image: p.images?.[0] || '',
+            price: p.price,
+          });
+
+          // Fetch related products (same category, excluding current)
+          if (p.category) {
+            try {
+              const related = await getCollection('products', [
+                where('category', '==', p.category),
+              ]);
+              setRelatedProducts(
+                (related as unknown as Product[])
+                  .filter((r) => r.id !== p.id && r.isActive !== false && r.active !== false)
+                  .slice(0, 4)
+              );
+            } catch {
+              // silently fail
+            }
+          }
+        }
       } catch (err) {
         console.error(err);
       } finally {
@@ -284,7 +321,10 @@ export default function ProductDetailPage() {
                   </span>
                 </>
               ) : (
-                <span className="text-sm font-medium text-red-500">Out of Stock</span>
+                <>
+                  <span className="text-sm font-medium text-red-500 mb-2 block">Out of Stock</span>
+                  <StockNotify productId={product.id} productName={product.name} />
+                </>
               )}
             </div>
 
@@ -318,8 +358,47 @@ export default function ProductDetailPage() {
                 <ShoppingCart className="w-5 h-5" />
                 Add to Cart
               </Button>
-              <Button size="lg" variant="outline" className="px-4">
-                <Heart className="w-5 h-5" />
+              <Button
+                size="lg"
+                variant="outline"
+                className="px-4"
+                onClick={() => {
+                  if (isInWishlist(product.id)) {
+                    removeFromWishlist(product.id);
+                    toast.success('Removed from wishlist');
+                  } else {
+                    addToWishlist({
+                      productId: product.id,
+                      name: product.name,
+                      image: product.images?.[0] || '',
+                      price: product.price,
+                    });
+                    toast.success('Added to wishlist');
+                  }
+                }}
+              >
+                <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''}`} />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="px-4"
+                onClick={() => {
+                  addToCompare({
+                    productId: product.id,
+                    name: product.name,
+                    image: product.images?.[0] || '',
+                    price: product.price,
+                    category: product.category || '',
+                    brand: product.brand || '',
+                    specifications: product.specifications || {},
+                    rating: product.rating || 0,
+                    stock: product.stock ?? 0,
+                  });
+                  toast.success(isInCompare(product.id) ? 'Already in comparison' : 'Added to comparison');
+                }}
+              >
+                <GitCompare className={`w-5 h-5 ${isInCompare(product.id) ? 'text-primary-600' : ''}`} />
               </Button>
             </div>
 
@@ -565,6 +644,57 @@ export default function ProductDetailPage() {
             )}
           </div>
         </div>
+
+        {/* Related Products */}
+        {relatedProducts.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Related Products</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {relatedProducts.map((rp) => (
+                <Link key={rp.id} href={`/products/${rp.id}`} className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                  <div className="relative h-48 bg-gray-100">
+                    {rp.images?.[0] ? (
+                      <Image src={rp.images[0]} alt={rp.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 640px) 100vw, 25vw" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center"><Package className="w-10 h-10 text-gray-300" /></div>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-medium text-gray-900 group-hover:text-primary-600 transition-colors line-clamp-2 text-sm mb-2">{rp.name}</h3>
+                    <span className="text-lg font-bold text-gray-900">{formatCurrency(rp.price)}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Recently Viewed */}
+        {recentlyViewed.filter((rv) => rv.productId !== productId).length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Recently Viewed</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              {recentlyViewed
+                .filter((rv) => rv.productId !== productId)
+                .slice(0, 6)
+                .map((rv) => (
+                  <Link key={rv.productId} href={`/products/${rv.productId}`} className="group bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all">
+                    <div className="relative h-32 bg-gray-100">
+                      {rv.image ? (
+                        <Image src={rv.image} alt={rv.name} fill className="object-cover" sizes="(max-width: 640px) 50vw, 16vw" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center"><Package className="w-8 h-8 text-gray-300" /></div>
+                      )}
+                    </div>
+                    <div className="p-3">
+                      <h4 className="text-xs font-medium text-gray-900 group-hover:text-primary-600 line-clamp-2 mb-1">{rv.name}</h4>
+                      <span className="text-sm font-bold text-gray-900">{formatCurrency(rv.price)}</span>
+                    </div>
+                  </Link>
+                ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

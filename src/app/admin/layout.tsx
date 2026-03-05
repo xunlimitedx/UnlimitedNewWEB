@@ -19,6 +19,8 @@ import {
   Shield,
   Truck,
   DollarSign,
+  Tag,
+  Newspaper,
 } from 'lucide-react';
 
 const adminLinks = [
@@ -27,6 +29,8 @@ const adminLinks = [
   { href: '/admin/pricing', label: 'Pricing', icon: DollarSign },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { href: '/admin/customers', label: 'Customers', icon: Users },
+  { href: '/admin/coupons', label: 'Coupons', icon: Tag },
+  { href: '/admin/blog', label: 'Blog', icon: Newspaper },
   { href: '/admin/feeds', label: 'Data Feeds', icon: Truck },
   { href: '/admin/import', label: 'Data Import', icon: Upload },
   { href: '/admin/ai-tools', label: 'AI Tools', icon: Sparkles },

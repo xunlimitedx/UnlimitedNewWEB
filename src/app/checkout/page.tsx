@@ -22,6 +22,8 @@ import {
   Banknote,
   Truck,
   Loader2,
+  Tag,
+  X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -56,6 +58,17 @@ export default function CheckoutPage() {
   });
 
   const [paymentMethod, setPaymentMethod] = useState('');
+
+  // Coupon state
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    couponId: string;
+    code: string;
+    discountType: 'percentage' | 'fixed';
+    discountValue: number;
+    discount: number;
+  } | null>(null);
+  const [couponLoading, setCouponLoading] = useState(false);
 
   // Fetch enabled payment methods
   useEffect(() => {
@@ -120,8 +133,9 @@ export default function CheckoutPage() {
 
   const subtotal = getSubtotal();
   const shipping = subtotal >= 2500 ? 0 : 199;
-  const tax = subtotal * 0.15;
-  const total = subtotal + shipping + tax;
+  const couponDiscount = appliedCoupon?.discount || 0;
+  const tax = (subtotal - couponDiscount) * 0.15;
+  const total = subtotal - couponDiscount + shipping + tax;
 
   const steps: { key: Step; label: string; icon: React.ElementType }[] = [
     { key: 'shipping', label: 'Shipping', icon: MapPin },
@@ -130,6 +144,34 @@ export default function CheckoutPage() {
   ];
 
   const currentStepIndex = steps.findIndex((s) => s.key === step);
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    try {
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode.trim(), subtotal }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Invalid coupon');
+        return;
+      }
+      setAppliedCoupon(data);
+      toast.success(`Coupon "${data.code}" applied! You save ${formatCurrency(data.discount)}`);
+    } catch {
+      toast.error('Failed to validate coupon');
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
+  };
 
   const handleShippingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -179,6 +221,7 @@ export default function CheckoutPage() {
         subtotal,
         shipping,
         tax,
+        ...(couponDiscount > 0 ? { couponDiscount, couponCode: appliedCoupon?.code } : {}),
         ...(codSurcharge > 0 ? { codSurcharge } : {}),
         total: orderTotal,
         status: 'pending',
@@ -784,6 +827,43 @@ export default function CheckoutPage() {
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 Order Summary
               </h2>
+
+              {/* Coupon Input */}
+              <div className="mb-4 pb-4 border-b border-gray-100">
+                {appliedCoupon ? (
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-100">
+                    <div className="flex items-center gap-2">
+                      <Tag className="w-4 h-4 text-green-600" />
+                      <div>
+                        <span className="text-sm font-medium text-green-700">{appliedCoupon.code}</span>
+                        <span className="text-xs text-green-600 block">
+                          {appliedCoupon.discountType === 'percentage'
+                            ? `${appliedCoupon.discountValue}% off`
+                            : `${formatCurrency(appliedCoupon.discountValue)} off`}
+                        </span>
+                      </div>
+                    </div>
+                    <button onClick={handleRemoveCoupon} className="text-green-600 hover:text-green-800">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                      placeholder="Coupon code"
+                      className="flex-1 h-9 px-3 rounded-lg border border-gray-300 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      onKeyDown={(e) => e.key === 'Enter' && handleApplyCoupon()}
+                    />
+                    <Button size="sm" variant="outline" onClick={handleApplyCoupon} loading={couponLoading}>
+                      Apply
+                    </Button>
+                  </div>
+                )}
+              </div>
+
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-500">Subtotal</span>
@@ -803,6 +883,12 @@ export default function CheckoutPage() {
                   <span className="text-gray-500">VAT (15%)</span>
                   <span className="font-medium">{formatCurrency(tax)}</span>
                 </div>
+                {couponDiscount > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Coupon Discount</span>
+                    <span className="font-medium">-{formatCurrency(couponDiscount)}</span>
+                  </div>
+                )}
                 {codSurcharge > 0 && (
                   <div className="flex justify-between">
                     <span className="text-gray-500">COD Surcharge</span>

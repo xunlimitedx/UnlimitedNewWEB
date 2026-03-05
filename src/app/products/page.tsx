@@ -5,7 +5,10 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button, Input, Badge, Skeleton } from '@/components/ui';
+import { QuickView } from '@/components/ui';
 import { useCartStore } from '@/store/cartStore';
+import { useWishlistStore } from '@/store/wishlistStore';
+import { useCompareStore } from '@/store/compareStore';
 import { getCollection, where, orderBy, limit } from '@/lib/firebase';
 import { formatCurrency, CATEGORIES } from '@/lib/utils';
 import {
@@ -18,6 +21,9 @@ import {
   X,
   ChevronDown,
   Package,
+  Heart,
+  Eye,
+  GitCompare,
 } from 'lucide-react';
 import type { Product } from '@/types';
 import type { QueryConstraint } from 'firebase/firestore';
@@ -57,7 +63,10 @@ function ProductsContent() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const addItem = useCartStore((s) => s.addItem);
+  const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
+  const { addItem: addToCompare, isInCompare } = useCompareStore();
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -146,6 +155,36 @@ function ProductsContent() {
       sku: product.sku || '',
     });
     toast.success(`${product.name} added to cart`);
+  };
+
+  const handleToggleWishlist = (product: Product) => {
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+      toast.success('Removed from wishlist');
+    } else {
+      addToWishlist({
+        productId: product.id,
+        name: product.name,
+        image: product.images?.[0] || '',
+        price: product.price,
+      });
+      toast.success('Added to wishlist');
+    }
+  };
+
+  const handleAddToCompare = (product: Product) => {
+    addToCompare({
+      productId: product.id,
+      name: product.name,
+      image: product.images?.[0] || '',
+      price: product.price,
+      category: product.category || '',
+      brand: product.brand || '',
+      specifications: product.specifications || {},
+      rating: product.rating || 0,
+      stock: product.stock ?? 0,
+    });
+    toast.success('Added to comparison');
   };
 
   return (
@@ -410,6 +449,34 @@ function ProductsContent() {
                             Featured
                           </Badge>
                         )}
+                        {/* Hover action buttons */}
+                        <div className="absolute top-3 right-3 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={(e) => { e.preventDefault(); handleToggleWishlist(product); }}
+                            className={`w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-colors ${
+                              isInWishlist(product.id) ? 'bg-red-500 text-white' : 'bg-white text-gray-600 hover:bg-red-50 hover:text-red-500'
+                            }`}
+                            title="Add to Wishlist"
+                          >
+                            <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                          </button>
+                          <button
+                            onClick={(e) => { e.preventDefault(); setQuickViewProduct(product); }}
+                            className="w-8 h-8 rounded-full bg-white text-gray-600 hover:bg-primary-50 hover:text-primary-600 flex items-center justify-center shadow-md transition-colors"
+                            title="Quick View"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={(e) => { e.preventDefault(); handleAddToCompare(product); }}
+                            className={`w-8 h-8 rounded-full flex items-center justify-center shadow-md transition-colors ${
+                              isInCompare(product.id) ? 'bg-primary-500 text-white' : 'bg-white text-gray-600 hover:bg-primary-50 hover:text-primary-600'
+                            }`}
+                            title="Compare"
+                          >
+                            <GitCompare className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     </Link>
                     <div className="p-5">
@@ -539,6 +606,12 @@ function ProductsContent() {
           </div>
         </div>
       </div>
+
+      <QuickView
+        product={quickViewProduct}
+        isOpen={!!quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+      />
     </div>
   );
 }

@@ -21,8 +21,12 @@ import {
   Package,
   Settings,
   MapPin,
+  Heart,
+  GitCompare,
 } from 'lucide-react';
 import { Button } from '@/components/ui';
+import { useWishlistStore } from '@/store/wishlistStore';
+import { useCompareStore } from '@/store/compareStore';
 import toast from 'react-hot-toast';
 
 export default function Header() {
@@ -32,6 +36,8 @@ export default function Header() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const itemCount = getItemCount();
+  const wishlistCount = useWishlistStore((s) => s.items.length);
+  const compareCount = useCompareStore((s) => s.items.length);
 
   const handleLogout = async () => {
     try {
@@ -113,6 +119,34 @@ export default function Header() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
+            {/* Wishlist */}
+            <Link
+              href="/wishlist"
+              className="relative p-2 text-gray-600 hover:text-primary-600 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Wishlist"
+            >
+              <Heart className="w-5 h-5" />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {wishlistCount > 99 ? '99+' : wishlistCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Compare */}
+            <Link
+              href="/compare"
+              className="relative p-2 text-gray-600 hover:text-primary-600 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Compare products"
+            >
+              <GitCompare className="w-5 h-5" />
+              {compareCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-primary-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {compareCount}
+                </span>
+              )}
+            </Link>
+
             {/* Cart */}
             <button
               onClick={openCart}
@@ -248,6 +282,12 @@ export default function Header() {
             About
           </Link>
           <Link
+            href="/blog"
+            className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
+          >
+            Blog
+          </Link>
+          <Link
             href="/contact"
             className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
           >
@@ -304,6 +344,13 @@ export default function Header() {
                 className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
               >
                 About
+              </Link>
+              <Link
+                href="/blog"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
+              >
+                Blog
               </Link>
               <Link
                 href="/contact"

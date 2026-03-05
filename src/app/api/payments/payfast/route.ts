@@ -25,6 +25,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required payment fields' }, { status: 400 });
     }
 
+    const parsedAmount = parseFloat(amount);
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      return NextResponse.json({ error: 'Invalid payment amount' }, { status: 400 });
+    }
+
     // Fetch payment settings from Firestore
     const paymentData = await getDocument('settings', 'payment') as PaymentSettings | null;
     
@@ -51,7 +56,7 @@ export async function POST(request: NextRequest) {
       name_last: lastName || '',
       email_address: email,
       m_payment_id: orderId,
-      amount: parseFloat(amount).toFixed(2),
+      amount: parsedAmount.toFixed(2),
       item_name: itemName.substring(0, 100),
     };
 

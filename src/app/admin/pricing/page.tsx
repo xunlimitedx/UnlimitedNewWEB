@@ -271,16 +271,16 @@ export default function PricingPage() {
       let newPrice = p.price;
       switch (bulkAction) {
         case 'margin':
-          newPrice = p.price * (1 + bulkValue / 100);
+          newPrice = Math.round(p.price * (100 + bulkValue)) / 100;
           break;
         case 'fixed':
-          newPrice = p.price + bulkValue;
+          newPrice = Math.round((p.price + bulkValue) * 100) / 100;
           break;
         case 'setprice':
           newPrice = bulkValue;
           break;
         case 'sale':
-          newPrice = p.price * (1 - bulkValue / 100);
+          newPrice = Math.round(p.price * (100 - bulkValue)) / 100;
           break;
       }
       newPrice = Math.max(0, newPrice);
