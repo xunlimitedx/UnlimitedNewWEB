@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { FeedProduct } from '@/types';
 
-function getUbossFeedUrl(): string {
+function getUbossFeedUrl(): string | null {
   const token = process.env.UBOSS_API_TOKEN;
-  if (!token) throw new Error('UBOSS_API_TOKEN not configured');
+  if (!token) return null;
   return `https://app.uboss.co.za/api/inventory/feed?token=${encodeURIComponent(token)}&format=json`;
 }
 
@@ -45,7 +45,14 @@ function transformUbossItem(item: UbossItem): FeedProduct {
 
 export async function GET() {
   try {
-    const response = await fetch(getUbossFeedUrl(), {
+    const feedUrl = getUbossFeedUrl();
+    if (!feedUrl) {
+      return NextResponse.json(
+        { success: false, error: 'UBOSS_API_TOKEN not configured. Add it in your environment variables.' },
+        { status: 503 }
+      );
+    }
+    const response = await fetch(feedUrl, {
       next: { revalidate: 0 },
       headers: { Accept: 'application/json' },
     });

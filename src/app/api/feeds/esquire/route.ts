@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import type { FeedProduct } from '@/types';
 
-function getEsquireFeedUrl(): string {
+function getEsquireFeedUrl(): string | null {
   const user = process.env.ESQUIRE_API_USER;
   const pass = process.env.ESQUIRE_API_PASS;
-  if (!user || !pass) throw new Error('Esquire API credentials not configured');
+  if (!user || !pass) return null;
   return `https://api.esquire.co.za/api/DataFeed?u=${encodeURIComponent(user)}&p=${encodeURIComponent(pass)}&t=json&m=0&o=ascending&r=RoundNone&rm=0&min=0`;
 }
 
@@ -40,7 +40,14 @@ function transformEsquireItem(item: EsquireItem): FeedProduct {
 
 export async function GET() {
   try {
-    const response = await fetch(getEsquireFeedUrl(), {
+    const feedUrl = getEsquireFeedUrl();
+    if (!feedUrl) {
+      return NextResponse.json(
+        { success: false, error: 'Esquire API credentials not configured. Add ESQUIRE_API_USER and ESQUIRE_API_PASS in your environment variables.' },
+        { status: 503 }
+      );
+    }
+    const response = await fetch(feedUrl, {
       next: { revalidate: 0 },
       headers: { Accept: 'application/json' },
     });

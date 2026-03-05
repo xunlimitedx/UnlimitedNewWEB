@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from './providers';
 import JsonLd from '@/components/JsonLd';
-import { Analytics } from '@vercel/analytics/react';
+
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://unlimitedits.co.za'),
@@ -96,7 +96,6 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>{children}</Providers>
-        <Analytics />
       </body>
     </html>
   );
