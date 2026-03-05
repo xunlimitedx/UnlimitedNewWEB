@@ -304,6 +304,25 @@ export default function DataFeedsPage() {
         await Promise.all(promises);
       }
 
+      // Create category documents for any new categories from the feed
+      const feedCategories = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
+      for (const catName of feedCategories) {
+        const slug = catName
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '');
+        try {
+          await setDocument('categories', slug, {
+            name: catName,
+            slug,
+            description: `${catName} products`,
+            isActive: true,
+          });
+        } catch {
+          // Category may already exist, ignore errors
+        }
+      }
+
       // Save sync metadata
       await setDocument('feedSettings', supplier, {
         ...s,

@@ -62,9 +62,9 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed mb-4">
-              Your one-stop shop for all things tech. From high-performance
-              laptops to essential components, we provide reliable IT solutions
-              for businesses and individuals.
+              Professional IT solutions for businesses and individuals.
+              From consulting and support to hardware sales, we deliver
+              reliable technology services on the South Coast.
             </p>
             <div className="flex gap-3">
               <a
@@ -106,18 +106,19 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Products */}
+          {/* Company */}
           <div>
             <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
-              Products
+              Company
             </h4>
             <ul className="space-y-2.5">
               {[
-                { name: 'Laptops', href: '/products?category=laptops' },
-                { name: 'Desktops', href: '/products?category=desktops' },
-                { name: 'Components', href: '/products?category=components' },
-                { name: 'Peripherals', href: '/products?category=peripherals' },
-                { name: 'All Products', href: '/products' },
+                { name: 'About Us', href: '/about' },
+                { name: 'Services', href: '/services' },
+                { name: 'Blog', href: '/blog' },
+                { name: 'Contact', href: '/contact' },
+                { name: 'Terms of Service', href: '/terms' },
+                { name: 'Privacy Policy', href: '/privacy' },
               ].map((link) => (
                 <li key={link.name}>
                   <Link
@@ -132,19 +133,18 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Company */}
+          {/* Products */}
           <div>
             <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
-              Company
+              Products
             </h4>
             <ul className="space-y-2.5">
               {[
-                { name: 'About Us', href: '/about' },
-                { name: 'Contact', href: '/contact' },
-                { name: 'Services', href: '/services' },
-                { name: 'Blog', href: '/blog' },
-                { name: 'Terms of Service', href: '/terms' },
-                { name: 'Privacy Policy', href: '/privacy' },
+                { name: 'All Products', href: '/products' },
+                { name: 'Laptops', href: '/products?category=laptops' },
+                { name: 'Desktops', href: '/products?category=desktops' },
+                { name: 'Components', href: '/products?category=components' },
+                { name: 'Peripherals', href: '/products?category=peripherals' },
               ].map((link) => (
                 <li key={link.name}>
                   <Link

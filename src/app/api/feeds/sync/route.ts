@@ -128,6 +128,10 @@ export async function POST(request: NextRequest) {
     // Transform products for import
     const importProducts = products.map((p) => {
       const sellingPrice = applyMarkup(p.costPrice, markupType, markupValue);
+      const categorySlug = p.category
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
       return {
         name: p.name,
         slug: generateSlug(p.name),
@@ -135,12 +139,13 @@ export async function POST(request: NextRequest) {
         shortDescription: p.description.substring(0, 200),
         price: sellingPrice,
         costPrice: p.costPrice,
-        category: p.category,
+        category: categorySlug,
+        categoryName: p.category,
         brand: p.supplier,
         sku: p.sku,
         stock: p.stock,
         images: p.imageUrl ? [p.imageUrl] : [],
-        tags: [p.supplier.toLowerCase(), p.category.toLowerCase()],
+        tags: [p.supplier.toLowerCase(), categorySlug],
         specifications: {
           Supplier: p.supplier,
           ...(p.barcode ? { Barcode: p.barcode } : {}),

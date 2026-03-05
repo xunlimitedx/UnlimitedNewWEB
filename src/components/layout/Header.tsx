@@ -260,26 +260,16 @@ export default function Header() {
             Home
           </Link>
           <Link
-            href="/products"
-            className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
-          >
-            All Products
-          </Link>
-          {categories.map((cat) => (
-            <Link
-              key={cat.name}
-              href={cat.href}
-              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
-            >
-              <cat.icon className="w-3.5 h-3.5" />
-              {cat.name}
-            </Link>
-          ))}
-          <Link
             href="/about"
             className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
           >
             About
+          </Link>
+          <Link
+            href="/services"
+            className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
+          >
+            Services
           </Link>
           <Link
             href="/blog"
@@ -293,6 +283,23 @@ export default function Header() {
           >
             Contact
           </Link>
+          <span className="w-px h-5 bg-gray-300 mx-1" />
+          <Link
+            href="/products"
+            className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
+          >
+            Shop
+          </Link>
+          {categories.map((cat) => (
+            <Link
+              key={cat.name}
+              href={cat.href}
+              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
+            >
+              <cat.icon className="w-3.5 h-3.5" />
+              {cat.name}
+            </Link>
+          ))}
         </nav>
       </div>
 
@@ -321,29 +328,18 @@ export default function Header() {
                 Home
               </Link>
               <Link
-                href="/products"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
-              >
-                All Products
-              </Link>
-              {categories.map((cat) => (
-                <Link
-                  key={cat.name}
-                  href={cat.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
-                >
-                  <cat.icon className="w-4 h-4" />
-                  {cat.name}
-                </Link>
-              ))}
-              <Link
                 href="/about"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
               >
                 About
+              </Link>
+              <Link
+                href="/services"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
+              >
+                Services
               </Link>
               <Link
                 href="/blog"
@@ -359,6 +355,25 @@ export default function Header() {
               >
                 Contact
               </Link>
+              <div className="border-t border-gray-200 my-2" />
+              <Link
+                href="/products"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
+              >
+                Shop
+              </Link>
+              {categories.map((cat) => (
+                <Link
+                  key={cat.name}
+                  href={cat.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
+                >
+                  <cat.icon className="w-4 h-4" />
+                  {cat.name}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
