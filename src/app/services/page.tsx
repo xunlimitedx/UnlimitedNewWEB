@@ -10,66 +10,147 @@ import {
   Server,
   Laptop,
   ArrowRight,
+  Camera,
+  Gamepad2,
+  Globe,
+  Phone,
+  CalendarClock,
+  CircuitBoard,
+  Settings,
+  ShieldCheck,
+  Lightbulb,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Services',
+  title: 'IT Services — Computer Repairs, CCTV, Networking & Console Repairs | Ramsgate',
   description:
-    'Unlimited IT Solutions offers IT support, computer repairs, networking, cloud solutions, data recovery, and more for businesses and individuals in South Africa.',
+    'Unlimited IT Solutions offers computer repairs (including Mac), CCTV installations, network installations, console repairs (PlayStation, Xbox, Nintendo), fine soldering, managed IT services, remote support, cloud services, and more in Ramsgate, KwaZulu-Natal.',
+  keywords: [
+    'computer repairs Ramsgate', 'Mac repairs KZN', 'CCTV installation South Coast',
+    'network installation Ramsgate', 'console repairs PlayStation Xbox Nintendo',
+    'fine soldering', 'managed IT services KZN', 'IT support Ramsgate',
+    'remote support South Africa', 'server maintenance', 'cloud services KZN',
+    'IT consulting', 'callout IT support', 'internet solutions Ramsgate',
+    'scheduled maintenance IT', 'software repairs',
+  ],
   openGraph: {
-    title: 'IT Services | Unlimited IT Solutions',
-    description: 'Professional IT services for businesses and individuals across South Africa.',
+    title: 'IT Services — Computer Repairs, CCTV, Networking & More | Unlimited IT Solutions',
+    description:
+      'From computer & Mac repairs to CCTV installations, networking, console repairs, and managed IT — we cover all your technology needs in Ramsgate, KZN.',
   },
 };
 
-const services = [
+const serviceCategories = [
   {
-    icon: Wrench,
-    title: 'Computer Repairs',
-    description:
-      'Hardware and software diagnostics, component replacement, virus removal, and system optimisation for desktops and laptops.',
+    heading: 'Repair Services',
+    services: [
+      {
+        icon: Wrench,
+        title: 'Computer Repair & Sales',
+        description:
+          'Hardware and software diagnostics, component replacement, virus removal, and optimisation for desktops and laptops — Dell, HP, Lenovo, ASUS, Acer, MSI, Toshiba, and Apple Mac.',
+      },
+      {
+        icon: Gamepad2,
+        title: 'Console Repair & Sales',
+        description:
+          'Expert repair for PlayStation, Xbox, and Nintendo consoles — HDMI port replacement, overheating fixes, disc drive repairs, and refurbished console sales.',
+      },
+      {
+        icon: CircuitBoard,
+        title: 'Fine Soldering & Part Replacement',
+        description:
+          'Precision micro-soldering for motherboards, charging ports, GPU chips, and other delicate components that require specialist equipment.',
+      },
+      {
+        icon: Settings,
+        title: 'Software Repairs & Sales',
+        description:
+          'Windows repairs, virus removal, OS reinstallation, driver updates. Certified reseller for Adobe, Norton, McAfee, Kaspersky, Bitdefender, Avast, Windows, and Microsoft Office.',
+      },
+    ],
   },
   {
-    icon: Monitor,
-    title: 'Custom PC Builds',
-    description:
-      'Tailor-made desktop systems built to your specifications — gaming rigs, workstations, or office machines.',
+    heading: 'Installation Services',
+    services: [
+      {
+        icon: Camera,
+        title: 'CCTV Maintenance & Installations',
+        description:
+          'Full CCTV system design, installation, and maintenance — IP cameras, DVR/NVR setup, remote monitoring, and integration with existing security infrastructure.',
+      },
+      {
+        icon: Wifi,
+        title: 'Network Maintenance & Installations',
+        description:
+          'Structured cabling, Wi-Fi design, router and switch configuration, VPN setup, and enterprise networking for homes, offices, and commercial premises.',
+      },
+      {
+        icon: Globe,
+        title: 'Internet Solutions',
+        description:
+          'Fibre and wireless internet setup, Wi-Fi coverage design, ISP liaison, speed optimisation, and troubleshooting connectivity issues.',
+      },
+      {
+        icon: Server,
+        title: 'Server Repairs, Maintenance & Installations',
+        description:
+          'Server rack setup, installation, configuration, virtualisation, monitoring, and ongoing maintenance for small businesses to enterprise environments.',
+      },
+    ],
   },
   {
-    icon: Wifi,
-    title: 'Networking Solutions',
-    description:
-      'Wi-Fi setup, network cabling, router configuration, and enterprise networking for homes and businesses.',
-  },
-  {
-    icon: Shield,
-    title: 'Cybersecurity',
-    description:
-      'Antivirus setup, firewall configuration, security audits, and data protection to keep your systems safe.',
-  },
-  {
-    icon: Cloud,
-    title: 'Cloud & Backup',
-    description:
-      'Cloud migration, Microsoft 365 setup, automated backups, and disaster recovery planning.',
-  },
-  {
-    icon: Server,
-    title: 'Server Management',
-    description:
-      'Server installation, maintenance, monitoring, and virtualisation for businesses of all sizes.',
-  },
-  {
-    icon: Headphones,
-    title: 'IT Support & Helpdesk',
-    description:
-      'On-site and remote IT support, SLA-based helpdesk services, and ongoing maintenance contracts.',
-  },
-  {
-    icon: Laptop,
-    title: 'Hardware Sales',
-    description:
-      'Quality laptops, desktops, peripherals, and components from leading brands at competitive prices.',
+    heading: 'IT Support & Management',
+    services: [
+      {
+        icon: ShieldCheck,
+        title: 'IT Support & Maintenance',
+        description:
+          'Regular system check-ups, patch management, virus protection, hardware servicing, and proactive system health monitoring.',
+      },
+      {
+        icon: Monitor,
+        title: 'Managed IT Services',
+        description:
+          'Full IT outsourcing — proactive monitoring, helpdesk, infrastructure management, SLA-based contracts, and technology roadmaps for your business.',
+      },
+      {
+        icon: Headphones,
+        title: 'Remote Support',
+        description:
+          'Instant remote troubleshooting and maintenance via secure remote access — available nationwide for quick issue resolution.',
+      },
+      {
+        icon: Phone,
+        title: 'Callouts & On-site Support',
+        description:
+          'On-site visits for installations, repairs, troubleshooting, and setups at your home or business across the KZN South Coast and beyond.',
+      },
+      {
+        icon: CalendarClock,
+        title: 'Scheduled Maintenance',
+        description:
+          'Daily, weekly, or bi-weekly maintenance schedules — preventative check-ups, system updates, hardware cleaning, and performance optimisation.',
+      },
+      {
+        icon: Cloud,
+        title: 'Cloud Services',
+        description:
+          'Cloud migration, Microsoft 365 deployments, automated backups, disaster recovery planning, and SaaS solutions for businesses.',
+      },
+      {
+        icon: Lightbulb,
+        title: 'IT Consulting & Strategy',
+        description:
+          'Technology planning, cybersecurity audits, infrastructure assessments, compliance guidance, and digital transformation strategy.',
+      },
+      {
+        icon: Laptop,
+        title: 'Hardware Sales',
+        description:
+          'New and refurbished laptops, desktops, peripherals, and components from Dell, HP, Lenovo, ASUS, Acer, MSI, Toshiba, and Apple.',
+      },
+    ],
   },
 ];
 
@@ -81,28 +162,49 @@ export default function ServicesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Services</h1>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            From repairs to full IT infrastructure — we provide end-to-end technology
-            solutions for businesses and individuals across South Africa.
+            From computer repairs and CCTV installations to managed IT and console repairs —
+            we provide end-to-end technology solutions from our shop in Ramsgate, KZN.
           </p>
         </div>
       </section>
 
-      {/* Services Grid */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((service) => (
-              <div
-                key={service.title}
-                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-primary-100 transition-all group"
-              >
-                <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary-100 transition-colors">
-                  <service.icon className="w-6 h-6 text-primary-600" />
+      {/* Services by Category */}
+      {serviceCategories.map((category) => (
+        <section key={category.heading} className="py-16 odd:bg-gray-50 even:bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 pb-3 border-b border-gray-200">
+              {category.heading}
+            </h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {category.services.map((service) => (
+                <div
+                  key={service.title}
+                  className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-primary-100 transition-all group"
+                >
+                  <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary-100 transition-colors">
+                    <service.icon className="w-6 h-6 text-primary-600" />
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-2">{service.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">{service.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
+        </section>
+      ))}
+
+      {/* Brands */}
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Brands We Service & Sell</h2>
+          <div className="flex flex-wrap justify-center gap-6 text-gray-500 font-medium">
+            {['Dell', 'HP', 'Lenovo', 'ASUS', 'Acer', 'MSI', 'Toshiba', 'Apple', 'Microsoft', 'Adobe', 'PlayStation', 'Xbox', 'Nintendo'].map(
+              (brand) => (
+                <span key={brand} className="px-4 py-2 bg-white rounded-lg border border-gray-200 text-sm">
+                  {brand}
+                </span>
+              )
+            )}
           </div>
         </div>
       </section>
@@ -115,7 +217,7 @@ export default function ServicesPage() {
           </h2>
           <p className="text-gray-600 mb-8">
             Contact us to discuss your requirements. We&apos;ll tailor a solution that fits your
-            budget and needs.
+            budget and needs — on-site or remote.
           </p>
           <Link
             href="/contact"

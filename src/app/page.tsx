@@ -24,6 +24,7 @@ import {
   ChevronRight,
   ShoppingCart,
   Package,
+  Wrench,
 } from 'lucide-react';
 
 const categories = [
@@ -63,24 +64,24 @@ const categories = [
 
 const features = [
   {
-    icon: Truck,
-    title: 'Fast Delivery',
-    description: 'Free shipping on orders over R2,500. Express delivery available nationwide.',
+    icon: Wrench,
+    title: 'Expert Repairs',
+    description: 'Computer, laptop, Mac, and console repairs by experienced technicians at our Ramsgate shop.',
   },
   {
     icon: Shield,
-    title: 'Secure Shopping',
-    description: 'Your payment and personal data are protected with industry-standard encryption.',
+    title: 'CCTV & Security',
+    description: 'Professional CCTV installation, maintenance, and remote monitoring for homes and businesses.',
   },
   {
     icon: Headphones,
-    title: 'Expert Support',
-    description: 'Our knowledgeable team is available Mon-Fri to help you find the right tech.',
+    title: 'On-site & Remote Support',
+    description: 'Callout technicians for on-site repairs and installations, plus nationwide remote support.',
   },
   {
     icon: CheckCircle,
-    title: 'Quality Guarantee',
-    description: 'All products come with manufacturer warranty and our satisfaction guarantee.',
+    title: 'Certified Reseller',
+    description: 'Authorised reseller for Adobe, Microsoft, Norton, McAfee, Kaspersky, and more.',
   },
 ];
 
@@ -88,19 +89,19 @@ const testimonials = [
   {
     name: 'David M.',
     role: 'Business Owner',
-    content: 'Unlimited IT Solutions provided our entire office with workstations. Excellent service and competitive pricing.',
+    content: 'Unlimited IT Solutions set up our entire CCTV system and network infrastructure. Professional, reliable, and great after-sales support.',
     rating: 5,
   },
   {
     name: 'Sarah K.',
     role: 'Graphic Designer',
-    content: 'Found the perfect high-performance laptop for my design work. The team helped me choose the right specs.',
+    content: 'Had my MacBook repaired quickly and at a fair price. They also set me up with Adobe Creative Cloud. Highly recommend!',
     rating: 5,
   },
   {
     name: 'Andre V.',
     role: 'IT Manager',
-    content: 'Reliable supplier for all our IT infrastructure needs. Their technical knowledge is outstanding.',
+    content: 'We use their managed IT services for our office — proactive monitoring, scheduled maintenance, the works. Outstanding technical knowledge.',
     rating: 5,
   },
 ];
@@ -136,28 +137,28 @@ export default function HomePage() {
             <div className="animate-fade-in">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm mb-6">
                 <Zap className="w-4 h-4 text-yellow-400" />
-                <span>Technology for Tomorrow</span>
+                <span>Computer Repairs &bull; CCTV &bull; Networking &bull; IT Support</span>
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-                Your One-Stop
+                IT Repairs &amp;
                 <br />
-                <span className="text-primary-300">Tech Shop</span>
+                <span className="text-primary-300">Solutions Experts</span>
               </h1>
               <p className="text-lg text-primary-100 max-w-lg mb-8 leading-relaxed">
-                Discover cutting-edge computing technology. High-performance
-                hardware for professionals and enthusiasts, all backed by expert
-                support and reliable service.
+                Walk-in computer, Mac &amp; console repairs. CCTV installations,
+                network setups, and managed IT services — all from our shop
+                in Ramsgate, KZN. Serving the South Coast since 2010.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/products">
+                <Link href="/services">
                   <Button size="xl" className="bg-white text-primary-900 hover:bg-gray-100 shadow-lg">
-                    Shop All Products
+                    View Our Services
                     <ArrowRight className="w-5 h-5" />
                   </Button>
                 </Link>
-                <Link href="/about">
+                <Link href="/contact">
                   <Button size="xl" variant="outline" className="border-white/30 text-white hover:bg-white/10">
-                    Learn More
+                    Get a Quote
                   </Button>
                 </Link>
               </div>
@@ -373,10 +374,10 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-white">
               <h2 className="text-3xl font-bold mb-2">
-                Need Help Choosing the Right Tech?
+                Need a Repair or IT Solution?
               </h2>
               <p className="text-primary-100 text-lg">
-                Our experts are ready to help you find the perfect solution for your needs.
+                Walk in to our Ramsgate shop or call us — our technicians are ready to help.
               </p>
             </div>
             <div className="flex gap-4">
@@ -439,15 +440,15 @@ export default function HomePage() {
       <section className="section-padding">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Ready to Upgrade Your Tech?
+            Ready to Get Your Tech Sorted?
           </h2>
           <p className="text-lg text-gray-500 mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied customers who trust Unlimited IT
-            Solutions for their technology needs.
+            Whether it&apos;s a laptop repair, CCTV installation, or managed IT for your business
+            — Unlimited IT Solutions has you covered.
           </p>
-          <Link href="/products">
+          <Link href="/contact">
             <Button size="xl">
-              Browse All Products
+              Contact Us Today
               <ArrowRight className="w-5 h-5" />
             </Button>
           </Link>

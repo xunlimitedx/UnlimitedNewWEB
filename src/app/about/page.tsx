@@ -16,9 +16,13 @@ import {
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'About Us',
+  title: 'About Us — Computer Repairs, IT Services & CCTV | Ramsgate KZN',
   description:
-    'Learn about Unlimited IT Solutions — your trusted partner for business technology since 2010. Serving thousands of clients across South Africa.',
+    'Unlimited4all T/A Unlimited IT Solutions — premier IT service provider in Ramsgate, KwaZulu-Natal since 2010. Computer repairs, Mac repairs, CCTV installations, networking, console repairs, managed IT services, and on-site technicians for homes and businesses.',
+  openGraph: {
+    title: 'About Unlimited IT Solutions | Computer Repairs & IT Services | Ramsgate KZN',
+    description: 'Your trusted IT partner since 2010. Computer & laptop repairs, CCTV, networking, console repairs, and managed IT services in Ramsgate, KwaZulu-Natal.',
+  },
 };
 
 const values = [
@@ -49,12 +53,12 @@ const values = [
 ];
 
 const milestones = [
-  { year: '2010', title: 'Founded', description: 'Started operations in Ramsgate, KwaZulu-Natal.' },
-  { year: '2013', title: 'First Major Contract', description: 'Secured our first enterprise client for a full IT infrastructure deployment.' },
-  { year: '2016', title: 'Online Expansion', description: 'Launched our e-commerce platform to serve customers nationwide.' },
-  { year: '2019', title: '5000+ Clients', description: 'Reached the milestone of serving over 5,000 satisfied customers.' },
-  { year: '2022', title: 'AI Integration', description: 'Integrated AI-powered tools for smarter logistics and customer service.' },
-  { year: '2026', title: 'Unlimited IT Solutions', description: 'Launched the next-generation e-commerce experience.' },
+  { year: '2010', title: 'Founded', description: 'Opened our physical shop at 202 Marine Drive, Ramsgate, KwaZulu-Natal — offering computer repairs and IT support from day one.' },
+  { year: '2013', title: 'Enterprise Contracts', description: 'Secured our first major enterprise IT infrastructure and managed services contract.' },
+  { year: '2016', title: 'CCTV & Networking', description: 'Expanded into CCTV installations, network infrastructure, and on-site callout services.' },
+  { year: '2019', title: '5000+ Clients', description: 'Reached the milestone of 5,000+ satisfied customers — from individual repairs to full business IT overhauls.' },
+  { year: '2022', title: 'Console & Mac Repairs', description: 'Added specialised console repair (PlayStation, Xbox, Nintendo) and Apple Mac repair services.' },
+  { year: '2026', title: 'Online Shop Launch', description: 'Launched our next-generation online store for hardware sales alongside our core repair and service operations.' },
 ];
 
 export default function AboutPage() {
@@ -69,9 +73,11 @@ export default function AboutPage() {
                 About <span className="text-primary-300">Unlimited IT</span>
               </h1>
               <p className="text-lg text-primary-100 max-w-lg leading-relaxed">
-                Are you in search of reliable, expert solutions for all your
-                technology needs? Unlimited IT Solutions is your one-stop
-                destination for all things tech and security.
+                Unlimited4all T/A Unlimited IT Solutions is a premier provider of
+                comprehensive IT services in Ramsgate, KwaZulu-Natal. From computer
+                and laptop repairs to CCTV installations, networking, and managed IT
+                services — our skilled technicians deliver tailored solutions for
+                individuals, small businesses, and enterprises.
               </p>
             </div>
             <div className="hidden lg:block">
@@ -95,18 +101,25 @@ export default function AboutPage() {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Our Story</h2>
             <p className="text-lg text-gray-600 leading-relaxed mb-6">
-              Founded in 2010, Unlimited IT Solutions started with a simple
-              mission: to provide businesses with powerful, reliable, and
-              scalable technology solutions. We saw a gap in the market for a
-              provider that not only delivered cutting-edge hardware but also
-              fostered long-term partnerships built on trust and exceptional
-              service.
+              Founded in 2010 in Ramsgate, KwaZulu-Natal, Unlimited IT Solutions
+              started as a local computer repair shop with a mission: provide
+              reliable, expert IT services that people and businesses can depend
+              on. We opened our doors at 202 Marine Drive and quickly became the
+              go-to destination for computer repairs, networking, and IT support
+              on the South Coast.
+            </p>
+            <p className="text-lg text-gray-600 leading-relaxed mb-6">
+              Over the years we&apos;ve expanded into CCTV installations, console
+              repairs (PlayStation, Xbox, Nintendo), Apple Mac repairs, server
+              management, fine soldering, and managed IT services. Our team of
+              experienced technicians provides on-site callouts and remote
+              support across KwaZulu-Natal and beyond.
             </p>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Over the past decade, we&apos;ve grown from a small startup into a
-              leading national provider of IT infrastructure, serving thousands
-              of clients across various industries. Our commitment to innovation
-              and customer satisfaction remains at the core of everything we do.
+              As a certified reseller for Adobe, Microsoft, Norton, Kaspersky,
+              and major hardware brands like Dell, HP, Lenovo, ASUS, and Apple,
+              we offer both the products and the expertise to keep your
+              technology running at its best.
             </p>
           </div>
         </div>
@@ -122,10 +135,10 @@ export default function AboutPage() {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h3>
               <p className="text-gray-600 leading-relaxed">
-                Our mission is to empower businesses by providing them with the
-                technological tools and expertise they need to thrive in a
-                digital world. We believe that the right technology can unlock
-                immense potential, driving efficiency, innovation, and growth.
+                Our mission is to empower our clients through exceptional IT
+                services, driving growth and efficiency by leveraging cutting-edge
+                technology and unparalleled expertise. We strive to build lasting
+                relationships based on trust, reliability, and mutual success.
               </p>
             </div>
             <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">

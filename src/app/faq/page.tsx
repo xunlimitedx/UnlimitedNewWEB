@@ -2,16 +2,66 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'FAQ',
+  title: 'FAQ — Computer Repairs, IT Services & CCTV Questions | Ramsgate',
   description:
-    'Frequently asked questions about ordering, shipping, returns, and IT services at Unlimited IT Solutions.',
+    'Frequently asked questions about computer repairs, Mac repairs, CCTV installations, console repairs, networking, IT support, and online orders at Unlimited IT Solutions, Ramsgate.',
   openGraph: {
     title: 'FAQ | Unlimited IT Solutions',
-    description: 'Find answers to common questions about our products and services.',
+    description: 'Answers to common questions about our repairs, IT services, CCTV, and online shop.',
   },
 };
 
 const faqs = [
+  {
+    category: 'Repairs & Services',
+    items: [
+      {
+        q: 'What types of computers do you repair?',
+        a: 'We repair all major brands including Dell, HP, Lenovo, ASUS, Acer, MSI, Toshiba, and Apple Mac. This covers desktops, laptops, and all-in-one PCs — both hardware and software issues.',
+      },
+      {
+        q: 'Do you repair gaming consoles?',
+        a: 'Yes! We repair PlayStation, Xbox, and Nintendo consoles. Common repairs include HDMI port replacement, overheating fixes, disc drive repairs, and controller issues.',
+      },
+      {
+        q: 'Do you repair Apple Mac computers?',
+        a: 'Absolutely. We service MacBooks, iMacs, Mac Minis, and Mac Pros — including logic board repairs, screen replacements, battery swaps, and software troubleshooting.',
+      },
+      {
+        q: 'What is fine soldering?',
+        a: 'Fine soldering (micro-soldering) is precision work on tiny components like USB-C ports, GPU chips, capacitors, and connectors on motherboards. Our technicians use specialist equipment for this delicate work.',
+      },
+      {
+        q: 'Do you install CCTV systems?',
+        a: 'Yes, we design, install, and maintain CCTV systems for homes and businesses. This includes IP cameras, DVR/NVR setup, remote viewing on your phone, and integration with existing security systems.',
+      },
+      {
+        q: 'Can you set up networking for my business?',
+        a: 'We provide full network solutions — structured cabling, Wi-Fi design, router and switch configuration, VPN setup, and enterprise-grade networking for offices and commercial premises.',
+      },
+      {
+        q: 'Do you offer remote support?',
+        a: 'Yes, we offer secure remote support nationwide. Our technicians can connect to your computer remotely to diagnose and fix software issues, install updates, and more.',
+      },
+      {
+        q: 'Do you do on-site callouts?',
+        a: 'Yes. Our technicians provide on-site support across the KZN South Coast for installations, network setups, CCTV work, server maintenance, and troubleshooting.',
+      },
+    ],
+  },
+  {
+    category: 'Software & Licensing',
+    items: [
+      {
+        q: 'Are you an authorised software reseller?',
+        a: 'Yes, we are a certified reseller for Adobe products (Acrobat, Photoshop, Creative Cloud), Microsoft (Windows, Office, Microsoft 365), and antivirus software (Norton, McAfee, Kaspersky, Bitdefender, Avast).',
+      },
+      {
+        q: 'Can you help with virus removal?',
+        a: 'Yes. We provide thorough virus and malware removal, followed by security software installation and system hardening to prevent future infections.',
+      },
+    ],
+  },
   {
     category: 'Orders & Shipping',
     items: [
@@ -29,7 +79,7 @@ const faqs = [
       },
       {
         q: 'What payment methods do you accept?',
-        a: 'We accept credit cards, debit cards, and EFT payments. All transactions are processed through secure, PCI-compliant payment gateways.',
+        a: 'We accept credit cards, debit cards, EFT, and cash payments at our Ramsgate shop. All online transactions are processed through secure, PCI-compliant payment gateways.',
       },
     ],
   },
@@ -51,23 +101,6 @@ const faqs = [
     ],
   },
   {
-    category: 'Services & Support',
-    items: [
-      {
-        q: 'Do you offer on-site IT support?',
-        a: 'Yes, we provide on-site IT support in the KwaZulu-Natal South Coast area. Remote support is available nationwide.',
-      },
-      {
-        q: 'Can you build a custom PC for me?',
-        a: "Absolutely! Tell us your requirements and budget, and we'll design and build a system tailored to your needs. Contact us for a free quote.",
-      },
-      {
-        q: 'Do you service businesses?',
-        a: 'Yes, we offer SLA-based IT support contracts, network infrastructure, server management, and cloud solutions for businesses of all sizes.',
-      },
-    ],
-  },
-  {
     category: 'Account & Security',
     items: [
       {
@@ -78,17 +111,39 @@ const faqs = [
         q: 'Is my personal information safe?',
         a: 'Yes. We comply with POPIA (Protection of Personal Information Act) and use industry-standard encryption to protect your data. Read our Privacy Policy for details.',
       },
-      {
-        q: 'I forgot my password. What do I do?',
-        a: 'Click "Forgot password?" on the login page. We\'ll send a password reset link to your registered email address.',
-      },
     ],
   },
 ];
 
+// Flatten all FAQ items for JSON-LD
+const allFaqItems = faqs.flatMap((section) => section.items);
+
+function FaqJsonLd() {
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: allFaqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+    />
+  );
+}
+
 export default function FAQPage() {
   return (
     <div>
+      <FaqJsonLd />
       {/* Hero */}
       <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
