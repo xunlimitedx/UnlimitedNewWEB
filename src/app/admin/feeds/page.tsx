@@ -20,6 +20,7 @@ import {
   Layers,
   Search,
   X,
+  Link2,
 } from 'lucide-react';
 
 interface FeedProduct {
@@ -82,6 +83,7 @@ interface SyncSettings {
   excludeOutOfStock: boolean;
   excludeZeroPrice: boolean;
   selectedCategories: string[];
+  feedUrl: string;
 }
 
 const SUPPLIERS = [
@@ -123,6 +125,7 @@ export default function DataFeedsPage() {
       excludeOutOfStock: true,
       excludeZeroPrice: true,
       selectedCategories: [],
+      feedUrl: '',
     },
     esquire: {
       markupType: 'percentage',
@@ -130,6 +133,7 @@ export default function DataFeedsPage() {
       excludeOutOfStock: true,
       excludeZeroPrice: true,
       selectedCategories: [],
+      feedUrl: '',
     },
   });
 
@@ -169,6 +173,7 @@ export default function DataFeedsPage() {
               excludeOutOfStock: doc.excludeOutOfStock !== false,
               excludeZeroPrice: doc.excludeZeroPrice !== false,
               selectedCategories: (doc.selectedCategories as string[]) || [],
+              feedUrl: (doc.feedUrl as string) || '',
             };
           }
         });
@@ -182,13 +187,22 @@ export default function DataFeedsPage() {
   }, []);
 
   const fetchFeed = async (supplier: string) => {
+    const feedUrl = settings[supplier]?.feedUrl;
+    if (!feedUrl) {
+      toast.error('Please enter a feed URL first');
+      return;
+    }
     setLoading((prev) => ({ ...prev, [supplier]: true }));
     try {
-      const response = await fetch(`/api/feeds/${supplier}`);
+      const response = await fetch('/api/feeds/fetch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ feedUrl, format: supplier }),
+      });
       const data = await response.json();
       if (data.success) {
         setFeedInfo((prev) => ({ ...prev, [supplier]: data.data }));
-        toast.success(`${supplier === 'uboss' ? 'Uboss' : 'Esquire'} feed loaded: ${data.data.totalItems} products`);
+        toast.success(`Feed loaded: ${data.data.totalItems} products`);
       } else {
         toast.error(data.error || 'Failed to fetch feed');
       }
@@ -209,6 +223,7 @@ export default function DataFeedsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           supplier,
+          feedUrl: s.feedUrl,
           markupType: s.markupType,
           markupValue: s.markupValue,
           excludeOutOfStock: s.excludeOutOfStock,
@@ -241,6 +256,7 @@ export default function DataFeedsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           supplier,
+          feedUrl: s.feedUrl,
           markupType: s.markupType,
           markupValue: s.markupValue,
           excludeOutOfStock: s.excludeOutOfStock,
@@ -447,7 +463,6 @@ export default function DataFeedsPage() {
                     size="sm"
                     variant={isActive ? 'secondary' : 'default'}
                     onClick={() => {
-                      if (!info) fetchFeed(supplier.id);
                       setActiveSupplier(isActive ? null : supplier.id);
                       setShowPreview(false);
                       setSyncResult(null);
@@ -481,6 +496,33 @@ export default function DataFeedsPage() {
       {/* Configuration Panel */}
       {activeSupplier && currentSettings && (
         <div className="space-y-4">
+          {/* Feed URL */}
+          <Card>
+            <CardContent className="p-5">
+              <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-4">
+                <Link2 className="w-4 h-4" />
+                Feed URL
+              </h3>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">
+                  Data Feed URL for {SUPPLIERS.find((s) => s.id === activeSupplier)?.name}
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://example.com/feed.xml"
+                  value={currentSettings.feedUrl}
+                  onChange={(e) =>
+                    updateSetting(activeSupplier, 'feedUrl', e.target.value)
+                  }
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+                <p className="text-[10px] text-gray-400 mt-1">
+                  Enter the full URL to the supplier&apos;s product data feed
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Pricing & Markup */}
           <Card>
             <CardContent className="p-5">

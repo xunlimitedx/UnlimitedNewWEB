@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { FeedProduct } from '@/types';
 
-function getUbossFeedUrl(): string {
-  const token = process.env.UBOSS_API_TOKEN;
-  if (!token) throw new Error('UBOSS_API_TOKEN not configured');
-  return `https://app.uboss.co.za/api/inventory/feed?token=${encodeURIComponent(token)}&format=json`;
-}
-
-function getEsquireFeedUrl(): string {
-  const user = process.env.ESQUIRE_API_USER;
-  const pass = process.env.ESQUIRE_API_PASS;
-  if (!user || !pass) throw new Error('Esquire API credentials not configured');
-  return `https://api.esquire.co.za/api/DataFeed?u=${encodeURIComponent(user)}&p=${encodeURIComponent(pass)}&t=json&m=0&o=ascending&r=RoundNone&rm=0&min=0`;
+// Validate that the URL is a valid HTTP(S) URL
+function isValidFeedUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+  } catch {
+    return false;
+  }
 }
 
 function generateSlug(name: string): string {
@@ -33,12 +30,13 @@ function applyMarkup(
   return Math.round((costPrice + markupValue) * 100) / 100;
 }
 
-async function fetchFeedProducts(supplier: string): Promise<{ products: FeedProduct[]; categories: string[] }> {
+async function fetchFeedProducts(supplier: string, feedUrl: string): Promise<{ products: FeedProduct[]; categories: string[] }> {
+  const response = await fetch(feedUrl, {
+    headers: { Accept: 'application/json' },
+  });
+  if (!response.ok) throw new Error(`Feed API returned ${response.status}`);
+
   if (supplier === 'uboss') {
-    const response = await fetch(getUbossFeedUrl(), {
-      headers: { Accept: 'application/json' },
-    });
-    if (!response.ok) throw new Error(`Uboss API returned ${response.status}`);
     const data = await response.json();
     const items = data.items || [];
     const products: FeedProduct[] = items.map((item: Record<string, unknown>) => ({
@@ -59,10 +57,6 @@ async function fetchFeedProducts(supplier: string): Promise<{ products: FeedProd
     const categories = Array.from(new Set(products.map((p) => p.category))).sort();
     return { products, categories };
   } else {
-    const response = await fetch(getEsquireFeedUrl(), {
-      headers: { Accept: 'application/json' },
-    });
-    if (!response.ok) throw new Error(`Esquire API returned ${response.status}`);
     const items: Record<string, unknown>[] = await response.json();
     const products: FeedProduct[] = items.map((item) => {
       const inStock = ((item.availableQty as string) || '').toLowerCase() === 'yes';
@@ -91,6 +85,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       supplier,
+      feedUrl,
       markupType = 'percentage',
       markupValue = 0,
       excludeOutOfStock = true,
@@ -106,8 +101,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!feedUrl || !isValidFeedUrl(feedUrl)) {
+      return NextResponse.json(
+        { success: false, error: 'A valid feed URL is required' },
+        { status: 400 }
+      );
+    }
+
     // Fetch feed data directly from supplier API
-    const feedData = await fetchFeedProducts(supplier);
+    const feedData = await fetchFeedProducts(supplier, feedUrl);
     let products: FeedProduct[] = feedData.products;
 
     // Apply filters
