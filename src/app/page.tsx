@@ -177,16 +177,13 @@ export default function HomePage() {
               </div>
             </div>
             <div className="hidden lg:block relative">
-              <div className="relative w-full h-[500px] rounded-2xl overflow-hidden shadow-2xl">
-                <Image
-                  src="https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=800&q=80"
-                  alt="Modern computer hardware setup"
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 1024px) 0vw, 50vw"
+              <div className="relative w-full h-[500px] flex items-center justify-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/hero-tech.svg"
+                  alt="Technology workstation illustration"
+                  className="w-full h-full object-contain drop-shadow-2xl"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary-900/40 to-transparent" />
               </div>
             </div>
           </div>

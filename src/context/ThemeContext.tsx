@@ -78,7 +78,15 @@ const ThemeContext = createContext<ThemeContextType>({
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<ThemeSettings>(defaultTheme);
+  const [theme, setTheme] = useState<ThemeSettings>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('theme-settings');
+        if (cached) return { ...defaultTheme, ...JSON.parse(cached) };
+      } catch { /* use default */ }
+    }
+    return defaultTheme;
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -86,7 +94,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       try {
         const data = await getDocument('settings', 'theme');
         if (data) {
-          setTheme({ ...defaultTheme, ...(data as unknown as ThemeSettings) });
+          const merged = { ...defaultTheme, ...(data as unknown as ThemeSettings) };
+          setTheme(merged);
+          localStorage.setItem('theme-settings', JSON.stringify(merged));
         }
       } catch (err) {
         console.error('Failed to load theme:', err);

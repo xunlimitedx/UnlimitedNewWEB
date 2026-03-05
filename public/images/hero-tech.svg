@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Monitor -->
+  <rect x="200" y="80" width="400" height="280" rx="16" fill="#1e293b" stroke="#334155" stroke-width="3"/>
+  <rect x="216" y="96" width="368" height="240" rx="8" fill="#0f172a"/>
+  <!-- Screen content - code lines -->
+  <rect x="240" y="120" width="120" height="8" rx="4" fill="#38bdf8" opacity="0.8"/>
+  <rect x="240" y="140" width="180" height="8" rx="4" fill="#a78bfa" opacity="0.6"/>
+  <rect x="260" y="160" width="140" height="8" rx="4" fill="#34d399" opacity="0.7"/>
+  <rect x="260" y="180" width="200" height="8" rx="4" fill="#f472b6" opacity="0.5"/>
+  <rect x="260" y="200" width="100" height="8" rx="4" fill="#38bdf8" opacity="0.6"/>
+  <rect x="240" y="220" width="160" height="8" rx="4" fill="#fbbf24" opacity="0.5"/>
+  <rect x="240" y="240" width="80" height="8" rx="4" fill="#a78bfa" opacity="0.7"/>
+  <rect x="260" y="260" width="200" height="8" rx="4" fill="#34d399" opacity="0.6"/>
+  <rect x="240" y="280" width="130" height="8" rx="4" fill="#38bdf8" opacity="0.5"/>
+  <!-- Terminal section on right -->
+  <rect x="460" y="120" width="108" height="180" rx="6" fill="#0c0a09" stroke="#334155" stroke-width="1"/>
+  <rect x="470" y="136" width="60" height="6" rx="3" fill="#22c55e" opacity="0.8"/>
+  <rect x="470" y="150" width="80" height="6" rx="3" fill="#22c55e" opacity="0.5"/>
+  <rect x="470" y="164" width="50" height="6" rx="3" fill="#22c55e" opacity="0.6"/>
+  <rect x="470" y="178" width="70" height="6" rx="3" fill="#22c55e" opacity="0.4"/>
+  <rect x="470" y="192" width="40" height="6" rx="3" fill="#22c55e" opacity="0.7"/>
+  <!-- Monitor webcam dot -->
+  <circle cx="400" cy="88" r="3" fill="#475569"/>
+  <!-- Monitor stand -->
+  <rect x="360" y="360" width="80" height="20" rx="4" fill="#1e293b"/>
+  <rect x="340" y="376" width="120" height="10" rx="5" fill="#334155"/>
+  <!-- Keyboard -->
+  <rect x="260" y="420" width="280" height="60" rx="10" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <g fill="#475569" opacity="0.8">
+    <rect x="278" y="432" width="20" height="12" rx="3"/>
+    <rect x="304" y="432" width="20" height="12" rx="3"/>
+    <rect x="330" y="432" width="20" height="12" rx="3"/>
+    <rect x="356" y="432" width="20" height="12" rx="3"/>
+    <rect x="382" y="432" width="20" height="12" rx="3"/>
+    <rect x="408" y="432" width="20" height="12" rx="3"/>
+    <rect x="434" y="432" width="20" height="12" rx="3"/>
+    <rect x="460" y="432" width="20" height="12" rx="3"/>
+    <rect x="486" y="432" width="20" height="12" rx="3"/>
+    <rect x="290" y="452" width="20" height="12" rx="3"/>
+    <rect x="316" y="452" width="20" height="12" rx="3"/>
+    <rect x="342" y="452" width="20" height="12" rx="3"/>
+    <rect x="368" y="452" width="60" height="12" rx="3"/>
+    <rect x="434" y="452" width="20" height="12" rx="3"/>
+    <rect x="460" y="452" width="20" height="12" rx="3"/>
+    <rect x="486" y="452" width="20" height="12" rx="3"/>
+  </g>
+  <!-- Mouse -->
+  <rect x="580" y="430" width="40" height="55" rx="18" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <line x1="600" y1="435" x2="600" y2="452" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+  <!-- Floating tech elements -->
+  <!-- Gear icon -->
+  <g transform="translate(120,140)" opacity="0.3">
+    <circle cx="0" cy="0" r="20" stroke="white" stroke-width="3" fill="none"/>
+    <circle cx="0" cy="0" r="8" stroke="white" stroke-width="2" fill="none"/>
+    <line x1="0" y1="-24" x2="0" y2="-16" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    <line x1="0" y1="16" x2="0" y2="24" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    <line x1="-24" y1="0" x2="-16" y2="0" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    <line x1="16" y1="0" x2="24" y2="0" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <!-- Cloud icon -->
+  <g transform="translate(680,120)" opacity="0.25">
+    <ellipse cx="0" cy="0" rx="30" ry="18" fill="white"/>
+    <ellipse cx="-18" cy="6" rx="18" ry="14" fill="white"/>
+    <ellipse cx="16" cy="4" rx="20" ry="16" fill="white"/>
+  </g>
+  <!-- Circuit lines -->
+  <g stroke="white" stroke-width="1.5" opacity="0.15">
+    <line x1="100" y1="400" x2="180" y2="400"/>
+    <line x1="180" y1="400" x2="180" y2="350"/>
+    <circle cx="180" cy="350" r="3" fill="white"/>
+    <line x1="620" y1="200" x2="700" y2="200"/>
+    <line x1="700" y1="200" x2="700" y2="260"/>
+    <circle cx="700" cy="260" r="3" fill="white"/>
+    <line x1="660" y1="380" x2="720" y2="380"/>
+    <line x1="720" y1="380" x2="720" y2="340"/>
+    <circle cx="720" cy="340" r="3" fill="white"/>
+    <line x1="80" y1="280" x2="150" y2="280"/>
+    <circle cx="150" cy="280" r="3" fill="white"/>
+  </g>
+  <!-- Wifi signal -->
+  <g transform="translate(700,100)" stroke="white" stroke-width="2" fill="none" opacity="0.2">
+    <path d="M-12,8 Q0,-4 12,8"/>
+    <path d="M-20,4 Q0,-14 20,4"/>
+    <path d="M-28,0 Q0,-24 28,0"/>
+  </g>
+  <!-- Binary digits -->
+  <g fill="white" opacity="0.12" font-family="monospace" font-size="14">
+    <text x="90" y="200">01</text>
+    <text x="100" y="220">10</text>
+    <text x="680" y="440">11</text>
+    <text x="670" y="460">01</text>
+    <text x="110" y="480">10</text>
+  </g>
+  <!-- Chip/CPU -->
+  <g transform="translate(130,430)" opacity="0.2">
+    <rect x="-16" y="-16" width="32" height="32" rx="4" stroke="white" stroke-width="2" fill="none"/>
+    <line x1="-8" y1="-20" x2="-8" y2="-16" stroke="white" stroke-width="2"/>
+    <line x1="0" y1="-20" x2="0" y2="-16" stroke="white" stroke-width="2"/>
+    <line x1="8" y1="-20" x2="8" y2="-16" stroke="white" stroke-width="2"/>
+    <line x1="-8" y1="16" x2="-8" y2="20" stroke="white" stroke-width="2"/>
+    <line x1="0" y1="16" x2="0" y2="20" stroke="white" stroke-width="2"/>
+    <line x1="8" y1="16" x2="8" y2="20" stroke="white" stroke-width="2"/>
+  </g>
+</svg>
