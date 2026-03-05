@@ -36,10 +36,13 @@ async function fetchFeedProducts(supplier: string, feedUrl: string): Promise<{ p
   });
   if (!response.ok) throw new Error(`Feed API returned ${response.status}`);
 
+  const rawData = await response.json();
+
+  let products: FeedProduct[];
+
   if (supplier === 'uboss') {
-    const data = await response.json();
-    const items = data.items || [];
-    const products: FeedProduct[] = items.map((item: Record<string, unknown>) => ({
+    const items = rawData.items || [];
+    products = items.map((item: Record<string, unknown>) => ({
       sku: (item.sku as string) || '',
       name: (item.name as string) || '',
       description: (item.description as string) || '',
@@ -54,11 +57,9 @@ async function fetchFeedProducts(supplier: string, feedUrl: string): Promise<{ p
       barcode: (item.barcode as string) || '',
       lastUpdated: (item.last_updated as string) || '',
     }));
-    const categories = Array.from(new Set(products.map((p) => p.category))).sort();
-    return { products, categories };
-  } else {
-    const items: Record<string, unknown>[] = await response.json();
-    const products: FeedProduct[] = items.map((item) => {
+  } else if (supplier === 'esquire') {
+    const items: Record<string, unknown>[] = Array.isArray(rawData) ? rawData : [];
+    products = items.map((item) => {
       const inStock = ((item.availableQty as string) || '').toLowerCase() === 'yes';
       return {
         sku: (item.productCode as string) || '',
@@ -75,9 +76,30 @@ async function fetchFeedProducts(supplier: string, feedUrl: string): Promise<{ p
         lastUpdated: new Date().toISOString(),
       };
     });
-    const categories = Array.from(new Set(products.map((p) => p.category).filter(Boolean))).sort();
-    return { products, categories };
+  } else {
+    // Generic format
+    const items: Record<string, unknown>[] = Array.isArray(rawData)
+      ? rawData
+      : (rawData.items || rawData.products || rawData.data || []);
+    const supplierName = supplier.charAt(0).toUpperCase() + supplier.slice(1);
+    products = items.map((item) => ({
+      sku: (item.sku as string) || (item.productCode as string) || (item.id as string) || '',
+      name: (item.name as string) || (item.productName as string) || (item.title as string) || '',
+      description: (item.description as string) || (item.productSummary as string) || '',
+      category: (item.category as string) || 'Uncategorized',
+      price: Number(item.price) || 0,
+      costPrice: Number(item.costPrice || item.cost || item.price) || 0,
+      stock: item.stock != null ? Number(item.stock) : (item.quantity != null ? Number(item.quantity) : null),
+      inStock: item.inStock != null ? Boolean(item.inStock) : (Number(item.stock || item.quantity || 0) > 0),
+      isActive: item.isActive != null ? Boolean(item.isActive) : true,
+      imageUrl: (item.imageUrl as string) || (item.image as string) || (item.image_url as string) || '',
+      supplier: supplierName,
+      lastUpdated: new Date().toISOString(),
+    }));
   }
+
+  const categories = Array.from(new Set(products.map((p) => p.category).filter(Boolean))).sort();
+  return { products, categories };
 }
 
 export async function POST(request: NextRequest) {
@@ -94,9 +116,9 @@ export async function POST(request: NextRequest) {
       mode = 'preview',
     } = body;
 
-    if (!supplier || !['uboss', 'esquire'].includes(supplier)) {
+    if (!supplier || typeof supplier !== 'string') {
       return NextResponse.json(
-        { success: false, error: 'Invalid supplier' },
+        { success: false, error: 'Supplier is required' },
         { status: 400 }
       );
     }

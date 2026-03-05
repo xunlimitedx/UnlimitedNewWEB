@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, Button, Badge, Spinner } from '@/components/ui';
-import { addDocument, getCollection, setDocument } from '@/lib/firebase';
+import { addDocument, getCollection, setDocument, deleteDocument } from '@/lib/firebase';
 import { query, where } from '@/lib/firebase';
 import toast from 'react-hot-toast';
 import {
@@ -21,6 +21,9 @@ import {
   Search,
   X,
   Link2,
+  Plus,
+  Trash2,
+  RotateCcw,
 } from 'lucide-react';
 
 interface FeedProduct {
@@ -84,21 +87,24 @@ interface SyncSettings {
   excludeZeroPrice: boolean;
   selectedCategories: string[];
   feedUrl: string;
+  lastSync?: string;
+  lastSyncCount?: number;
+  lastStockSync?: string;
+  lastStockSyncUpdated?: number;
+  lastStockSyncDeactivated?: number;
 }
 
-const SUPPLIERS = [
-  {
-    id: 'uboss',
-    name: 'Uboss',
-    description: 'IT components, networking, storage & peripherals',
-    color: 'blue',
-  },
-  {
-    id: 'esquire',
-    name: 'Esquire',
-    description: 'Full range IT, office, household & accessories',
-    color: 'purple',
-  },
+interface SupplierConfig {
+  id: string;
+  name: string;
+  description: string;
+  format: string; // 'uboss' | 'esquire' | 'generic'
+}
+
+const DEFAULT_FORMATS = [
+  { value: 'uboss', label: 'Uboss Format' },
+  { value: 'esquire', label: 'Esquire Format' },
+  { value: 'generic', label: 'Generic JSON' },
 ];
 
 export default function DataFeedsPage() {
@@ -117,25 +123,12 @@ export default function DataFeedsPage() {
   const [categorySearch, setCategorySearch] = useState('');
   const [existingSkus, setExistingSkus] = useState<Set<string>>(new Set());
   const [loadingSkus, setLoadingSkus] = useState(false);
+  const [suppliers, setSuppliers] = useState<SupplierConfig[]>([]);
+  const [showAddSupplier, setShowAddSupplier] = useState(false);
+  const [newSupplier, setNewSupplier] = useState({ name: '', description: '', format: 'generic' });
+  const [stockSyncing, setStockSyncing] = useState<Record<string, boolean>>({});
 
-  const [settings, setSettings] = useState<Record<string, SyncSettings>>({
-    uboss: {
-      markupType: 'percentage',
-      markupValue: 20,
-      excludeOutOfStock: true,
-      excludeZeroPrice: true,
-      selectedCategories: [],
-      feedUrl: '',
-    },
-    esquire: {
-      markupType: 'percentage',
-      markupValue: 20,
-      excludeOutOfStock: true,
-      excludeZeroPrice: true,
-      selectedCategories: [],
-      feedUrl: '',
-    },
-  });
+  const [settings, setSettings] = useState<Record<string, SyncSettings>>({});
 
   // Load existing product SKUs to detect duplicates
   const loadExistingSkus = useCallback(async () => {
@@ -158,32 +151,65 @@ export default function DataFeedsPage() {
     loadExistingSkus();
   }, [loadExistingSkus]);
 
-  // Load saved feed settings from Firestore
+  // Load saved feed settings and suppliers from Firestore
   useEffect(() => {
     const loadSettings = async () => {
       try {
         const docs = await getCollection('feedSettings');
-        const savedSettings: Record<string, SyncSettings> = { ...settings };
+        const savedSettings: Record<string, SyncSettings> = {};
+        const loadedSuppliers: SupplierConfig[] = [];
         docs.forEach((doc: Record<string, unknown>) => {
-          const supplier = doc.id as string;
-          if (savedSettings[supplier]) {
-            savedSettings[supplier] = {
-              markupType: (doc.markupType as 'percentage' | 'fixed') || 'percentage',
-              markupValue: (doc.markupValue as number) || 20,
-              excludeOutOfStock: doc.excludeOutOfStock !== false,
-              excludeZeroPrice: doc.excludeZeroPrice !== false,
-              selectedCategories: (doc.selectedCategories as string[]) || [],
-              feedUrl: (doc.feedUrl as string) || '',
-            };
-          }
+          const id = doc.id as string;
+          savedSettings[id] = {
+            markupType: (doc.markupType as 'percentage' | 'fixed') || 'percentage',
+            markupValue: (doc.markupValue as number) || 20,
+            excludeOutOfStock: doc.excludeOutOfStock !== false,
+            excludeZeroPrice: doc.excludeZeroPrice !== false,
+            selectedCategories: (doc.selectedCategories as string[]) || [],
+            feedUrl: (doc.feedUrl as string) || '',
+            lastSync: (doc.lastSync as string) || undefined,
+            lastSyncCount: (doc.lastSyncCount as number) || undefined,
+            lastStockSync: (doc.lastStockSync as string) || undefined,
+            lastStockSyncUpdated: (doc.lastStockSyncUpdated as number) || undefined,
+            lastStockSyncDeactivated: (doc.lastStockSyncDeactivated as number) || undefined,
+          };
+          loadedSuppliers.push({
+            id,
+            name: (doc.supplierName as string) || id.charAt(0).toUpperCase() + id.slice(1),
+            description: (doc.supplierDescription as string) || '',
+            format: (doc.format as string) || id,
+          });
         });
-        setSettings(savedSettings);
+        if (loadedSuppliers.length > 0) {
+          setSuppliers(loadedSuppliers);
+          setSettings(savedSettings);
+        } else {
+          // Default suppliers for first-time setup
+          const defaults: SupplierConfig[] = [
+            { id: 'uboss', name: 'Uboss', description: 'IT components, networking, storage & peripherals', format: 'uboss' },
+            { id: 'esquire', name: 'Esquire', description: 'Full range IT, office, household & accessories', format: 'esquire' },
+          ];
+          setSuppliers(defaults);
+          const defaultSettings: Record<string, SyncSettings> = {};
+          defaults.forEach((s) => {
+            defaultSettings[s.id] = {
+              markupType: 'percentage', markupValue: 20,
+              excludeOutOfStock: true, excludeZeroPrice: true,
+              selectedCategories: [], feedUrl: '',
+            };
+          });
+          setSettings(defaultSettings);
+        }
       } catch {
         // Use defaults
+        const defaults: SupplierConfig[] = [
+          { id: 'uboss', name: 'Uboss', description: 'IT components, networking, storage & peripherals', format: 'uboss' },
+          { id: 'esquire', name: 'Esquire', description: 'Full range IT, office, household & accessories', format: 'esquire' },
+        ];
+        setSuppliers(defaults);
       }
     };
     loadSettings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchFeed = async (supplier: string) => {
@@ -192,12 +218,13 @@ export default function DataFeedsPage() {
       toast.error('Please enter a feed URL first');
       return;
     }
+    const format = suppliers.find((s) => s.id === supplier)?.format || supplier;
     setLoading((prev) => ({ ...prev, [supplier]: true }));
     try {
       const response = await fetch('/api/feeds/fetch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ feedUrl, format: supplier }),
+        body: JSON.stringify({ feedUrl, format, supplierName: suppliers.find((s) => s.id === supplier)?.name }),
       });
       const data = await response.json();
       if (data.success) {
@@ -361,7 +388,13 @@ export default function DataFeedsPage() {
 
   const saveSettings = async (supplier: string) => {
     try {
-      await setDocument('feedSettings', supplier, settings[supplier]);
+      const supplierConfig = suppliers.find((s) => s.id === supplier);
+      await setDocument('feedSettings', supplier, {
+        ...settings[supplier],
+        supplierName: supplierConfig?.name || supplier,
+        supplierDescription: supplierConfig?.description || '',
+        format: supplierConfig?.format || supplier,
+      });
       toast.success('Settings saved');
     } catch {
       toast.error('Failed to save settings');
@@ -387,6 +420,135 @@ export default function DataFeedsPage() {
     updateSetting(supplier, 'selectedCategories', updated);
   };
 
+  const addSupplier = async () => {
+    const id = newSupplier.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    if (!id || !newSupplier.name) {
+      toast.error('Please enter a supplier name');
+      return;
+    }
+    if (suppliers.some((s) => s.id === id)) {
+      toast.error('A supplier with this name already exists');
+      return;
+    }
+    const config: SupplierConfig = {
+      id,
+      name: newSupplier.name,
+      description: newSupplier.description,
+      format: newSupplier.format,
+    };
+    const defaultSettings: SyncSettings = {
+      markupType: 'percentage',
+      markupValue: 20,
+      excludeOutOfStock: true,
+      excludeZeroPrice: true,
+      selectedCategories: [],
+      feedUrl: '',
+    };
+    try {
+      await setDocument('feedSettings', id, {
+        ...defaultSettings,
+        supplierName: config.name,
+        supplierDescription: config.description,
+        format: config.format,
+      });
+      setSuppliers((prev) => [...prev, config]);
+      setSettings((prev) => ({ ...prev, [id]: defaultSettings }));
+      setNewSupplier({ name: '', description: '', format: 'generic' });
+      setShowAddSupplier(false);
+      toast.success(`${config.name} added`);
+    } catch {
+      toast.error('Failed to add supplier');
+    }
+  };
+
+  const deleteSupplier = async (id: string) => {
+    if (!confirm(`Delete ${suppliers.find((s) => s.id === id)?.name}? This won't remove already-imported products.`)) return;
+    try {
+      await deleteDocument('feedSettings', id);
+      setSuppliers((prev) => prev.filter((s) => s.id !== id));
+      setSettings((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
+      if (activeSupplier === id) setActiveSupplier(null);
+      toast.success('Supplier removed');
+    } catch {
+      toast.error('Failed to remove supplier');
+    }
+  };
+
+  const syncStock = async (supplierId: string) => {
+    setStockSyncing((prev) => ({ ...prev, [supplierId]: true }));
+    try {
+      const response = await fetch('/api/feeds/stock-sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ supplier: supplierId }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        const result = data.data.results[supplierId];
+        toast.success(
+          `Stock synced: ${result.updated} updated, ${result.deactivated} deactivated`
+        );
+        // Refresh settings to get updated sync timestamps
+        const doc = await getCollection('feedSettings');
+        const updated = doc.find((d: Record<string, unknown>) => d.id === supplierId) as Record<string, unknown> | undefined;
+        if (updated) {
+          setSettings((prev) => ({
+            ...prev,
+            [supplierId]: {
+              ...prev[supplierId],
+              lastStockSync: updated.lastStockSync as string,
+              lastStockSyncUpdated: updated.lastStockSyncUpdated as number,
+              lastStockSyncDeactivated: updated.lastStockSyncDeactivated as number,
+            },
+          }));
+        }
+      } else {
+        toast.error(data.error || 'Stock sync failed');
+      }
+    } catch {
+      toast.error('Stock sync request failed');
+    } finally {
+      setStockSyncing((prev) => ({ ...prev, [supplierId]: false }));
+    }
+  };
+
+  const syncAllStock = async () => {
+    setStockSyncing({ _all: true });
+    try {
+      const response = await fetch('/api/feeds/stock-sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      const data = await response.json();
+      if (data.success) {
+        const results = data.data.results;
+        let totalUpdated = 0;
+        let totalDeactivated = 0;
+        for (const key of Object.keys(results)) {
+          totalUpdated += results[key].updated;
+          totalDeactivated += results[key].deactivated;
+        }
+        toast.success(
+          `All feeds synced: ${totalUpdated} updated, ${totalDeactivated} deactivated`
+        );
+      } else {
+        toast.error(data.error || 'Stock sync failed');
+      }
+    } catch {
+      toast.error('Stock sync request failed');
+    } finally {
+      setStockSyncing({});
+    }
+  };
+
   const filteredCategories = (categories: string[]) => {
     if (!categorySearch) return categories;
     return categories.filter((c) =>
@@ -407,24 +569,90 @@ export default function DataFeedsPage() {
         <p className="text-sm text-gray-500 mt-1">
           Import and sync products from your supplier data feeds
         </p>
+        <div className="flex flex-wrap items-center gap-3 mt-3">
+          <Button size="sm" variant="outline" onClick={() => setShowAddSupplier(true)}>
+            <Plus className="w-3.5 h-3.5" /> Add Supplier
+          </Button>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={syncAllStock}
+            disabled={!!stockSyncing._all || suppliers.length === 0}
+          >
+            <RotateCcw className={`w-3.5 h-3.5 ${stockSyncing._all ? 'animate-spin' : ''}`} />
+            {stockSyncing._all ? 'Syncing All...' : 'Sync All Stock'}
+          </Button>
+        </div>
         {loadingSkus && (
-          <p className="text-xs text-blue-500 mt-1 flex items-center gap-1">
+          <p className="text-xs text-blue-500 mt-2 flex items-center gap-1">
             <Spinner size="sm" /> Loading existing products...
           </p>
         )}
         {!loadingSkus && existingSkus.size > 0 && (
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-gray-400 mt-2">
             {existingSkus.size} existing product SKUs loaded
           </p>
         )}
       </div>
 
+      {/* Add Supplier Modal */}
+      {showAddSupplier && (
+        <Card className="mb-6">
+          <CardContent className="p-5">
+            <h3 className="font-semibold text-gray-900 mb-4">Add New Supplier</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Mustek"
+                  value={newSupplier.name}
+                  onChange={(e) => setNewSupplier((p) => ({ ...p, name: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Description</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Computer hardware distributor"
+                  value={newSupplier.description}
+                  onChange={(e) => setNewSupplier((p) => ({ ...p, description: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Feed Format</label>
+                <select
+                  value={newSupplier.format}
+                  onChange={(e) => setNewSupplier((p) => ({ ...p, format: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                >
+                  {DEFAULT_FORMATS.map((f) => (
+                    <option key={f.value} value={f.value}>{f.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-2 mt-4">
+              <Button size="sm" onClick={addSupplier}>
+                <Plus className="w-3.5 h-3.5" /> Add
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => setShowAddSupplier(false)}>
+                Cancel
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Supplier Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        {SUPPLIERS.map((supplier) => {
+        {suppliers.map((supplier) => {
           const info = feedInfo[supplier.id];
           const isLoading = loading[supplier.id];
           const isActive = activeSupplier === supplier.id;
+          const s = settings[supplier.id];
 
           return (
             <Card key={supplier.id} className={isActive ? 'ring-2 ring-primary-500' : ''}>
@@ -433,6 +661,17 @@ export default function DataFeedsPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900 text-lg">{supplier.name}</h3>
                     <p className="text-xs text-gray-500 mt-0.5">{supplier.description}</p>
+                    {s?.lastStockSync && (
+                      <p className="text-[10px] text-green-600 mt-1">
+                        Last stock sync: {new Date(s.lastStockSync).toLocaleString()} 
+                        ({s.lastStockSyncUpdated ?? 0} updated, {s.lastStockSyncDeactivated ?? 0} deactivated)
+                      </p>
+                    )}
+                    {s?.lastSync && (
+                      <p className="text-[10px] text-blue-600 mt-0.5">
+                        Last import: {new Date(s.lastSync).toLocaleString()} ({s.lastSyncCount ?? 0} products)
+                      </p>
+                    )}
                   </div>
                   <Badge variant={info ? 'success' : 'default'}>
                     {info ? `${info.totalItems} items` : 'Not loaded'}
@@ -458,7 +697,7 @@ export default function DataFeedsPage() {
                   </div>
                 )}
 
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     size="sm"
                     variant={isActive ? 'secondary' : 'default'}
@@ -486,6 +725,24 @@ export default function DataFeedsPage() {
                     <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
                     Refresh
                   </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => syncStock(supplier.id)}
+                    disabled={!!stockSyncing[supplier.id] || !s?.feedUrl}
+                    title={!s?.feedUrl ? 'Configure a feed URL first' : 'Sync stock levels from feed'}
+                  >
+                    <RotateCcw className={`w-3.5 h-3.5 ${stockSyncing[supplier.id] ? 'animate-spin' : ''}`} />
+                    {stockSyncing[supplier.id] ? 'Syncing...' : 'Sync Stock'}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => deleteSupplier(supplier.id)}
+                    title="Remove supplier"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-red-500" />
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -505,7 +762,7 @@ export default function DataFeedsPage() {
               </h3>
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">
-                  Data Feed URL for {SUPPLIERS.find((s) => s.id === activeSupplier)?.name}
+                  Data Feed URL for {suppliers.find((s) => s.id === activeSupplier)?.name}
                 </label>
                 <input
                   type="url"

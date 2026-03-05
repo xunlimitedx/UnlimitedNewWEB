@@ -37,6 +37,23 @@ function transformEsquireItem(item: Record<string, unknown>): FeedProduct {
   };
 }
 
+function transformGenericItem(item: Record<string, unknown>, supplierName: string): FeedProduct {
+  return {
+    sku: (item.sku as string) || (item.productCode as string) || (item.id as string) || '',
+    name: (item.name as string) || (item.productName as string) || (item.title as string) || '',
+    description: (item.description as string) || (item.productSummary as string) || '',
+    category: (item.category as string) || 'Uncategorized',
+    price: Number(item.price) || 0,
+    costPrice: Number(item.costPrice || item.cost || item.price) || 0,
+    stock: item.stock != null ? Number(item.stock) : (item.quantity != null ? Number(item.quantity) : null),
+    inStock: item.inStock != null ? Boolean(item.inStock) : (Number(item.stock || item.quantity || 0) > 0),
+    isActive: item.isActive != null ? Boolean(item.isActive) : true,
+    imageUrl: (item.imageUrl as string) || (item.image as string) || (item.image_url as string) || '',
+    supplier: supplierName,
+    lastUpdated: new Date().toISOString(),
+  };
+}
+
 // Validate that the URL is a valid HTTP(S) URL
 function isValidFeedUrl(url: string): boolean {
   try {
@@ -66,9 +83,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!format || !['uboss', 'esquire'].includes(format)) {
+    if (!format || typeof format !== 'string') {
       return NextResponse.json(
-        { success: false, error: 'Format must be "uboss" or "esquire"' },
+        { success: false, error: 'Format is required' },
         { status: 400 }
       );
     }
@@ -87,16 +104,20 @@ export async function POST(request: NextRequest) {
     const rawData = await response.json();
 
     let products: FeedProduct[];
-    let supplierName: string;
+    const supplierName = (body.supplierName as string) || format;
 
     if (format === 'uboss') {
       const items = rawData.items || [];
       products = items.map(transformUbossItem);
-      supplierName = 'Uboss';
-    } else {
+    } else if (format === 'esquire') {
       const items: Record<string, unknown>[] = Array.isArray(rawData) ? rawData : [];
       products = items.map(transformEsquireItem);
-      supplierName = 'Esquire';
+    } else {
+      // Generic format: try to handle any JSON array or { items: [] }
+      const items: Record<string, unknown>[] = Array.isArray(rawData)
+        ? rawData
+        : (rawData.items || rawData.products || rawData.data || []);
+      products = items.map((item) => transformGenericItem(item, supplierName));
     }
 
     const categories = Array.from(
