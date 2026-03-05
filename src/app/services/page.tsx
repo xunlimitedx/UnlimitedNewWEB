@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import BreadcrumbJsonLd from '@/components/BreadcrumbJsonLd';
 import {
   Monitor,
   Wrench,
@@ -47,12 +48,14 @@ const serviceCategories = [
       {
         icon: Wrench,
         title: 'Computer Repair & Sales',
+        href: '/services/computer-repairs',
         description:
           'Hardware and software diagnostics, component replacement, virus removal, and optimisation for desktops and laptops — Dell, HP, Lenovo, ASUS, Acer, MSI, Toshiba, and Apple Mac.',
       },
       {
         icon: Gamepad2,
         title: 'Console Repair & Sales',
+        href: '/services/console-repairs',
         description:
           'Expert repair for PlayStation, Xbox, and Nintendo consoles — HDMI port replacement, overheating fixes, disc drive repairs, and refurbished console sales.',
       },
@@ -76,12 +79,14 @@ const serviceCategories = [
       {
         icon: Camera,
         title: 'CCTV Maintenance & Installations',
+        href: '/services/cctv-installation',
         description:
           'Full CCTV system design, installation, and maintenance — IP cameras, DVR/NVR setup, remote monitoring, and integration with existing security infrastructure.',
       },
       {
         icon: Wifi,
         title: 'Network Maintenance & Installations',
+        href: '/services/networking',
         description:
           'Structured cabling, Wi-Fi design, router and switch configuration, VPN setup, and enterprise networking for homes, offices, and commercial premises.',
       },
@@ -157,6 +162,10 @@ const serviceCategories = [
 export default function ServicesPage() {
   return (
     <div>
+      <BreadcrumbJsonLd items={[
+        { name: 'Home', href: '/' },
+        { name: 'Services' },
+      ]} />
       {/* Hero */}
       <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -176,18 +185,29 @@ export default function ServicesPage() {
               {category.heading}
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {category.services.map((service) => (
-                <div
-                  key={service.title}
-                  className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-primary-100 transition-all group"
-                >
-                  <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary-100 transition-colors">
-                    <service.icon className="w-6 h-6 text-primary-600" />
+              {category.services.map((service) => {
+                const Card = (
+                  <div
+                    className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-primary-100 transition-all group"
+                  >
+                    <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary-100 transition-colors">
+                      <service.icon className="w-6 h-6 text-primary-600" />
+                    </div>
+                    <h3 className="font-bold text-gray-900 mb-2">{service.title}</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
+                    {service.href && (
+                      <span className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-primary-600">
+                        Learn more <ArrowRight className="w-3 h-3" />
+                      </span>
+                    )}
                   </div>
-                  <h3 className="font-bold text-gray-900 mb-2">{service.title}</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
-                </div>
-              ))}
+                );
+                return service.href ? (
+                  <Link key={service.title} href={service.href}>{Card}</Link>
+                ) : (
+                  <div key={service.title}>{Card}</div>
+                );
+              })}
             </div>
           </div>
         </section>
