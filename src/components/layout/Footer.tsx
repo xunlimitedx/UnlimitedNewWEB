@@ -6,11 +6,9 @@ import {
   Clock,
   Mail,
   Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
   ArrowUpRight,
 } from 'lucide-react';
+import NewsletterForm from '@/components/NewsletterForm';
 
 export default function Footer() {
   return (
@@ -27,19 +25,7 @@ export default function Footer() {
                 Get the latest deals and tech news delivered to your inbox.
               </p>
             </div>
-            <form className="flex w-full md:w-auto gap-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full md:w-72 h-11 px-4 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-              />
-              <button
-                type="submit"
-                className="h-11 px-6 bg-primary-600 text-white rounded-lg font-medium text-sm hover:bg-primary-700 transition-colors whitespace-nowrap"
-              >
-                Subscribe
-              </button>
-            </form>
+            <NewsletterForm />
           </div>
         </div>
       </div>
@@ -76,33 +62,6 @@ export default function Footer() {
               >
                 <Facebook className="w-4 h-4" />
               </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-600 hover:text-white transition-all"
-                aria-label="Twitter"
-              >
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-600 hover:text-white transition-all"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary-600 hover:text-white transition-all"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
             </div>
           </div>
 
@@ -116,6 +75,7 @@ export default function Footer() {
                 { name: 'About Us', href: '/about' },
                 { name: 'Services', href: '/services' },
                 { name: 'Blog', href: '/blog' },
+                { name: 'FAQ', href: '/faq' },
                 { name: 'Contact', href: '/contact' },
                 { name: 'Terms of Service', href: '/terms' },
                 { name: 'Privacy Policy', href: '/privacy' },

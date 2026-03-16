@@ -278,6 +278,12 @@ export default function Header() {
             Blog
           </Link>
           <Link
+            href="/faq"
+            className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
+          >
+            FAQ
+          </Link>
+          <Link
             href="/contact"
             className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
           >
@@ -347,6 +353,13 @@ export default function Header() {
                 className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
               >
                 Blog
+              </Link>
+              <Link
+                href="/faq"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
+              >
+                FAQ
               </Link>
               <Link
                 href="/contact"

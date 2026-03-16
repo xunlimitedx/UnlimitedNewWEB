@@ -261,9 +261,9 @@ export default function AboutPage() {
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </Link>
-            <Link href="/products">
+            <Link href="/services">
               <Button size="lg" variant="outline">
-                Browse Products
+                View Our Services
               </Button>
             </Link>
           </div>

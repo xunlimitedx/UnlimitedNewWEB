@@ -24,12 +24,17 @@ export default function ContactPage() {
     phone: '',
     subject: '',
     message: '',
+    website: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
       toast.error('Please fill in all required fields');
+      return;
+    }
+    if (form.website) {
+      setSubmitted(true);
       return;
     }
     setLoading(true);
@@ -147,7 +152,7 @@ export default function ContactPage() {
                   </p>
                   <Button onClick={() => {
                     setSubmitted(false);
-                    setForm({ name: '', email: '', phone: '', subject: '', message: '' });
+                    setForm({ name: '', email: '', phone: '', subject: '', message: '', website: '' });
                   }} variant="outline">
                     Send Another Message
                   </Button>
@@ -218,6 +223,18 @@ export default function ContactPage() {
                       }
                       required
                     />
+                    <div className="absolute -left-[9999px]" aria-hidden="true">
+                      <input
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={form.website}
+                        onChange={(e) =>
+                          setForm({ ...form, website: e.target.value })
+                        }
+                      />
+                    </div>
                     <Button type="submit" size="lg" loading={loading} className="w-full">
                       <Send className="w-4 h-4" />
                       Send Message
@@ -230,7 +247,7 @@ export default function ContactPage() {
             {/* Map */}
             <div id="map" className="rounded-2xl overflow-hidden shadow-sm border border-gray-100 min-h-[400px]">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3468.5!2d30.3538!3d-30.8883!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1ef6b5b5b5b5b5b5%3A0x1234567890abcdef!2s202+Marine+Dr%2C+Ramsgate%2C+4285%2C+South+Africa!5e0!3m2!1sen!2sza!4v1700000000000"
+                src="https://maps.google.com/maps?q=202+Marine+Drive,+Ramsgate,+KwaZulu-Natal,+4285,+South+Africa&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0, minHeight: '500px' }}

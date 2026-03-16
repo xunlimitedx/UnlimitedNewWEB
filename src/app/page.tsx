@@ -33,7 +33,6 @@ const categories = [
     slug: 'laptops',
     icon: Laptop,
     description: 'Powerful laptops for work & play',
-    image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&q=80',
     color: 'from-blue-500 to-blue-700',
   },
   {
@@ -41,7 +40,6 @@ const categories = [
     slug: 'desktops',
     icon: Monitor,
     description: 'Custom builds & pre-built systems',
-    image: 'https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=400&q=80',
     color: 'from-purple-500 to-purple-700',
   },
   {
@@ -49,7 +47,6 @@ const categories = [
     slug: 'components',
     icon: Cpu,
     description: 'GPUs, CPUs, RAM & more',
-    image: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=400&q=80',
     color: 'from-orange-500 to-orange-700',
   },
   {
@@ -57,7 +54,6 @@ const categories = [
     slug: 'peripherals',
     icon: Mouse,
     description: 'Keyboards, mice & accessories',
-    image: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&q=80',
     color: 'from-green-500 to-green-700',
   },
 ];
@@ -67,21 +63,25 @@ const features = [
     icon: Wrench,
     title: 'Expert Repairs',
     description: 'Computer, laptop, Mac, and console repairs by experienced technicians at our Ramsgate shop.',
+    href: '/services/computer-repairs',
   },
   {
     icon: Shield,
     title: 'CCTV & Security',
     description: 'Professional CCTV installation, maintenance, and remote monitoring for homes and businesses.',
+    href: '/services/cctv-installation',
   },
   {
     icon: Headphones,
     title: 'On-site & Remote Support',
     description: 'Callout technicians for on-site repairs and installations, plus nationwide remote support.',
+    href: '/services',
   },
   {
     icon: CheckCircle,
     title: 'Certified Reseller',
     description: 'Authorised reseller for Adobe, Microsoft, Norton, McAfee, Kaspersky, and more.',
+    href: '/products',
   },
 ];
 
@@ -210,16 +210,12 @@ export default function HomePage() {
                 className="group relative overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="relative h-64">
-                  <Image
-                    src={cat.image}
-                    alt={cat.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${cat.color} opacity-75`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${cat.color} rounded-2xl`} />
+                  <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 70% 30%, rgba(255,255,255,0.3) 0%, transparent 50%)' }} />
+                  </div>
                   <div className="absolute inset-0 flex flex-col justify-end p-6">
-                    <cat.icon className="w-8 h-8 text-white mb-3" />
+                    <cat.icon className="w-12 h-12 text-white/80 mb-3 group-hover:scale-110 transition-transform" />
                     <h3 className="text-xl font-bold text-white mb-1">{cat.name}</h3>
                     <p className="text-white/80 text-sm">{cat.description}</p>
                     <div className="flex items-center gap-1 mt-3 text-white/90 text-sm font-medium group-hover:translate-x-1 transition-transform">
@@ -349,20 +345,24 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature) => (
-              <div
+              <Link
                 key={feature.title}
-                className="text-center p-6 rounded-2xl hover:bg-gray-50 transition-colors"
+                href={feature.href}
+                className="text-center p-6 rounded-2xl hover:bg-gray-50 transition-colors group"
               >
-                <div className="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition-colors">
                   <feature.icon className="w-7 h-7 text-primary-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
                   {feature.title}
                 </h3>
                 <p className="text-sm text-gray-500 leading-relaxed">
                   {feature.description}
                 </p>
-              </div>
+                <span className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-primary-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                  Learn more <ChevronRight className="w-4 h-4" />
+                </span>
+              </Link>
             ))}
           </div>
         </div>

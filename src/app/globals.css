@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Black+Ops+One&display=swap');
-
 :root {
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
@@ -36,7 +34,7 @@
 
   body {
     @apply bg-white text-gray-900 antialiased;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   html {
@@ -45,7 +43,7 @@
 
   h1, h2, h3, h4, h5, h6,
   .font-heading {
-    font-family: 'Black Ops One', cursive;
+    font-family: var(--font-heading), 'Black Ops One', cursive;
   }
 }
 
@@ -121,6 +119,21 @@
 
 .animate-slide-in-right {
   animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
 }
 
 /* Star rating */

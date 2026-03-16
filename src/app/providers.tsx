@@ -7,6 +7,8 @@ import { Toaster } from 'react-hot-toast';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CartDrawer from '@/components/layout/CartDrawer';
+import CookieConsent from '@/components/CookieConsent';
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 function AnnouncementBar() {
   const { theme } = useTheme();
@@ -44,6 +46,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <Footer />
         </div>
         <CartDrawer />
+        <CookieConsent />
+        <WhatsAppButton />
       </ThemeProvider>
     </AuthProvider>
   );

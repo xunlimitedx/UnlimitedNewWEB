@@ -1,7 +1,21 @@
 import type { Metadata } from 'next';
+import { Inter, Black_Ops_One } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
 import JsonLd from '@/components/JsonLd';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const blackOpsOne = Black_Ops_One({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-heading',
+  display: 'swap',
+});
 
 
 export const metadata: Metadata = {
@@ -55,14 +69,7 @@ export const metadata: Metadata = {
     title: 'Unlimited IT Solutions | Computer Repairs, IT Support & Sales | Ramsgate, KZN',
     description:
       'Computer repairs, laptop & Mac repairs, CCTV installations, networking, console repairs, and IT support. Physical shop in Ramsgate with on-site technicians across KZN.',
-    images: [
-      {
-        url: '/images/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Unlimited IT Solutions — Computer Repairs, IT Support & Sales in Ramsgate KZN',
-      },
-    ],
+
   },
   twitter: {
     card: 'summary_large_image',
@@ -96,7 +103,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${blackOpsOne.variable}`}>
       <head>
         <JsonLd />
         <meta name="theme-color" content="#2563eb" />
