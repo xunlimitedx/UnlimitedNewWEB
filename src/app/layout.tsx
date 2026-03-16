@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Black_Ops_One } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import { Providers } from './providers';
 import JsonLd from '@/components/JsonLd';
@@ -114,6 +115,16 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-SXVL22NN2Z"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-SXVL22NN2Z');`}
+        </Script>
         <Providers>{children}</Providers>
       </body>
     </html>
