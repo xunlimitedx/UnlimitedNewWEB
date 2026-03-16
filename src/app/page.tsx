@@ -87,21 +87,39 @@ const features = [
 
 const testimonials = [
   {
-    name: 'David M.',
-    role: 'Business Owner',
-    content: 'Unlimited IT Solutions set up our entire CCTV system and network infrastructure. Professional, reliable, and great after-sales support.',
+    name: 'Tracy Gaylord',
+    role: 'Google Review',
+    content: 'Highly recommended! The service is exemplary! They go above and beyond!',
     rating: 5,
   },
   {
-    name: 'Sarah K.',
-    role: 'Graphic Designer',
-    content: 'Had my MacBook repaired quickly and at a fair price. They also set me up with Adobe Creative Cloud. Highly recommend!',
+    name: 'Pierre van Jaarsveld',
+    role: 'Google Review',
+    content: 'Great service, very patient. Would highly suggest Unlimited IT Solutions for all your computer or IT related issues. This is how a local business is run.',
     rating: 5,
   },
   {
-    name: 'Andre V.',
-    role: 'IT Manager',
-    content: 'We use their managed IT services for our office — proactive monitoring, scheduled maintenance, the works. Outstanding technical knowledge.',
+    name: 'Edward Crankshaw',
+    role: 'Google Review',
+    content: 'Friendly service and competent staff. Pricing is good.',
+    rating: 5,
+  },
+  {
+    name: 'Anita Murray',
+    role: 'Google Review',
+    content: 'Fantastic service and very reasonable prices. I highly recommend this store!',
+    rating: 5,
+  },
+  {
+    name: 'Toby Ahlers',
+    role: 'Google Review',
+    content: 'Friendly and knowledgeable staff.',
+    rating: 5,
+  },
+  {
+    name: 'Memory Pieterse',
+    role: 'Google Review',
+    content: 'These guys are very professional and know exactly what they\u2019re doing. Their work is fast and efficient. They fixed my Dell and Packard laptops. They also offer a complete range of internet / WiFi services at competitive prices, which includes satellite.',
     rating: 5,
   },
 ];
@@ -407,7 +425,7 @@ export default function HomePage() {
               Don&apos;t just take our word for it — hear from our satisfied customers.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.name}
