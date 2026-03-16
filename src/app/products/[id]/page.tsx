@@ -28,6 +28,7 @@ import {
   Package,
   Check,
   GitCompare,
+  X,
 } from 'lucide-react';
 import type { Product, Review } from '@/types';
 import type { QueryConstraint } from 'firebase/firestore';
@@ -52,6 +53,7 @@ export default function ProductDetailPage() {
   const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description');
   const [reviewForm, setReviewForm] = useState({ rating: 5, title: '', comment: '' });
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -128,7 +130,7 @@ export default function ProductDetailPage() {
         rating: reviewForm.rating,
         title: reviewForm.title,
         comment: reviewForm.comment,
-        verified: true,
+        verified: false,
       });
       toast.success('Review submitted!');
       setReviewForm({ rating: 5, title: '', comment: '' });
@@ -208,7 +210,10 @@ export default function ProductDetailPage() {
         <div className="grid lg:grid-cols-2 gap-10 mb-12">
           {/* Images */}
           <div className="space-y-4">
-            <div className="relative w-full h-[400px] sm:h-[500px] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+            <div
+              className="relative w-full h-[400px] sm:h-[500px] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 cursor-zoom-in"
+              onClick={() => product.images?.[selectedImage] && setZoomedImage(product.images[selectedImage])}
+            >
               {product.images?.[selectedImage] ? (
                 <Image
                   src={product.images[selectedImage]}
@@ -403,7 +408,22 @@ export default function ProductDetailPage() {
             </div>
 
             {/* SKU */}
-            <p className="text-xs text-gray-400 mb-6">SKU: {product.sku}</p>
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-xs text-gray-400">SKU: {product.sku}</p>
+              <button
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({ title: product.name, url: window.location.href });
+                  } else {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast.success('Link copied to clipboard');
+                  }
+                }}
+                className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-600 transition-colors"
+              >
+                <Share2 className="w-4 h-4" /> Share
+              </button>
+            </div>
 
             {/* Features */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-xl">
@@ -696,6 +716,32 @@ export default function ProductDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Image Zoom Modal */}
+      {zoomedImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 cursor-zoom-out"
+          onClick={() => setZoomedImage(null)}
+        >
+          <button
+            onClick={() => setZoomedImage(null)}
+            className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
+            aria-label="Close zoom"
+          >
+            <X className="w-8 h-8" />
+          </button>
+          <div className="relative w-full max-w-4xl h-[80vh]">
+            <Image
+              src={zoomedImage}
+              alt={product?.name || 'Product image'}
+              fill
+              className="object-contain"
+              sizes="100vw"
+              priority
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

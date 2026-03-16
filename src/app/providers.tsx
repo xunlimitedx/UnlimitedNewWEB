@@ -9,6 +9,7 @@ import Footer from '@/components/layout/Footer';
 import CartDrawer from '@/components/layout/CartDrawer';
 import CookieConsent from '@/components/CookieConsent';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import ScrollToTop from '@/components/ScrollToTop';
 
 function AnnouncementBar() {
   const { theme } = useTheme();
@@ -48,6 +49,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <CartDrawer />
         <CookieConsent />
         <WhatsAppButton />
+        <ScrollToTop />
       </ThemeProvider>
     </AuthProvider>
   );

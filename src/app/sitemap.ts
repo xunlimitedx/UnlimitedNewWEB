@@ -1,18 +1,30 @@
 import { MetadataRoute } from 'next';
-import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { initializeApp, getApps } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
 const BASE_URL = 'https://unlimitedits.co.za';
 
 async function getBlogSlugs(): Promise<string[]> {
   try {
-    // Initialize admin if not already
     if (getApps().length === 0) {
       initializeApp();
     }
     const db = getFirestore();
     const snap = await db.collection('blog-posts').where('published', '==', true).get();
     return snap.docs.map((doc) => doc.data().slug as string).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+async function getProductIds(): Promise<string[]> {
+  try {
+    if (getApps().length === 0) {
+      initializeApp();
+    }
+    const db = getFirestore();
+    const snap = await db.collection('products').where('isActive', '!=', false).get();
+    return snap.docs.map((doc) => doc.id);
   } catch {
     return [];
   }
@@ -45,5 +57,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...blogPages];
+  const productIds = await getProductIds();
+  const productPages: MetadataRoute.Sitemap = productIds.map((id) => ({
+    url: `${BASE_URL}/products/${id}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...blogPages, ...productPages];
 }

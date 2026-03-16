@@ -9,6 +9,7 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { getCollection, where } from '@/lib/firebase';
 import { formatDate } from '@/lib/utils';
 import { Calendar, User, ArrowLeft, BookOpen, Share2 } from 'lucide-react';
+import { Facebook, Twitter, Linkedin } from 'lucide-react';
 import type { QueryConstraint } from 'firebase/firestore';
 
 interface BlogPost {
@@ -129,12 +130,58 @@ export default function BlogPostPage() {
         />
 
         {/* Footer */}
-        <div className="mt-12 pt-8 border-t border-gray-200 flex items-center justify-between">
-          <Link href="/blog">
-            <Button variant="outline">
-              <ArrowLeft className="w-4 h-4" /> Back to Blog
-            </Button>
-          </Link>
+        <div className="mt-12 pt-8 border-t border-gray-200">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <Link href="/blog">
+              <Button variant="outline">
+                <ArrowLeft className="w-4 h-4" /> Back to Blog
+              </Button>
+            </Link>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-500">Share:</span>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://unlimitedits.co.za/blog/${slug}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-blue-600 transition-colors"
+                aria-label="Share on Facebook"
+              >
+                <Facebook className="w-5 h-5" />
+              </a>
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://unlimitedits.co.za/blog/${slug}`)}&text=${encodeURIComponent(post.title)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-sky-500 transition-colors"
+                aria-label="Share on X"
+              >
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a
+                href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(`https://unlimitedits.co.za/blog/${slug}`)}&title=${encodeURIComponent(post.title)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-blue-700 transition-colors"
+                aria-label="Share on LinkedIn"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <button
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({ title: post.title, url: window.location.href });
+                  } else {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert('Link copied to clipboard!');
+                  }
+                }}
+                className="text-gray-400 hover:text-primary-600 transition-colors"
+                aria-label="Share link"
+              >
+                <Share2 className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
         </div>
       </article>
     </div>

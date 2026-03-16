@@ -64,6 +64,7 @@ function ProductsContent() {
   const [showFilters, setShowFilters] = useState(false);
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  const [visibleCount, setVisibleCount] = useState(20);
   const addItem = useCartStore((s) => s.addItem);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
   const { addItem: addToCompare, isInCompare } = useCompareStore();
@@ -125,6 +126,7 @@ function ProductsContent() {
       }
 
       setProducts(result);
+      setVisibleCount(20);
     } catch (err) {
       console.error(err);
     } finally {
@@ -189,15 +191,6 @@ function ProductsContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Maintenance Notice */}
-      <div className="bg-yellow-50 border-b border-yellow-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center gap-3">
-          <span className="flex-shrink-0 text-yellow-600 text-xl">&#9888;</span>
-          <p className="text-sm text-yellow-800">
-            <strong>Online Shop Under Maintenance</strong> — Our online shop is currently being updated with new stock and pricing. For immediate purchases, please visit our shop at <strong>202 Marine Drive, Ramsgate</strong> or call <a href="tel:0393144359" className="underline font-medium">039&nbsp;314&nbsp;4359</a>.
-          </p>
-        </div>
-      </div>
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -428,7 +421,7 @@ function ProductsContent() {
               </div>
             ) : viewMode === 'grid' ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                {products.map((product) => (
+                {products.slice(0, visibleCount).map((product) => (
                   <div
                     key={product.id}
                     className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
@@ -548,7 +541,7 @@ function ProductsContent() {
               </div>
             ) : (
               <div className="space-y-4">
-                {products.map((product) => (
+                {products.slice(0, visibleCount).map((product) => (
                   <div
                     key={product.id}
                     className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex"
@@ -610,6 +603,19 @@ function ProductsContent() {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* Load More */}
+            {!loading && products.length > visibleCount && (
+              <div className="text-center mt-10">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setVisibleCount((prev) => prev + 20)}
+                >
+                  Load More ({products.length - visibleCount} remaining)
+                </Button>
               </div>
             )}
           </div>

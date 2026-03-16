@@ -25,6 +25,7 @@ import {
   ShoppingCart,
   Package,
   Wrench,
+  ExternalLink,
 } from 'lucide-react';
 
 const categories = [
@@ -243,8 +244,17 @@ export default function HomePage() {
                 </div>
               </Link>
             ))}
-          </div>
-        </div>
+          </div>          <div className="text-center mt-10">
+            <a
+              href="https://www.google.com/maps/place/Unlimited+IT+Solutions/@-30.878246,30.3545,17z/data=!4m8!3m7!1s0x1ef6b9f6a9c59a3b:0x7f4e8e12345!8m2!3d-30.878246!4d30.357!9m1!1b1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium transition-colors"
+            >
+              See all reviews on Google
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>        </div>
       </section>
 
       {/* Latest Products Section */}
@@ -426,7 +436,7 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
+            {testimonials.map((testimonial, index) => (
               <div
                 key={testimonial.name}
                 className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
