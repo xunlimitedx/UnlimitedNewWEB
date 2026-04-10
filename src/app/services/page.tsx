@@ -20,24 +20,34 @@ import {
   Settings,
   ShieldCheck,
   Lightbulb,
+  Printer,
+  HardDrive,
+  Bot,
+  Code,
+  BarChart3,
+  Briefcase,
+  Rocket,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'IT Services — Computer Repairs, CCTV, Networking & Console Repairs | Ramsgate',
+  title: 'IT Services — Repairs, CCTV, Networking, Software, POS & Business Solutions | Ramsgate',
   description:
-    'Unlimited IT Solutions offers computer repairs (including Mac), CCTV installations, network installations, console repairs (PlayStation, Xbox, Nintendo), fine soldering, managed IT services, remote support, cloud services, and more in Ramsgate, KwaZulu-Natal.',
+    'Unlimited IT Solutions offers computer repairs, CCTV installations, networking, cybersecurity, data recovery, electronics repair, robotics, custom software development, POS systems, and UBOSS business software in Ramsgate, KwaZulu-Natal.',
   keywords: [
     'computer repairs Ramsgate', 'Mac repairs KZN', 'CCTV installation South Coast',
     'network installation Ramsgate', 'console repairs PlayStation Xbox Nintendo',
     'fine soldering', 'managed IT services KZN', 'IT support Ramsgate',
     'remote support South Africa', 'server maintenance', 'cloud services KZN',
     'IT consulting', 'callout IT support', 'internet solutions Ramsgate',
-    'scheduled maintenance IT', 'software repairs',
+    'data recovery KZN', 'electronics repair', 'printer repairs Ramsgate',
+    'POS systems South Coast', 'custom software development KZN',
+    'business management solutions', 'UBOSS business software',
+    'robotics solutions', 'cybersecurity KZN',
   ],
   openGraph: {
-    title: 'IT Services — Computer Repairs, CCTV, Networking & More | Unlimited IT Solutions',
+    title: 'IT Services — Repairs, Software, Business Solutions & More | Unlimited IT Solutions',
     description:
-      'From computer & Mac repairs to CCTV installations, networking, console repairs, and managed IT — we cover all your technology needs in Ramsgate, KZN.',
+      'From computer repairs to custom software and UBOSS business systems — complete technology solutions from Ramsgate, KZN.',
   },
 };
 
@@ -70,6 +80,12 @@ const serviceCategories = [
         title: 'Software Repairs & Sales',
         description:
           'Windows repairs, virus removal, OS reinstallation, driver updates. Certified reseller for Adobe, Norton, McAfee, Kaspersky, Bitdefender, Avast, Windows, and Microsoft Office.',
+      },
+      {
+        icon: Printer,
+        title: 'Printer Sales, Setup & Repairs',
+        description:
+          'Printer and multifunction device sales, installation, driver setup, maintenance, and repairs for all major brands — inkjet, laser, and thermal.',
       },
     ],
   },
@@ -157,6 +173,64 @@ const serviceCategories = [
       },
     ],
   },
+  {
+    heading: 'Advanced & Specialized',
+    services: [
+      {
+        icon: HardDrive,
+        title: 'Data Recovery',
+        description:
+          'Professional recovery of lost, deleted, or damaged files from hard drives, SSDs, USB drives, memory cards, and RAID arrays.',
+      },
+      {
+        icon: CircuitBoard,
+        title: 'Electronic Repairs',
+        description:
+          'Board-level repair including capacitor replacement, microcontroller programming, and precision micro-soldering for all types of electronic devices.',
+      },
+      {
+        icon: Bot,
+        title: 'Robotics Solutions & Integration',
+        description:
+          'Custom robotics design, programming, integration, and automation solutions for education, industry, and hobbyists.',
+      },
+      {
+        icon: Code,
+        title: 'Custom Software Development',
+        description:
+          'Bespoke software solutions — web apps, mobile apps, business tools, API integrations, and database systems built to your specifications.',
+      },
+    ],
+  },
+  {
+    heading: 'Business Solutions',
+    services: [
+      {
+        icon: BarChart3,
+        title: 'POS Systems',
+        description:
+          'Point-of-sale hardware and software — sales, setup, training, and ongoing support for retail, restaurants, and service businesses.',
+      },
+      {
+        icon: Briefcase,
+        title: 'Business Management Solutions',
+        description:
+          'Complete business technology consulting — workflow automation, digital systems, CRM, ERP, and operational efficiency solutions.',
+      },
+      {
+        icon: Code,
+        title: 'Custom Business Software',
+        description:
+          'Tailored software solutions for your specific business needs — inventory management, invoicing, reporting, and process automation.',
+      },
+      {
+        icon: Rocket,
+        title: 'UBOSS — Business Software',
+        description:
+          'Our powerful all-in-one business management platform. Invoicing, stock, customers, reporting, and more — built for South African businesses.',
+      },
+    ],
+  },
 ];
 
 export default function ServicesPage() {
@@ -169,10 +243,11 @@ export default function ServicesPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-primary-400 font-semibold text-sm uppercase tracking-wider mb-3">Advanced Technology. Complete Business Solutions.</p>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Services</h1>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            From computer repairs and CCTV installations to managed IT and console repairs —
-            we provide end-to-end technology solutions from our shop in Ramsgate, KZN.
+            From IT support and repairs to custom software and full business systems —
+            we deliver end-to-end technology solutions from our shop in Ramsgate, KZN.
           </p>
         </div>
       </section>
@@ -212,6 +287,20 @@ export default function ServicesPage() {
           </div>
         </section>
       ))}
+
+      {/* Cybersecurity note */}
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 rounded-2xl p-8 md:p-12 text-white text-center">
+            <Shield className="w-10 h-10 text-primary-300 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold mb-2">Cybersecurity &amp; Data Protection</h2>
+            <p className="text-primary-100 max-w-2xl mx-auto">
+              We offer comprehensive cybersecurity solutions — antivirus deployment, firewall configuration,
+              network security audits, data encryption, and staff training to keep your home and business safe from cyber threats.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Brands */}
       <section className="py-12 bg-gray-50">

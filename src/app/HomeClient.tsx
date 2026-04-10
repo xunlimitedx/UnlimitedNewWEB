@@ -39,6 +39,15 @@ import {
   RotateCcw,
   MapPin,
   Phone,
+  Printer,
+  HardDrive,
+  CircuitBoard,
+  Bot,
+  Code,
+  BarChart3,
+  Briefcase,
+  Rocket,
+  Cloud,
 } from 'lucide-react';
 
 // ─── Animated counter ───
@@ -292,48 +301,38 @@ function BrandTicker() {
 }
 
 // ─── Data ───
-const REPAIR_SERVICES = [
+const SERVICE_CATEGORIES = [
   {
-    icon: Laptop,
-    title: 'Computer & Laptop Repairs',
-    description: 'Screen replacements, motherboard repair, virus removal, data recovery, OS installations, and hardware upgrades.',
-    href: '/services/computer-repairs',
-    color: 'bg-blue-500',
+    heading: 'IT & Technical Services',
+    services: [
+      { icon: Laptop, title: 'Computer & Laptop Repairs', description: 'Sales, repairs & upgrades for all major brands.', href: '/services/computer-repairs', color: 'bg-blue-500' },
+      { icon: Network, title: 'Networks & Wi-Fi', description: 'Network installations, fibre, Wi-Fi & cabling.', href: '/services/networking', color: 'bg-green-600' },
+      { icon: Shield, title: 'Cybersecurity', description: 'Data protection, antivirus & security audits.', href: '/services', color: 'bg-red-700' },
+      { icon: Camera, title: 'CCTV & Cameras', description: 'Camera systems, DVR/NVR & remote monitoring.', href: '/services/cctv-installation', color: 'bg-red-600' },
+      { icon: Printer, title: 'Printer Services', description: 'Printer sales, setup, repairs & supplies.', href: '/services', color: 'bg-teal-600' },
+      { icon: Cloud, title: 'Cloud & Backups', description: 'Cloud solutions, automated backups & recovery.', href: '/services', color: 'bg-sky-600' },
+      { icon: Headphones, title: 'Callouts & Remote Support', description: 'On-site technicians & nationwide remote support.', href: '/services', color: 'bg-orange-500' },
+    ],
   },
   {
-    icon: Smartphone,
-    title: 'Mac & Apple Repairs',
-    description: 'MacBook, iMac, and Mac Mini repairs. Logic board fixes, screen replacements, battery swaps, and SSD upgrades.',
-    href: '/services/mac-repairs',
-    color: 'bg-gray-800',
+    heading: 'Advanced & Specialized',
+    services: [
+      { icon: HardDrive, title: 'Data Recovery', description: 'Lost or damaged files recovered from any device.', href: '/services', color: 'bg-amber-600' },
+      { icon: CircuitBoard, title: 'Electronics Repair', description: 'Board-level repair, capacitors & microcontrollers.', href: '/services', color: 'bg-violet-600' },
+      { icon: Gamepad2, title: 'Console Repairs', description: 'PlayStation, Xbox & Nintendo Switch repairs.', href: '/services/console-repairs', color: 'bg-purple-600' },
+      { icon: Smartphone, title: 'Mac & Apple Repairs', description: 'MacBook, iMac & Mac Mini specialist repairs.', href: '/services/mac-repairs', color: 'bg-gray-800' },
+      { icon: Bot, title: 'Robotics Solutions', description: 'Robotics integration & automation systems.', href: '/services', color: 'bg-cyan-600' },
+      { icon: Code, title: 'Custom Software', description: 'Bespoke software development & integrations.', href: '/services', color: 'bg-indigo-600' },
+    ],
   },
   {
-    icon: Gamepad2,
-    title: 'Console Repairs',
-    description: 'PlayStation, Xbox, and Nintendo Switch repairs. HDMI port fixes, overheating, disc drive, and controller repairs.',
-    href: '/services/console-repairs',
-    color: 'bg-purple-600',
-  },
-  {
-    icon: Camera,
-    title: 'CCTV Installation',
-    description: 'Professional security camera systems for homes and businesses. Remote viewing, night vision, and 24/7 recording.',
-    href: '/services/cctv-installation',
-    color: 'bg-red-600',
-  },
-  {
-    icon: Network,
-    title: 'Networking Solutions',
-    description: 'WiFi installations, fibre setup, network cabling, server configuration, and business network infrastructure.',
-    href: '/services/networking',
-    color: 'bg-green-600',
-  },
-  {
-    icon: Headphones,
-    title: 'IT Support & Callouts',
-    description: 'On-site technicians for home and business. Remote support anywhere in South Africa. Managed IT services.',
-    href: '/services',
-    color: 'bg-orange-500',
+    heading: 'Business Solutions',
+    services: [
+      { icon: BarChart3, title: 'POS Systems', description: 'Point-of-sale sales, setup & ongoing support.', href: '/services', color: 'bg-emerald-600' },
+      { icon: Briefcase, title: 'Business Management', description: 'Complete business technology & management solutions.', href: '/services', color: 'bg-slate-700' },
+      { icon: Code, title: 'Custom Software Solutions', description: 'Tailored business software built to your needs.', href: '/services', color: 'bg-indigo-700' },
+      { icon: Rocket, title: 'UBOSS', description: 'Our powerful all-in-one business management software.', href: '/services', color: 'bg-primary-600' },
+    ],
   },
 ];
 
@@ -403,18 +402,18 @@ export default function HomeClient({ latestProducts }: HomeClientProps) {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-36">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 bg-primary-500/20 border border-primary-400/30 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm text-primary-200 mb-8">
-              <Wrench className="w-4 h-4" />
-              <span>Trusted Repair Shop Since 2010 &bull; Ramsgate, KZN</span>
+              <Zap className="w-4 h-4" />
+              <span>IT Repairs &bull; Software &bull; Business Solutions &bull; Since 2010</span>
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
-              We Fix What&apos;s
+              Advanced Technology.
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-blue-400">
-                Broken.
+                Complete Solutions.
               </span>
             </h1>
             <p className="text-lg sm:text-xl text-gray-300 max-w-xl mb-10 leading-relaxed">
-              Computers, laptops, Macs, gaming consoles — we repair them all. Walk in to our shop or <strong className="text-white">mail your device from anywhere in South Africa</strong>.
+              From IT support &amp; repairs to custom software &amp; business systems — we power your home and your business. <strong className="text-white">Mail-in repairs from anywhere in South Africa.</strong>
             </p>
             <div className="flex flex-wrap gap-4 mb-12">
               <Link href="/services">
@@ -478,43 +477,41 @@ export default function HomeClient({ latestProducts }: HomeClientProps) {
         </div>
       </section>
 
-      {/* ═══════════ REPAIR SERVICES ═══════════ */}
-      <section className="section-padding bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <p className="text-primary-600 font-semibold text-sm uppercase tracking-wider mb-2">What We Do</p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
-              Repair &amp; IT Services
-            </h2>
-            <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-              From broken screens to full network infrastructure — our experienced technicians handle it all.
-            </p>
-          </div>
+      {/* ═══════════ SERVICES ═══════════ */}
+      {SERVICE_CATEGORIES.map((category, catIdx) => (
+        <section key={category.heading} className={`section-padding ${catIdx % 2 === 0 ? 'bg-gray-50 dark:bg-gray-900' : 'bg-white dark:bg-gray-800'}`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <p className="text-primary-600 font-semibold text-sm uppercase tracking-wider mb-2">
+                {catIdx === 0 ? 'What We Do' : catIdx === 1 ? 'Specialized' : 'For Business'}
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
+                {category.heading}
+              </h2>
+            </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {REPAIR_SERVICES.map((service) => (
-              <Link
-                key={service.title}
-                href={service.href}
-                className="group relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-              >
-                <div className={`w-12 h-12 ${service.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  <service.icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 transition-colors">
-                  {service.title}
-                </h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4">
-                  {service.description}
-                </p>
-                <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary-600 group-hover:gap-2 transition-all">
-                  Learn more <ChevronRight className="w-4 h-4" />
-                </span>
-              </Link>
-            ))}
+            <div className={`grid grid-cols-1 sm:grid-cols-2 ${category.services.length <= 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3 xl:grid-cols-4'} gap-5`}>
+              {category.services.map((service) => (
+                <Link
+                  key={service.title}
+                  href={service.href}
+                  className="group relative bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                >
+                  <div className={`w-11 h-11 ${service.color} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                    <service.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1 group-hover:text-primary-600 transition-colors">
+                    {service.title}
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                    {service.description}
+                  </p>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ))}
 
       {/* ═══════════ MAIL-IN REPAIRS ═══════════ */}
       <section className="section-padding bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 text-white relative overflow-hidden">
