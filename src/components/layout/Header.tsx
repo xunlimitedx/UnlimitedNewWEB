@@ -134,11 +134,11 @@ export default function Header() {
             <img
               src="/images/logo.svg"
               alt="Unlimited IT Solutions"
-              className="h-8 w-auto"
+              className="h-9 w-auto"
             />
-            <div>
-              <span className="text-lg font-heading text-gray-900">Unlimited</span>
-              <span className="text-lg font-heading text-primary-600"> IT Solutions</span>
+            <div className="leading-tight">
+              <span className="text-xl sm:text-2xl font-heading text-gray-900 dark:text-white tracking-wide">Unlimited</span>
+              <span className="text-xl sm:text-2xl font-heading text-primary-600 tracking-wide"> IT</span>
             </div>
           </Link>
 
