@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, rateLimitResponse, getClientIp } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 20 requests per minute per IP
+    const ip = getClientIp(request);
+    const rl = rateLimit(`ai-shipping:${ip}`, { maxRequests: 20, windowMs: 60_000 });
+    if (!rl.success) return rateLimitResponse();
+
     const { details } = await request.json();
 
     if (!details) {

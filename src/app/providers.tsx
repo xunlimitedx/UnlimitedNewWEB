@@ -17,6 +17,9 @@ import ExitIntentPopup from '@/components/ExitIntentPopup';
 import MobileBottomNav from '@/components/MobileBottomNav';
 import AbandonedCartTracker from '@/components/AbandonedCartTracker';
 import AccessibilityWidget from '@/components/AccessibilityWidget';
+import LiveChatWidget from '@/components/LiveChatWidget';
+import PageTransition from '@/components/PageTransition';
+import { LanguageProvider } from '@/components/LanguageToggle';
 
 function AnnouncementBar() {
   const { theme } = useTheme();
@@ -36,6 +39,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <AuthProvider>
       <QueryProvider>
         <ThemeProvider>
+        <LanguageProvider>
         <Toaster
           position="top-right"
           toastOptions={{
@@ -57,7 +61,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <div className="min-h-screen flex flex-col">
           <AnnouncementBar />
           <Header />
-          <main id="main-content" className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1"><PageTransition>{children}</PageTransition></main>
           <Footer />
         </div>
         <CartDrawer />
@@ -69,7 +73,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <ExitIntentPopup />
         <MobileBottomNav />
         <AbandonedCartTracker />
+        <LiveChatWidget />
         <AccessibilityWidget />
+      </LanguageProvider>
       </ThemeProvider>
       </QueryProvider>
     </AuthProvider>

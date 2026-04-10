@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addDocument, getCollection } from '@/lib/firebase';
 import { where } from 'firebase/firestore';
+import { rateLimit, rateLimitResponse, getClientIp } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 5 requests per minute per IP
+    const ip = getClientIp(request);
+    const rl = rateLimit(`stock-notify:${ip}`, { maxRequests: 5, windowMs: 60_000 });
+    if (!rl.success) return rateLimitResponse();
+
     const { email, productId, productName } = await request.json();
 
     if (!email || !productId) {

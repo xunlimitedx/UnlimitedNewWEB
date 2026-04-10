@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: 'About Us — Computer Repairs, IT Services & CCTV | Ramsgate KZN',
   description:
     'Unlimited4all T/A Unlimited IT Solutions — premier IT service provider in Ramsgate, KwaZulu-Natal since 2010. Computer repairs, Mac repairs, CCTV installations, networking, console repairs, managed IT services, and on-site technicians for homes and businesses.',
+  alternates: {
+    canonical: 'https://unlimitedits.co.za/about',
+  },
   openGraph: {
     title: 'About Unlimited IT Solutions | Computer Repairs & IT Services | Ramsgate KZN',
     description: 'Your trusted IT partner since 2010. Computer & laptop repairs, CCTV, networking, console repairs, and managed IT services in Ramsgate, KwaZulu-Natal.',

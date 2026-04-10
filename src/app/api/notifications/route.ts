@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { getDocument } from '@/lib/firebase';
+import { rateLimit, rateLimitResponse, getClientIp } from '@/lib/rate-limit';
 import type { EmailSettings } from '@/types';
 
 async function getSmtpConfig() {
@@ -54,6 +55,11 @@ async function getSmtpConfig() {
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 10 requests per minute per IP
+    const ip = getClientIp(request);
+    const rl = rateLimit(`notifications:${ip}`, { maxRequests: 10, windowMs: 60_000 });
+    if (!rl.success) return rateLimitResponse();
+
     const body = await request.json();
     const { type, data } = body;
 

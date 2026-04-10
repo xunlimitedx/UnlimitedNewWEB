@@ -3,6 +3,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description: 'Terms of Service for Unlimited IT Solutions online store.',
+  alternates: {
+    canonical: 'https://unlimitedits.co.za/terms',
+  },
 };
 
 export default function TermsPage() {

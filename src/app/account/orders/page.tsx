@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import type { Order } from '@/types';
 import type { QueryConstraint } from 'firebase/firestore';
+import PrintInvoice from '@/components/PrintInvoice';
 
 const STATUS_STEPS = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
 
@@ -250,6 +251,11 @@ export default function OrdersPage() {
                       <div className="flex justify-between font-bold text-gray-900 pt-1 border-t"><span>Total</span><span>{formatCurrency(order.total)}</span></div>
                     </div>
                   </div>
+                </div>
+
+                {/* Print Invoice */}
+                <div className="pt-4 border-t border-gray-100 flex justify-end">
+                  <PrintInvoice order={order} />
                 </div>
               </div>
             )}

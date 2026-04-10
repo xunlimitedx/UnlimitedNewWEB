@@ -9,6 +9,9 @@ import { useWishlistStore } from '@/store/wishlistStore';
 import { formatCurrency } from '@/lib/utils';
 import toast from 'react-hot-toast';
 import type { Product } from '@/types';
+import BeforeAfterGallery from '@/components/BeforeAfterGallery';
+import CustomerCounter from '@/components/CustomerCounter';
+import SocialFeed from '@/components/SocialFeed';
 import {
   ArrowRight,
   Laptop,
@@ -498,7 +501,7 @@ export default function HomeClient({ latestProducts }: HomeClientProps) {
                   className="group relative bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className={`w-11 h-11 ${service.color} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                    <service.icon className="w-5 h-5 text-white" />
+                    <service.icon className="w-5 h-5 text-white animate-service-icon" />
                   </div>
                   <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1 group-hover:text-primary-600 transition-colors">
                     {service.title}
@@ -744,6 +747,47 @@ export default function HomeClient({ latestProducts }: HomeClientProps) {
               </div>
             </>
           )}
+        </div>
+      </section>
+
+      {/* ═══════════ BEFORE & AFTER ═══════════ */}
+      <section className="section-padding bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <p className="text-primary-600 font-semibold text-sm uppercase tracking-wider mb-2">Our Work</p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
+              Before &amp; After
+            </h2>
+            <p className="text-gray-500 dark:text-gray-400 max-w-lg mx-auto">
+              Drag the slider to see the transformation. Real repairs from our workshop.
+            </p>
+          </div>
+          <BeforeAfterGallery />
+          <CustomerCounter className="mt-12" />
+        </div>
+      </section>
+
+      {/* ═══════════ SOCIAL FEED ═══════════ */}
+      <section className="section-padding bg-white dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <p className="text-primary-600 font-semibold text-sm uppercase tracking-wider mb-2">Stay Connected</p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-3">
+              Latest From Our Socials
+            </h2>
+          </div>
+          <SocialFeed />
+          <div className="text-center mt-8">
+            <a
+              href="https://www.facebook.com/unlimiteditsolutions"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium transition-colors"
+            >
+              Follow us on Facebook
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
         </div>
       </section>
 

@@ -36,6 +36,8 @@ import { Button } from '@/components/ui';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useCompareStore } from '@/store/compareStore';
 import InstantSearch from '@/components/InstantSearch';
+import OpenClosedBadge from '@/components/OpenClosedBadge';
+import LanguageToggle from '@/components/LanguageToggle';
 import toast from 'react-hot-toast';
 
 export default function Header() {
@@ -114,6 +116,8 @@ export default function Header() {
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-4">
+            <OpenClosedBadge />
+            <span className="text-primary-700">|</span>
             <a href="tel:0393144359" className="hover:text-white transition-colors">
               039 314 4359
             </a>
@@ -121,6 +125,8 @@ export default function Header() {
             <a href="tel:0825569875" className="hover:text-white transition-colors">
               082 556 9875
             </a>
+            <span className="text-primary-700">|</span>
+            <LanguageToggle />
           </div>
         </div>
       </div>

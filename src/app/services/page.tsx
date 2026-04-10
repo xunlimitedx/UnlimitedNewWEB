@@ -33,6 +33,9 @@ export const metadata: Metadata = {
   title: 'IT Services — Repairs, CCTV, Networking, Software, POS & Business Solutions | Ramsgate',
   description:
     'Unlimited IT Solutions offers computer repairs, CCTV installations, networking, cybersecurity, data recovery, electronics repair, robotics, custom software development, POS systems, and UBOSS business software in Ramsgate, KwaZulu-Natal.',
+  alternates: {
+    canonical: 'https://unlimitedits.co.za/services',
+  },
   keywords: [
     'computer repairs Ramsgate', 'Mac repairs KZN', 'CCTV installation South Coast',
     'network installation Ramsgate', 'console repairs PlayStation Xbox Nintendo',

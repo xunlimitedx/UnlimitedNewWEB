@@ -3,6 +3,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Cookie Policy',
   description: 'Cookie Policy for Unlimited IT Solutions – how we use cookies on our website.',
+  alternates: {
+    canonical: 'https://unlimitedits.co.za/cookies',
+  },
 };
 
 export default function CookiesPage() {

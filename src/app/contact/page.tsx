@@ -14,6 +14,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import ServiceRequestForm from '@/components/ServiceRequestForm';
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false);
@@ -258,6 +259,21 @@ export default function ContactPage() {
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Repair Request Form */}
+      <section className="section-padding bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-3">
+              Submit a Repair Request
+            </h2>
+            <p className="text-gray-500 max-w-lg mx-auto">
+              Fill out the form below and we&apos;ll get back to you with a quote. Walk-in, mail-in, or callout — we cover all of South Africa.
+            </p>
+          </div>
+          <ServiceRequestForm />
         </div>
       </section>
     </div>

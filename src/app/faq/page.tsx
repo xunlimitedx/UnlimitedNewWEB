@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: 'FAQ — Computer Repairs, IT Services & CCTV Questions | Ramsgate',
   description:
     'Frequently asked questions about computer repairs, Mac repairs, CCTV installations, console repairs, networking, IT support, and online orders at Unlimited IT Solutions, Ramsgate.',
+  alternates: {
+    canonical: 'https://unlimitedits.co.za/faq',
+  },
   openGraph: {
     title: 'FAQ | Unlimited IT Solutions',
     description: 'Answers to common questions about our repairs, IT services, CCTV, and online shop.',

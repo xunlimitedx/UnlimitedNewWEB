@@ -3,6 +3,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'Privacy Policy for Unlimited IT Solutions – how we collect, use, and protect your data.',
+  alternates: {
+    canonical: 'https://unlimitedits.co.za/privacy',
+  },
 };
 
 export default function PrivacyPage() {
