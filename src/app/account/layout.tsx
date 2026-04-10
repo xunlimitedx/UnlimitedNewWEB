@@ -5,12 +5,14 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Spinner } from '@/components/ui';
-import { User, Package, MapPin, Settings, ChevronRight } from 'lucide-react';
+import { User, Package, MapPin, Settings, ChevronRight, Award, Gift } from 'lucide-react';
 
 const accountLinks = [
   { href: '/account', label: 'Profile', icon: User },
   { href: '/account/orders', label: 'Orders', icon: Package },
   { href: '/account/addresses', label: 'Addresses', icon: MapPin },
+  { href: '/account/loyalty', label: 'Loyalty Program', icon: Award },
+  { href: '/account/referrals', label: 'Referrals', icon: Gift },
 ];
 
 export default function AccountLayout({
