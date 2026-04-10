@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useCartStore } from '@/store/cartStore';
 import { logout } from '@/lib/firebase';
+import { useTheme } from '@/context/ThemeContext';
 import {
   ShoppingCart,
   User,
@@ -19,10 +20,17 @@ import {
   LogOut,
   LayoutDashboard,
   Package,
-  Settings,
   MapPin,
   Heart,
   GitCompare,
+  Camera,
+  Wifi,
+  Wrench,
+  Gamepad2,
+  Headphones,
+  Phone,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useWishlistStore } from '@/store/wishlistStore';
@@ -32,12 +40,15 @@ import toast from 'react-hot-toast';
 export default function Header() {
   const { user, isAdminUser } = useAuth();
   const { getItemCount, openCart } = useCartStore();
+  const { darkMode, toggleDarkMode } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [megaMenuOpen, setMegaMenuOpen] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const itemCount = getItemCount();
   const wishlistCount = useWishlistStore((s) => s.items.length);
   const compareCount = useCompareStore((s) => s.items.length);
+  const megaMenuTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleLogout = async () => {
     try {
@@ -53,14 +64,41 @@ export default function Header() {
     e.preventDefault();
     if (searchQuery.trim()) {
       window.location.href = `/products?search=${encodeURIComponent(searchQuery.trim())}`;
+      setMobileMenuOpen(false);
     }
   };
 
-  const categories = [
-    { name: 'Laptops', href: '/products?category=laptops', icon: Laptop },
-    { name: 'Desktops', href: '/products?category=desktops', icon: Monitor },
-    { name: 'Components', href: '/products?category=components', icon: Cpu },
-    { name: 'Peripherals', href: '/products?category=peripherals', icon: Mouse },
+  const openMegaMenu = (menu: string) => {
+    if (megaMenuTimeout.current) clearTimeout(megaMenuTimeout.current);
+    setMegaMenuOpen(menu);
+  };
+
+  const closeMegaMenu = () => {
+    megaMenuTimeout.current = setTimeout(() => setMegaMenuOpen(null), 150);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (megaMenuTimeout.current) clearTimeout(megaMenuTimeout.current);
+    };
+  }, []);
+
+  const productCategories = [
+    { name: 'Laptops', href: '/products?category=laptops', icon: Laptop, desc: 'Notebooks for work & play' },
+    { name: 'Desktops', href: '/products?category=desktops', icon: Monitor, desc: 'Towers, AIOs & custom builds' },
+    { name: 'Components', href: '/products?category=components', icon: Cpu, desc: 'GPUs, RAM, storage & more' },
+    { name: 'Peripherals', href: '/products?category=peripherals', icon: Mouse, desc: 'Keyboards, mice, monitors' },
+    { name: 'Networking', href: '/products?category=networking', icon: Wifi, desc: 'Routers, switches, cables' },
+    { name: 'Accessories', href: '/products?category=accessories', icon: Headphones, desc: 'Cases, chargers & more' },
+  ];
+
+  const serviceItems = [
+    { name: 'Computer Repairs', href: '/services/computer-repairs', icon: Wrench, desc: 'Laptops & desktops' },
+    { name: 'Mac Repairs', href: '/services/mac-repairs', icon: Laptop, desc: 'MacBook, iMac, Mac Pro' },
+    { name: 'Console Repairs', href: '/services/console-repairs', icon: Gamepad2, desc: 'PlayStation, Xbox, Nintendo' },
+    { name: 'CCTV Installation', href: '/services/cctv-installation', icon: Camera, desc: 'Security cameras & DVR' },
+    { name: 'Networking', href: '/services/networking', icon: Wifi, desc: 'Wi-Fi, cabling & VPN' },
+    { name: 'All Services', href: '/services', icon: Headphones, desc: 'View all our services' },
   ];
 
   return (
@@ -119,6 +157,15 @@ export default function Header() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 text-gray-600 hover:text-primary-600 hover:bg-gray-100 rounded-lg transition-colors dark:text-gray-300 dark:hover:bg-gray-700"
+              aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+
             {/* Wishlist */}
             <Link
               href="/wishlist"
@@ -265,12 +312,82 @@ export default function Header() {
           >
             About
           </Link>
-          <Link
-            href="/services"
-            className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
+
+          {/* Services Mega Menu */}
+          <div
+            className="relative"
+            onMouseEnter={() => openMegaMenu('services')}
+            onMouseLeave={closeMegaMenu}
           >
-            Services
-          </Link>
+            <Link
+              href="/services"
+              className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
+            >
+              Services <ChevronDown className={`w-3.5 h-3.5 transition-transform ${megaMenuOpen === 'services' ? 'rotate-180' : ''}`} />
+            </Link>
+            {megaMenuOpen === 'services' && (
+              <div className="absolute left-0 top-full mt-1 w-[420px] bg-white rounded-xl shadow-xl border border-gray-200 p-4 grid grid-cols-2 gap-1 z-50 animate-scale-in">
+                {serviceItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                    onClick={() => setMegaMenuOpen(null)}
+                  >
+                    <item.icon className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <div className="text-sm font-medium text-gray-900 group-hover:text-primary-600">{item.name}</div>
+                      <div className="text-xs text-gray-500">{item.desc}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Shop Mega Menu */}
+          <div
+            className="relative"
+            onMouseEnter={() => openMegaMenu('shop')}
+            onMouseLeave={closeMegaMenu}
+          >
+            <Link
+              href="/products"
+              className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
+            >
+              Shop <ChevronDown className={`w-3.5 h-3.5 transition-transform ${megaMenuOpen === 'shop' ? 'rotate-180' : ''}`} />
+            </Link>
+            {megaMenuOpen === 'shop' && (
+              <div className="absolute left-0 top-full mt-1 w-[480px] bg-white rounded-xl shadow-xl border border-gray-200 p-4 z-50 animate-scale-in">
+                <div className="grid grid-cols-2 gap-1">
+                  {productCategories.map((cat) => (
+                    <Link
+                      key={cat.name}
+                      href={cat.href}
+                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                      onClick={() => setMegaMenuOpen(null)}
+                    >
+                      <cat.icon className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <div className="text-sm font-medium text-gray-900 group-hover:text-primary-600">{cat.name}</div>
+                        <div className="text-xs text-gray-500">{cat.desc}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+                <div className="border-t border-gray-100 mt-2 pt-2">
+                  <Link
+                    href="/products"
+                    onClick={() => setMegaMenuOpen(null)}
+                    className="flex items-center gap-2 p-3 rounded-lg hover:bg-primary-50 text-sm font-medium text-primary-600 transition-colors"
+                  >
+                    <Package className="w-4 h-4" /> Browse All Products
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
           <Link
             href="/blog"
             className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
@@ -289,23 +406,6 @@ export default function Header() {
           >
             Contact
           </Link>
-          <span className="w-px h-5 bg-gray-300 mx-1" />
-          <Link
-            href="/products"
-            className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
-          >
-            Shop
-          </Link>
-          {categories.map((cat) => (
-            <Link
-              key={cat.name}
-              href={cat.href}
-              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50"
-            >
-              <cat.icon className="w-3.5 h-3.5" />
-              {cat.name}
-            </Link>
-          ))}
         </nav>
       </div>
 
@@ -326,67 +426,72 @@ export default function Header() {
               </div>
             </form>
             <div className="space-y-1">
-              <Link
-                href="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
-              >
+              <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100">
                 Home
               </Link>
-              <Link
-                href="/about"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
-              >
+              <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100">
                 About
               </Link>
-              <Link
-                href="/services"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
-              >
-                Services
-              </Link>
-              <Link
-                href="/blog"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
-              >
+
+              {/* Services section */}
+              <div className="py-1">
+                <div className="px-3 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">Services</div>
+                {serviceItems.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
+                  >
+                    <item.icon className="w-4 h-4 text-primary-600" />
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="border-t border-gray-200 my-2" />
+
+              {/* Shop section */}
+              <div className="py-1">
+                <div className="px-3 py-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">Shop</div>
+                <Link href="/products" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100">
+                  <Package className="w-4 h-4 text-primary-600" />
+                  All Products
+                </Link>
+                {productCategories.map((cat) => (
+                  <Link
+                    key={cat.name}
+                    href={cat.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
+                  >
+                    <cat.icon className="w-4 h-4 text-primary-600" />
+                    {cat.name}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="border-t border-gray-200 my-2" />
+              <Link href="/blog" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100">
                 Blog
               </Link>
-              <Link
-                href="/faq"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
-              >
+              <Link href="/faq" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100">
                 FAQ
               </Link>
-              <Link
-                href="/contact"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
-              >
+              <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100">
                 Contact
               </Link>
-              <div className="border-t border-gray-200 my-2" />
-              <Link
-                href="/products"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
-              >
-                Shop
-              </Link>
-              {categories.map((cat) => (
-                <Link
-                  key={cat.name}
-                  href={cat.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100"
+
+              {/* Quick call CTA */}
+              <div className="border-t border-gray-200 mt-2 pt-3">
+                <a
+                  href="tel:0393144359"
+                  className="flex items-center gap-2 px-3 py-2.5 bg-primary-50 text-primary-700 rounded-lg text-sm font-medium"
                 >
-                  <cat.icon className="w-4 h-4" />
-                  {cat.name}
-                </Link>
-              ))}
+                  <Phone className="w-4 h-4" />
+                  Call Us: 039 314 4359
+                </a>
+              </div>
             </div>
           </div>
         </div>

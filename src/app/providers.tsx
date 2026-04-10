@@ -10,6 +10,7 @@ import CartDrawer from '@/components/layout/CartDrawer';
 import CookieConsent from '@/components/CookieConsent';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import ScrollToTop from '@/components/ScrollToTop';
+import NewsletterPopup from '@/components/NewsletterPopup';
 
 function AnnouncementBar() {
   const { theme } = useTheme();
@@ -40,16 +41,23 @@ export function Providers({ children }: { children: React.ReactNode }) {
             },
           }}
         />
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-lg focus:text-sm focus:font-medium focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
         <div className="min-h-screen flex flex-col">
           <AnnouncementBar />
           <Header />
-          <main className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1">{children}</main>
           <Footer />
         </div>
         <CartDrawer />
         <CookieConsent />
         <WhatsAppButton />
         <ScrollToTop />
+        <NewsletterPopup />
       </ThemeProvider>
     </AuthProvider>
   );

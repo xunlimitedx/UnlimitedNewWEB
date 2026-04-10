@@ -70,11 +70,15 @@ function generateShade(h: number, s: number, targetL: number): string {
 interface ThemeContextType {
   theme: ThemeSettings;
   loading: boolean;
+  darkMode: boolean;
+  toggleDarkMode: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: defaultTheme,
   loading: true,
+  darkMode: false,
+  toggleDarkMode: () => {},
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
@@ -88,6 +92,27 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return defaultTheme;
   });
   const [loading, setLoading] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('dark-mode');
+      if (saved !== null) return saved === 'true';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
+
+  const toggleDarkMode = () => {
+    setDarkMode(prev => {
+      const next = !prev;
+      localStorage.setItem('dark-mode', String(next));
+      return next;
+    });
+  };
+
+  // Apply dark mode class
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+  }, [darkMode]);
 
   useEffect(() => {
     async function fetchTheme() {
@@ -147,7 +172,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, loading }}>
+    <ThemeContext.Provider value={{ theme, loading, darkMode, toggleDarkMode }}>
       {children}
     </ThemeContext.Provider>
   );
