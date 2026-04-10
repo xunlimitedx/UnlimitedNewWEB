@@ -138,7 +138,7 @@ export default function Header() {
             />
             <div className="leading-tight">
               <span className="text-xl sm:text-2xl font-heading text-gray-900 dark:text-white tracking-wide">Unlimited</span>
-              <span className="text-xl sm:text-2xl font-heading text-primary-600 tracking-wide"> IT</span>
+              <span className="text-xl sm:text-2xl font-heading text-primary-600 tracking-wide"> IT Solutions</span>
             </div>
           </Link>
 
