@@ -647,7 +647,7 @@ export default function HomeClient({ latestProducts }: HomeClientProps) {
           <TestimonialCarousel testimonials={TESTIMONIALS} />
           <div className="text-center mt-10">
             <a
-              href="https://www.google.com/maps/place/Unlimited+IT+Solutions/"
+              href="https://www.google.com/maps/place/Unlimited+IT+Solutions/@-30.873927,30.3620552,17z/data=!3m1!4b1!4m6!3m5!1s0x1e58ba7e50dfcdb7:0xcb1d92d923cbc399!8m2!3d-30.873927!4d30.3620552!16s%2Fg%2F119v4lr0x"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium transition-colors"
