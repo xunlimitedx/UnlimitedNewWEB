@@ -22,8 +22,23 @@ export interface Product {
   active?: boolean;
   rating?: number;
   reviewCount?: number;
+  variants?: ProductVariant[];
+  relatedProducts?: string[];
+  weight?: number;
+  bulkPricingTiers?: { minQty: number; discount: number }[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ProductVariant {
+  id: string;
+  name: string;
+  type: 'color' | 'size' | 'storage' | 'other';
+  value: string;
+  price?: number;
+  stock?: number;
+  sku?: string;
+  image?: string;
 }
 
 export interface Category {
@@ -41,11 +56,70 @@ export interface Review {
   productId: string;
   userId: string;
   userName: string;
+  userPhoto?: string;
   rating: number;
   title: string;
   comment: string;
+  images?: string[];
   verified: boolean;
+  helpful?: number;
+  reported?: boolean;
+  adminReply?: string;
+  status?: 'pending' | 'approved' | 'rejected';
   createdAt: string;
+}
+
+export interface ProductQuestion {
+  id: string;
+  productId: string;
+  userId: string;
+  userName: string;
+  question: string;
+  answer?: string;
+  answeredBy?: string;
+  answeredAt?: string;
+  createdAt: string;
+}
+
+export interface LoyaltyAccount {
+  userId: string;
+  points: number;
+  tier: 'bronze' | 'silver' | 'gold';
+  totalSpent: number;
+  history: { date: string; points: number; description: string; type: 'earned' | 'redeemed' }[];
+}
+
+export interface GiftCard {
+  id: string;
+  code: string;
+  balance: number;
+  originalAmount: number;
+  isActive: boolean;
+  purchasedBy?: string;
+  redeemedBy?: string;
+  createdAt: string;
+  expiresAt?: string;
+}
+
+export interface PriceAlert {
+  id: string;
+  userId: string;
+  productId: string;
+  targetPrice: number;
+  currentPrice: number;
+  notified: boolean;
+  createdAt: string;
+}
+
+export interface AuditLog {
+  id: string;
+  userId: string;
+  userEmail: string;
+  action: string;
+  resource: string;
+  resourceId: string;
+  details: string;
+  timestamp: string;
 }
 
 // User Types
@@ -85,15 +159,29 @@ export interface Order {
   shipping: number;
   tax: number;
   total: number;
+  discount?: number;
+  couponCode?: string;
+  loyaltyPointsUsed?: number;
+  giftCardCode?: string;
   status: OrderStatus;
   shippingAddress: Address;
   billingAddress: Address;
   paymentMethod: string;
   paymentStatus: PaymentStatus;
   trackingNumber?: string;
+  trackingUrl?: string;
+  courier?: string;
   notes?: string;
+  adminNotes?: string;
+  timeline?: OrderEvent[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface OrderEvent {
+  status: string;
+  timestamp: string;
+  note?: string;
 }
 
 export interface OrderItem {
@@ -103,6 +191,7 @@ export interface OrderItem {
   price: number;
   quantity: number;
   sku: string;
+  variant?: string;
 }
 
 export type OrderStatus =

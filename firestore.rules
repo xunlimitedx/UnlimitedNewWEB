@@ -107,5 +107,41 @@ service cloud.firestore {
       allow create: if true;
       allow read, update, delete: if isAdmin();
     }
+
+    // ─── Product Questions ────────────────────────────────
+    match /product-questions/{questionId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ─── Price Alerts ─────────────────────────────────────
+    match /price-alerts/{alertId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid || isAdmin();
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // ─── Audit Logs ───────────────────────────────────────
+    match /audit-logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update, delete: if false; // Immutable
+    }
+
+    // ─── Feed Configs ─────────────────────────────────────
+    match /feedConfigs/{feedId} {
+      allow read, write: if isAdmin();
+    }
+    match /feed-sync-logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+    }
+
+    // ─── Deny all other collections by default ─────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
   }
 }

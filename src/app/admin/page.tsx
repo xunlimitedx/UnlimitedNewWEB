@@ -14,6 +14,7 @@ import {
   ArrowUpRight,
   AlertCircle,
 } from 'lucide-react';
+import DashboardCharts from '@/components/admin/DashboardCharts';
 
 interface Stats {
   totalProducts: number;
@@ -250,6 +251,9 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Dashboard Charts */}
+      <DashboardCharts />
     </div>
   );
 }

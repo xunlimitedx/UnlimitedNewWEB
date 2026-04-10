@@ -1,0 +1,27 @@
+{
+  "name": "Unlimited IT Solutions",
+  "short_name": "Unlimited IT",
+  "description": "Computer repairs, IT support, CCTV installations, and tech sales in Ramsgate, KZN",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "business", "technology"],
+  "prefer_related_applications": false
+}

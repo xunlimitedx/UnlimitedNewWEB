@@ -19,6 +19,28 @@ export function middleware(request: NextRequest) {
 
   const response = NextResponse.next();
 
+  // CSRF protection for API routes (POST/PUT/DELETE)
+  if (pathname.startsWith('/api/') && !['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+    const origin = request.headers.get('origin');
+    const host = request.headers.get('host');
+    if (origin) {
+      try {
+        const originUrl = new URL(origin);
+        if (originUrl.host !== host) {
+          return new NextResponse(JSON.stringify({ error: 'CSRF validation failed' }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+      } catch {
+        return new NextResponse(JSON.stringify({ error: 'Invalid origin' }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+    }
+  }
+
   // Security headers
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'SAMEORIGIN');

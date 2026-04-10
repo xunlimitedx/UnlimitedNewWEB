@@ -26,6 +26,7 @@ import {
   X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import CheckoutUpsells from '@/components/CheckoutUpsells';
 
 type Step = 'shipping' | 'payment' | 'review';
 
@@ -903,6 +904,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
             </div>
+            <CheckoutUpsells />
           </div>
         </div>
       </div>

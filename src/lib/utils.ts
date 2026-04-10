@@ -49,7 +49,45 @@ export function getStatusColor(status: string): string {
 }
 
 export function generateId(): string {
-  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return Date.now().toString(36) + '-' + Math.random().toString(36).substring(2, 10);
+}
+
+export function sanitizeInput(input: string): string {
+  return input
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
+export function calculateShipping(province: string, subtotal: number, weight?: number): number {
+  if (subtotal >= 2500) return 0; // Free shipping threshold
+  const baseCost: Record<string, number> = {
+    'KwaZulu-Natal': 75,
+    'Gauteng': 99,
+    'Western Cape': 120,
+    'Eastern Cape': 110,
+    'Free State': 99,
+    'Limpopo': 120,
+    'Mpumalanga': 99,
+    'North West': 110,
+    'Northern Cape': 130,
+  };
+  const base = baseCost[province] || 120;
+  const weightSurcharge = weight ? Math.ceil(weight / 5) * 15 : 0;
+  return base + weightSurcharge;
+}
+
+export function getDiscountedPrice(price: number, quantity: number, tiers?: { minQty: number; discount: number }[]): number {
+  if (!tiers || tiers.length === 0) return price;
+  const sorted = [...tiers].sort((a, b) => b.minQty - a.minQty);
+  const applicable = sorted.find(t => quantity >= t.minQty);
+  if (!applicable) return price;
+  return price * (1 - applicable.discount / 100);
 }
 
 export const ADMIN_EMAILS = [

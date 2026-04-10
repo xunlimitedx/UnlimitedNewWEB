@@ -287,3 +287,93 @@ main {
 .dark .glass-card {
   @apply bg-gray-800/80 border-gray-700/20;
 }
+
+/* Mobile bottom nav safe area */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Add padding to main content when mobile bottom nav is visible */
+@media (max-width: 767px) {
+  main {
+    padding-bottom: 4rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  header, footer, .fixed, .sticky,
+  [data-no-print], .no-print,
+  .whatsapp-button, .scroll-to-top,
+  .cookie-consent, .newsletter-popup,
+  .mobile-bottom-nav, .cart-drawer,
+  nav[aria-label="Mobile bottom navigation"],
+  button {
+    display: none !important;
+  }
+
+  body {
+    font-size: 12pt;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+
+  a[href^="#"]::after,
+  a[href^="javascript"]::after {
+    content: "";
+  }
+
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  .shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl {
+    box-shadow: none !important;
+  }
+
+  .rounded-2xl, .rounded-xl, .rounded-lg {
+    border-radius: 0 !important;
+  }
+}
+
+/* Accessibility: High Contrast Mode */
+html.high-contrast {
+  filter: contrast(1.4);
+}
+
+html.high-contrast img {
+  filter: contrast(0.85);
+}
+
+/* Accessibility: Reduced Motion */
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Focus visible outlines for keyboard navigation */
+:focus-visible {
+  outline: 3px solid var(--color-primary-500);
+  outline-offset: 2px;
+}

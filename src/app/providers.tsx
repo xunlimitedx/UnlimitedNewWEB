@@ -3,6 +3,7 @@
 import React from 'react';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider, useTheme } from '@/context/ThemeContext';
+import { QueryProvider } from '@/context/QueryProvider';
 import { Toaster } from 'react-hot-toast';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -11,6 +12,11 @@ import CookieConsent from '@/components/CookieConsent';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import ScrollToTop from '@/components/ScrollToTop';
 import NewsletterPopup from '@/components/NewsletterPopup';
+import SocialProofPopups from '@/components/SocialProofPopups';
+import ExitIntentPopup from '@/components/ExitIntentPopup';
+import MobileBottomNav from '@/components/MobileBottomNav';
+import AbandonedCartTracker from '@/components/AbandonedCartTracker';
+import AccessibilityWidget from '@/components/AccessibilityWidget';
 
 function AnnouncementBar() {
   const { theme } = useTheme();
@@ -28,7 +34,8 @@ function AnnouncementBar() {
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <ThemeProvider>
+      <QueryProvider>
+        <ThemeProvider>
         <Toaster
           position="top-right"
           toastOptions={{
@@ -58,7 +65,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <WhatsAppButton />
         <ScrollToTop />
         <NewsletterPopup />
+        <SocialProofPopups />
+        <ExitIntentPopup />
+        <MobileBottomNav />
+        <AbandonedCartTracker />
+        <AccessibilityWidget />
       </ThemeProvider>
+      </QueryProvider>
     </AuthProvider>
   );
 }

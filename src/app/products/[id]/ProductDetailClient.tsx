@@ -32,6 +32,11 @@ import {
 import type { Product, Review } from '@/types';
 import type { QueryConstraint } from 'firebase/firestore';
 import toast from 'react-hot-toast';
+import ShareButtons from '@/components/ShareButtons';
+import PriceAlertButton from '@/components/PriceAlertButton';
+import StickyAddToCart from '@/components/StickyAddToCart';
+import ShippingCalculator from '@/components/ShippingCalculator';
+import VariantSelector from '@/components/VariantSelector';
 
 interface ProductDetailClientProps {
   product: Product;
@@ -54,6 +59,7 @@ export default function ProductDetailClient({ product, initialReviews }: Product
   const [reviewForm, setReviewForm] = useState({ rating: 5, title: '', comment: '' });
   const [submittingReview, setSubmittingReview] = useState(false);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  const [selectedVariant, setSelectedVariant] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     // Track recently viewed
@@ -314,6 +320,17 @@ export default function ProductDetailClient({ product, initialReviews }: Product
               )}
             </div>
 
+            {/* Variant Selector */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="mb-6">
+                <VariantSelector
+                  variants={product.variants}
+                  selected={selectedVariant}
+                  onSelect={setSelectedVariant}
+                />
+              </div>
+            )}
+
             {/* Quantity & Add to Cart */}
             <div className="flex flex-wrap items-center gap-4 mb-6">
               <div className="flex items-center border border-gray-300 rounded-lg">
@@ -388,22 +405,21 @@ export default function ProductDetailClient({ product, initialReviews }: Product
               </Button>
             </div>
 
-            {/* SKU */}
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-xs text-gray-400">SKU: {product.sku}</p>
-              <button
-                onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({ title: product.name, url: window.location.href });
-                  } else {
-                    navigator.clipboard.writeText(window.location.href);
-                    toast.success('Link copied to clipboard');
-                  }
-                }}
-                className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-primary-600 transition-colors"
-              >
-                <Share2 className="w-4 h-4" /> Share
-              </button>
+            {/* SKU & Share */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-4">
+                <p className="text-xs text-gray-400">SKU: {product.sku}</p>
+                <PriceAlertButton productId={product.id} productName={product.name} currentPrice={product.price} />
+              </div>
+              <ShareButtons
+                url={typeof window !== 'undefined' ? window.location.href : `https://unlimitedits.co.za/products/${product.id}`}
+                title={product.name}
+              />
+            </div>
+
+            {/* Shipping Calculator */}
+            <div className="mb-6">
+              <ShippingCalculator subtotal={product.price * quantity} />
             </div>
 
             {/* Features */}
@@ -723,6 +739,9 @@ export default function ProductDetailClient({ product, initialReviews }: Product
           </div>
         </div>
       )}
+
+      {/* Sticky Add to Cart Bar */}
+      <StickyAddToCart product={product} />
     </div>
   );
 }

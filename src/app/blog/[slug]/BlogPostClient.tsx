@@ -7,6 +7,7 @@ import { Button, Badge } from '@/components/ui';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { formatDate } from '@/lib/utils';
 import { Calendar, User, ArrowLeft, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
+import BlogComments from '@/components/BlogComments';
 
 interface BlogPost {
   id: string;
@@ -156,6 +157,7 @@ export default function BlogPostClient({ post }: BlogPostClientProps) {
             </div>
           </div>
         </div>
+        <BlogComments postId={post.id} />
       </article>
     </div>
   );

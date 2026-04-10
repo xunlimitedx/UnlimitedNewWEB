@@ -21,6 +21,13 @@ import {
   DollarSign,
   Tag,
   Newspaper,
+  Star,
+  MessageCircle,
+  BarChart3,
+  Warehouse,
+  ShoppingCart,
+  Gift,
+  UserCheck,
 } from 'lucide-react';
 
 const adminLinks = [
@@ -28,13 +35,21 @@ const adminLinks = [
   { href: '/admin/products', label: 'Products', icon: Package },
   { href: '/admin/pricing', label: 'Pricing', icon: DollarSign },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
+  { href: '/admin/inventory', label: 'Inventory', icon: Warehouse },
+  { href: '/admin/abandoned-carts', label: 'Abandoned Carts', icon: ShoppingCart },
   { href: '/admin/customers', label: 'Customers', icon: Users },
+  { href: '/admin/segments', label: 'Segments', icon: UserCheck },
   { href: '/admin/coupons', label: 'Coupons', icon: Tag },
+  { href: '/admin/gift-cards', label: 'Gift Cards', icon: Gift },
+  { href: '/admin/reviews', label: 'Reviews', icon: Star },
+  { href: '/admin/questions', label: 'Questions', icon: MessageCircle },
+  { href: '/admin/reports', label: 'Sales Reports', icon: BarChart3 },
   { href: '/admin/blog', label: 'Blog', icon: Newspaper },
   { href: '/admin/feeds', label: 'Data Feeds', icon: Truck },
   { href: '/admin/import', label: 'Data Import', icon: Upload },
   { href: '/admin/ai-tools', label: 'AI Tools', icon: Sparkles },
   { href: '/admin/theme', label: 'Theme', icon: Palette },
+  { href: '/admin/security', label: 'Security', icon: Shield },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
