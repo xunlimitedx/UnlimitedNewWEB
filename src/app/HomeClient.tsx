@@ -284,7 +284,14 @@ function ProductCard({ product }: { product: Product }) {
 }
 
 // ─── Brand ticker ───
-const BRANDS = ['Dell', 'HP', 'Lenovo', 'Apple', 'Microsoft', 'Adobe', 'Norton', 'Asus', 'Samsung', 'Intel', 'AMD', 'Logitech'];
+const BRANDS = [
+  'Dell', 'HP', 'Lenovo', 'Apple', 'Microsoft', 'Asus', 'Samsung', 'Intel', 'AMD', 'Logitech',
+  'Acer', 'Toshiba', 'Sony', 'LG', 'Huawei', 'MSI', 'Gigabyte', 'Corsair', 'Kingston', 'Seagate',
+  'Western Digital', 'TP-Link', 'Netgear', 'Ubiquiti', 'MikroTik', 'Hikvision', 'Dahua', 'Epson',
+  'Brother', 'Canon', 'Xerox', 'APC', 'Nvidia', 'PlayStation', 'Xbox', 'Nintendo', 'DJI',
+  'Kaspersky', 'Bitdefender', 'Norton', 'Adobe', 'Google', 'Razer', 'SteelSeries', 'HyperX',
+  'Crucial', 'Thermaltake', 'NZXT', 'ViewSonic', 'BenQ', 'Eaton',
+];
 
 function BrandTicker() {
   return (

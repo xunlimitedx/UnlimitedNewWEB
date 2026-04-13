@@ -2,18 +2,19 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const { hostname, pathname, search } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
+  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || request.nextUrl.hostname;
 
   // Redirect www to non-www (canonical domain enforcement)
-  if (hostname.startsWith('www.')) {
-    const newHostname = hostname.replace('www.', '');
+  if (host.startsWith('www.')) {
+    const newHostname = host.replace('www.', '');
     const newUrl = new URL(`https://${newHostname}${pathname}${search}`);
     return NextResponse.redirect(newUrl, 301);
   }
 
   // Trailing slash redirect (SEO canonical)
   if (pathname !== '/' && pathname.endsWith('/')) {
-    const newUrl = new URL(`https://${hostname}${pathname.slice(0, -1)}${search}`);
+    const newUrl = new URL(`https://${host}${pathname.slice(0, -1)}${search}`);
     return NextResponse.redirect(newUrl, 301);
   }
 

@@ -310,7 +310,10 @@ export default function ServicesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-xl font-bold text-gray-900 mb-6">Some of the Brands We Service &amp; Sell</h2>
           <div className="flex flex-wrap justify-center gap-6 text-gray-500 font-medium">
-            {['Dell', 'HP', 'Lenovo', 'ASUS', 'Acer', 'MSI', 'Toshiba', 'Apple', 'Microsoft', 'Adobe', 'PlayStation', 'Xbox', 'Nintendo'].map(
+            {['Dell', 'HP', 'Lenovo', 'ASUS', 'Acer', 'MSI', 'Toshiba', 'Apple', 'Microsoft', 'Samsung', 'Sony', 'LG',
+              'Huawei', 'Intel', 'AMD', 'Nvidia', 'Logitech', 'Corsair', 'Kingston', 'Seagate', 'Western Digital',
+              'TP-Link', 'Ubiquiti', 'MikroTik', 'Hikvision', 'Dahua', 'Epson', 'Brother', 'Canon',
+              'PlayStation', 'Xbox', 'Nintendo', 'Razer', 'APC', 'Kaspersky', 'Norton', 'Adobe'].map(
               (brand) => (
                 <span key={brand} className="px-4 py-2 bg-white rounded-lg border border-gray-200 text-sm">
                   {brand}
