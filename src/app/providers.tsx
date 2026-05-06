@@ -78,7 +78,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <WhatsAppButton />
         <ScrollToTop />
         {!isSensitiveFlow && <NewsletterPopup />}
-        {!isSensitiveFlow && <SocialProofPopups />}
+        {/* SocialProofPopups disabled: fabricated names violate CPA §41 / POPIA. Re-enable only when wired to real Firestore orders. */}
+        {/* {!isSensitiveFlow && <SocialProofPopups />} */}
         {!isSensitiveFlow && <ExitIntentPopup />}
         <MobileBottomNav />
         <AbandonedCartTracker />
