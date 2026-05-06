@@ -465,8 +465,22 @@ export default function DataFeedsPage() {
   };
 
   const deleteSupplier = async (id: string) => {
-    if (!confirm(`Delete ${suppliers.find((s) => s.id === id)?.name}? This won't remove already-imported products.`)) return;
+    const name = suppliers.find((s) => s.id === id)?.name || id;
+    if (!confirm(`Delete supplier "${name}"?\n\nThis will ALSO permanently delete every product imported from this feed.\n\nThis cannot be undone.`)) return;
+    if (!confirm(`Are you absolutely sure? All "${name}" products will be removed from the live catalog.`)) return;
+    const loadingToast = toast.loading(`Removing ${name} and its products...`);
     try {
+      // 1. Find every product linked to this supplier
+      const products = await getCollection('products', [where('supplier', '==', id)]);
+      // 2. Delete them in parallel batches of 25
+      const batchSize = 25;
+      let deleted = 0;
+      for (let i = 0; i < products.length; i += batchSize) {
+        const batch = products.slice(i, i + batchSize) as Array<Record<string, unknown>>;
+        await Promise.all(batch.map((p) => deleteDocument('products', p.id as string)));
+        deleted += batch.length;
+      }
+      // 3. Delete the supplier config itself
       await deleteDocument('feedSettings', id);
       setSuppliers((prev) => prev.filter((s) => s.id !== id));
       setSettings((prev) => {
@@ -475,8 +489,11 @@ export default function DataFeedsPage() {
         return next;
       });
       if (activeSupplier === id) setActiveSupplier(null);
-      toast.success('Supplier removed');
-    } catch {
+      toast.dismiss(loadingToast);
+      toast.success(`${name} removed (${deleted} product${deleted === 1 ? '' : 's'} deleted)`);
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      console.error('Delete supplier error:', error);
       toast.error('Failed to remove supplier');
     }
   };
