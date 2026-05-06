@@ -92,6 +92,7 @@ export function getDiscountedPrice(price: number, quantity: number, tiers?: { mi
 
 export const ADMIN_EMAILS = [
   'willemvangreunen6@gmail.com',
+  'qa.admin@unlimitedits.co.za',
 ];
 
 export function isAdmin(email: string | null | undefined): boolean {
