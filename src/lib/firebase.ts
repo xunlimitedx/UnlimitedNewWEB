@@ -16,6 +16,7 @@ import {
   DocumentData,
   QueryConstraint,
   setDoc,
+  getCountFromServer,
 } from 'firebase/firestore';
 import {
   getAuth,
@@ -82,6 +83,16 @@ export const getCollection = async (
   const q = query(collection(db, collectionName), ...constraints);
   const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+};
+
+// Server-side aggregate count — cheap, single billable read regardless of collection size.
+export const getCollectionCount = async (
+  collectionName: string,
+  constraints: QueryConstraint[] = []
+): Promise<number> => {
+  const q = query(collection(db, collectionName), ...constraints);
+  const snap = await getCountFromServer(q);
+  return snap.data().count;
 };
 
 export const getDocument = async (collectionName: string, docId: string) => {

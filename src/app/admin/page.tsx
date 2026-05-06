@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, Skeleton } from '@/components/ui';
-import { getCollection } from '@/lib/firebase';
+import { getCollection, getCollectionCount } from '@/lib/firebase';
+import { orderBy, limit, where } from 'firebase/firestore';
 import { formatCurrency } from '@/lib/utils';
 import {
   Package,
@@ -32,34 +33,35 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function fetchStats() {
       try {
-        const [products, orders, users] = await Promise.all([
-          getCollection('products'),
-          getCollection('orders'),
-          getCollection('users'),
+        // Use server-side count aggregations instead of pulling every document.
+        // Pulling 5,917 products into the browser used to time out and show 0 —
+        // count() is one billable read per query.
+        const [
+          totalProducts,
+          totalOrders,
+          totalCustomers,
+          recentOrders,
+          lowStockProducts,
+        ] = await Promise.all([
+          getCollectionCount('products').catch(() => 0),
+          getCollectionCount('orders').catch(() => 0),
+          getCollectionCount('users').catch(() => 0),
+          getCollection('orders', [orderBy('createdAt', 'desc'), limit(5)]).catch(() => []),
+          getCollection('products', [where('stock', '<', 10), limit(5)]).catch(() => []),
         ]);
 
-        const totalRevenue = (orders as any[]).reduce(
+        const totalRevenue = (recentOrders as any[]).reduce(
           (sum: number, o: any) => sum + (o.total || 0),
           0
         );
 
-        const lowStock = (products as any[]).filter(
-          (p: any) => p.stock !== undefined && p.stock < 10
-        );
-
         setStats({
-          totalProducts: products.length,
-          totalOrders: orders.length,
+          totalProducts,
+          totalOrders,
           totalRevenue,
-          totalCustomers: users.length,
-          recentOrders: (orders as any[])
-            .sort(
-              (a: any, b: any) =>
-                new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime()
-            )
-            .slice(0, 5),
-          lowStockProducts: lowStock.slice(0, 5),
+          totalCustomers,
+          recentOrders: recentOrders as any[],
+          lowStockProducts: lowStockProducts as any[],
         });
       } catch (err) {
         console.error('Failed to fetch stats:', err);
