@@ -179,6 +179,124 @@ Some Apple Silicon repairs require Apple's proprietary calibration tools that on
 **202 Marine Drive, Ramsgate** \u2014 walk-ins welcome. We diagnose within 24 hours.
 `,
   },
+  {
+    slug: 'best-budget-laptop-south-africa-2026',
+    title: 'Best Budget Laptops Under R10,000 in South Africa (2026)',
+    excerpt: 'Our shortlist of dependable laptops under R10,000 for students, home office and light business use \u2014 with honest pros and cons.',
+    category: 'Buying Guides',
+    tags: ['laptop', 'budget', 'South Africa', 'buying guide'],
+    coverImage: '/images/blog/budget-laptops.jpg',
+    content: `
+# Best Budget Laptops Under R10,000 in South Africa (2026)
+
+Cheap laptops can be a trap \u2014 here are the models we actually recommend after testing in our [Ramsgate workshop](/locations/ramsgate).
+
+## What to look for under R10k
+- **8GB RAM minimum** (16GB if you can stretch budget)
+- **256GB SSD minimum** \u2014 never buy a HDD-only laptop in 2026
+- **Full HD (1920\u00d71080) display** \u2014 avoid 1366\u00d7768 panels
+- **At least one USB-C port** for future-proofing
+
+## Our shortlist
+1. **HP 250 G10 (Intel N200)** \u2014 lightweight admin & study machine. ~R8,500.
+2. **Lenovo IdeaPad 1 (Ryzen 5)** \u2014 best all-rounder around R9,500.
+3. **Acer Aspire 3 (i3-1215U)** \u2014 reliable office workhorse. ~R9,200.
+
+Browse our current [laptop range](/products?category=laptops) for live pricing.
+
+## Need help choosing?
+Call **082 556 9875** or [request a business quote](/business/quote) for 5+ units.
+`,
+  },
+  {
+    slug: 'small-business-network-setup-checklist',
+    title: 'Small Business Network Setup Checklist (KZN South Coast)',
+    excerpt: 'A practical checklist for setting up reliable WiFi, switches, and fibre for a small business or retail shop in South Africa.',
+    category: 'Networking',
+    tags: ['networking', 'small business', 'WiFi', 'fibre'],
+    coverImage: '/images/blog/network-setup.jpg',
+    content: `
+# Small Business Network Setup Checklist
+
+A flaky network costs more in lost sales than the network itself. Here's what every small business should have.
+
+## 1. A real router (not the ISP freebie)
+ISP-supplied routers are budget consumer kit. Replace with a proper SMB unit \u2014 MikroTik, Ubiquiti, or TP-Link Omada \u2014 to get VLANs, guest WiFi isolation and proper logging.
+
+## 2. WiFi 6 access points
+Your phone, POS, scanner and stock-take device all share spectrum. WiFi 6 (802.11ax) handles dense client counts far better than older WiFi 5.
+
+## 3. Managed switch
+Even an 8-port managed switch lets you separate POS traffic from guest WiFi and CCTV. Critical for [PCI-DSS compliance](/blog/cctv-installation-cost-south-africa-2026).
+
+## 4. UPS on the rack
+Load-shedding will kill an unprotected switch within months. Budget R1,500\u2013R3,500 for a 1kVA line-interactive UPS.
+
+## 5. Documentation
+Label every cable. Store a network diagram in the cloud. Future-you will thank present-you.
+
+## Need a quote?
+We do networking installs across [Margate, Port Shepstone, Hibberdene and Scottburgh](/locations/margate). [Request a quote](/business/quote) or call **082 556 9875**.
+`,
+  },
+  {
+    slug: 'load-shedding-proof-your-it-setup',
+    title: 'Load-Shedding Proof Your IT Setup (UPS, Inverter & Surge Guide)',
+    excerpt: 'How to keep your computers, router and CCTV running during stage 4+ load-shedding without frying the hardware.',
+    category: 'Power & Backup',
+    tags: ['load shedding', 'UPS', 'inverter', 'surge protection'],
+    coverImage: '/images/blog/load-shedding.jpg',
+    content: `
+# Load-Shedding Proof Your IT Setup
+
+After 7 years of load-shedding, the rules are clear. Here's the minimum every home and small office needs.
+
+## The 3-layer rule
+1. **Surge protection** at the wall (R150\u2013R400) \u2014 takes the spike that kills your PSU
+2. **Line-interactive UPS** for desktops, router and modem (R1,200\u2013R3,500)
+3. **Inverter or solar** for anything you need running through the full slot
+
+## What size UPS?
+A typical desktop + 24" monitor + ONT pulls about 200W. A 1kVA / 600W UPS gives you ~30 minutes \u2014 enough for stage 6 with comfortable margin.
+
+## Don't forget the CCTV
+A NVR + 4 cameras + PoE switch is roughly 80W continuous. A small dedicated UPS keeps your security live during outages \u2014 the time burglars love most.
+
+## Buy locally
+Browse our [UPS range](/products?category=power) or pop into our [Ramsgate branch](/locations/ramsgate) for advice.
+`,
+  },
+  {
+    slug: 'how-to-choose-cctv-camera-south-africa',
+    title: 'How to Choose a CCTV Camera in South Africa (2026 Buyer\u2019s Guide)',
+    excerpt: 'Resolution, IP rating, night vision and POE \u2014 the only camera spec guide you\u2019ll need before buying.',
+    category: 'CCTV',
+    tags: ['CCTV', 'security cameras', 'buying guide', 'South Africa'],
+    coverImage: '/images/blog/cctv-buyers-guide.jpg',
+    content: `
+# How to Choose a CCTV Camera in South Africa
+
+Cheap cameras with great Amazon reviews often disappoint after 6 months in SA's sun and humidity. Here's what actually matters.
+
+## Resolution
+- **2MP (1080p)** is the realistic minimum for facial ID at 5\u201310m
+- **4MP / 5MP** is the sweet spot for most homes and shops in 2026
+- **8MP / 4K** only matters for parking lots and large yards
+
+## IP rating
+Outdoor cameras must be **IP66 minimum** for KZN coastal humidity and salt air. IP67 if mounted within 50m of the beach.
+
+## Night vision
+- **IR LEDs (black & white at night)** \u2014 cheaper, fine for back yards
+- **Colour night vision (with white-light)** \u2014 better for entrances and driveways
+
+## POE vs WiFi
+Always pick **POE (Power-over-Ethernet)** for a fixed install \u2014 one cable for power and data, far more reliable than WiFi cameras.
+
+## Installation
+We install across the South Coast: [Margate](/locations/margate), [Port Shepstone](/locations/port-shepstone), [Hibberdene](/locations/hibberdene) and [Scottburgh](/locations/scottburgh). See our full [CCTV installation service](/services/cctv-installation) or [request a quote](/business/quote).
+`,
+  },
 ];
 
 async function main() {

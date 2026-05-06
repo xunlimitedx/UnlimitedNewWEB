@@ -1,4 +1,4 @@
-import { adminDb } from '@/lib/firebase-admin';
+import { getAdminDb } from '@/lib/firebase-admin';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { TrendingUp } from 'lucide-react';
@@ -21,7 +21,7 @@ interface CategoryStat {
 
 async function loadStats(): Promise<CategoryStat[]> {
   try {
-    const snap = await adminDb.collection('products').where('isActive', '==', true).select('category', 'price').get();
+    const snap = await getAdminDb().collection('products').where('isActive', '==', true).select('category', 'price').get();
     const buckets = new Map<string, number[]>();
     snap.forEach((doc) => {
       const d = doc.data() as any;

@@ -1,4 +1,4 @@
-import { adminDb } from '@/lib/firebase-admin';
+import { getAdminDb } from '@/lib/firebase-admin';
 import { Metadata } from 'next';
 import { CheckCircle2, Clock, Wrench, Package, AlertCircle } from 'lucide-react';
 
@@ -20,7 +20,7 @@ const STATUS_STEPS = [
 
 async function getJob(jobId: string) {
   try {
-    const doc = await adminDb.collection('repair-jobs').doc(jobId).get();
+    const doc = await getAdminDb().collection('repair-jobs').doc(jobId).get();
     if (!doc.exists) return null;
     const data = doc.data() as any;
     return {

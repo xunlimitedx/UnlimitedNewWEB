@@ -95,6 +95,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${product.name} | Unlimited IT Solutions`,
     description,
+    alternates: { canonical: `https://unlimitedits.co.za/products/${id}` },
     openGraph: {
       title: `${product.name} | Unlimited IT Solutions`,
       description,
@@ -103,6 +104,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       images: product.images?.[0]
         ? [{ url: product.images[0], width: 800, height: 800, alt: product.name }]
         : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${product.name} | Unlimited IT Solutions`,
+      description,
+      images: product.images?.[0] ? [product.images[0]] : undefined,
     },
   };
 }

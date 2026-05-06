@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
+import { getAdminDb } from '@/lib/firebase-admin';
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     if (data.requirements.length > 5000) {
       return NextResponse.json({ error: 'Requirements too long' }, { status: 400 });
     }
-    await adminDb.collection('business-quotes').add({
+    await getAdminDb().collection('business-quotes').add({
       company: String(data.company).slice(0, 200),
       vat: String(data.vat || '').slice(0, 50),
       name: String(data.name).slice(0, 200),
