@@ -59,7 +59,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed mb-5">
-              Enterprise-grade IT for South Africa&apos;s South Coast — repairs, hardware, networks and managed services since 2010.
+              South Coast IT done right — repairs, hardware, networks and CCTV from a real workshop in Ramsgate. Trusted since 2010.
             </p>
             <div className="flex gap-3">
               <a

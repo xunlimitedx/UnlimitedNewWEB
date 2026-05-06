@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { ArrowRight, Sparkles, Phone, MapPin, ShieldCheck, Clock4, Award } from 'lucide-react';
 
 const headlineLines = [
-  ['Enterprise-grade', 'IT'],
-  ['for', 'every', 'business.'],
+  ['Faster', 'fixes.'],
+  ['Smarter', 'setups.'],
+  ['Real', 'humans.'],
 ];
 
 export default function PremiumHero() {
@@ -42,7 +43,7 @@ export default function PremiumHero() {
                   initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
                   animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                   transition={{ duration: 0.7, delay: 0.15 + (li * line.length + wi) * 0.07, ease: [0.22, 1, 0.36, 1] }}
-                  className={`inline-block mr-3 ${li === 1 && word === 'business.' ? 'text-gradient-premium' : ''}`}
+                  className={`inline-block mr-3 ${li === 2 && word === 'humans.' ? 'text-gradient-premium' : ''}`}
                 >
                   {word}
                 </motion.span>
@@ -58,7 +59,7 @@ export default function PremiumHero() {
           transition={{ duration: 0.7, delay: 0.85 }}
           className="mt-7 max-w-2xl text-lg sm:text-xl text-slate-300/90 leading-relaxed"
         >
-          Repairs, hardware, networks, CCTV and managed support — engineered with the rigour of a billion-rand enterprise, delivered with the warmth of a Ramsgate local.
+          Same-day computer repairs, business networks, CCTV and hardware — straight from our Ramsgate workshop. No call centres, no scripts, no jargon. Just IT that works.
         </motion.p>
 
         {/* CTAs */}

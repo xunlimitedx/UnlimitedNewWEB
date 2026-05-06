@@ -85,7 +85,7 @@ export default function AboutPage() {
                 Built for South Africans <span className="text-gradient-premium">who can&apos;t afford downtime.</span>
               </h1>
               <p className="mt-7 text-lg sm:text-xl text-slate-300/90 max-w-2xl leading-relaxed">
-                We&apos;re a Ramsgate-based IT firm engineered around one principle: enterprise-grade rigour with the speed of a local technician. Every repair, every device sold, every cable run — held to the standard of a billion-rand business.
+                We&apos;re a Ramsgate workshop with one rule: pick up the phone, do the work properly, and stand behind it. Sixteen years of repairs, installs and hardware sales — handled by the same people who&apos;ll answer when you call back next month.
               </p>
               <div className="mt-10 grid grid-cols-3 gap-4 max-w-lg">
                 {[

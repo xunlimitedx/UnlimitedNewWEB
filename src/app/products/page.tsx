@@ -190,19 +190,25 @@ function ProductsContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+      <div className="relative isolate overflow-hidden bg-aurora text-white border-b border-slate-900">
+        <div className="absolute inset-0 animate-aurora opacity-90 pointer-events-none" />
+        <div className="absolute inset-0 bg-grid pointer-events-none" />
+        <div className="absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full bg-blue-500/25 blur-3xl animate-orb pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+          <span className="eyebrow-chip mb-4">
+            {searchQuery ? 'Search results' : selectedCategory ? 'Category' : 'Catalogue'}
+          </span>
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-3">
             {selectedCategory
               ? CATEGORIES.find((c) => c.slug === selectedCategory)?.name || 'Products'
               : searchQuery
-              ? `Search results for "${searchQuery}"`
-              : 'All Products'}
+              ? <>Results for <span className="text-gradient-premium">&ldquo;{searchQuery}&rdquo;</span></>
+              : <>Every part. <span className="text-gradient-premium">Hand-picked.</span></>}
           </h1>
-          <p className="text-gray-500">
-            {loading ? 'Loading...' : `${products.length} products found`}
+          <p className="text-slate-300 max-w-2xl">
+            {loading ? 'Loading…' : `${products.length} ${products.length === 1 ? 'product' : 'products'} ready to ship from our Ramsgate workshop.`}
           </p>
         </div>
       </div>

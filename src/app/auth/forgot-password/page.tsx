@@ -36,71 +36,65 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center py-12 px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <img
-            src="/images/logo.svg"
-            alt="Unlimited IT Solutions"
-            className="h-12 mx-auto mb-4 text-primary-600"
-            style={{ color: 'var(--color-primary-600, #2563eb)' }}
-          />
-          <h1 className="text-2xl font-bold text-gray-900">Reset your password</h1>
-          <p className="text-gray-500 mt-2">
-            Enter your email address and we&apos;ll send you a link to reset your password.
+    <div className="w-full max-w-md">
+      <div className="mb-8">
+        <span className="eyebrow-chip eyebrow-light mb-3">Password reset</span>
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+          Forgot your password?
+        </h1>
+        <p className="text-sm text-gray-500 mt-2">
+          Enter your email and we&apos;ll send you a link to set a new one.
+        </p>
+      </div>
+
+      {sent ? (
+        <div className="text-center space-y-4 bg-white rounded-2xl border border-slate-100 p-8 shadow-[0_2px_20px_-8px_rgba(15,23,42,0.08)]">
+          <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-green-500/25">
+            <CheckCircle className="w-8 h-8 text-white" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900">Check your inbox</h3>
+          <p className="text-gray-600 text-sm">
+            We&apos;ve sent a password reset link to <strong className="text-gray-900">{email}</strong>. Click the link in the
+            email to set a new password.
+          </p>
+          <p className="text-gray-400 text-xs">
+            Didn&apos;t receive it? Check your spam folder or{' '}
+            <button
+              onClick={() => setSent(false)}
+              className="text-primary-600 hover:text-primary-700 font-medium"
+            >
+              try again
+            </button>
+            .
           </p>
         </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <Input
+            label="Email Address"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            autoComplete="email"
+            required
+            icon={<Mail className="w-4 h-4" />}
+          />
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-          {sent ? (
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-8 h-8 text-green-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Check your inbox</h3>
-              <p className="text-gray-600 text-sm">
-                We&apos;ve sent a password reset link to <strong>{email}</strong>. Click the link in the
-                email to set a new password.
-              </p>
-              <p className="text-gray-400 text-xs">
-                Didn&apos;t receive the email? Check your spam folder or{' '}
-                <button
-                  onClick={() => setSent(false)}
-                  className="text-primary-600 hover:text-primary-700 font-medium"
-                >
-                  try again
-                </button>
-                .
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <Input
-                label="Email Address"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-                icon={<Mail className="w-4 h-4" />}
-              />
+          <Button type="submit" size="lg" loading={loading} className="w-full">
+            Send Reset Link
+          </Button>
+        </form>
+      )}
 
-              <Button type="submit" size="lg" loading={loading} className="w-full">
-                Send Reset Link
-              </Button>
-            </form>
-          )}
-
-          <div className="mt-6 text-center">
-            <Link
-              href="/auth/login"
-              className="text-sm text-primary-600 hover:text-primary-700 font-medium inline-flex items-center gap-1"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Sign In
-            </Link>
-          </div>
-        </div>
+      <div className="mt-8 text-center">
+        <Link
+          href="/auth/login"
+          className="text-sm text-primary-600 hover:text-primary-700 font-semibold inline-flex items-center gap-1 group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          Back to Sign In
+        </Link>
       </div>
     </div>
   );
