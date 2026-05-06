@@ -42,35 +42,42 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-      <div className="px-6 py-4 border-b border-gray-100">
-        <h2 className="text-lg font-semibold text-gray-900">Profile Information</h2>
-        <p className="text-sm text-gray-500">Update your personal details</p>
+    <div className="card-premium overflow-hidden">
+      {/* Header band with gradient */}
+      <div className="relative px-6 py-5 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-primary-50/60 via-blue-50/40 to-transparent dark:from-primary-900/20 dark:via-blue-900/10">
+        <div className="pointer-events-none absolute -top-10 -right-10 w-40 h-40 rounded-full bg-gradient-to-br from-primary-500/10 to-blue-500/10 blur-2xl" />
+        <h2 className="relative text-lg font-bold text-gray-900 dark:text-white tracking-tight">Profile Information</h2>
+        <p className="relative text-sm text-gray-500 dark:text-gray-400">Update your personal details</p>
       </div>
-      <div className="p-6">
+      <div className="p-6 sm:p-8">
         {/* Avatar */}
-        <div className="flex items-center gap-4 mb-8">
+        <div className="flex items-center gap-5 mb-8 pb-8 border-b border-gray-100 dark:border-gray-800">
           <div className="relative">
-            <div className="w-20 h-20 rounded-full bg-primary-100 flex items-center justify-center text-primary-600">
-              {user?.photoURL ? (
-                <img
-                  src={user.photoURL}
-                  alt="Profile"
-                  className="w-full h-full rounded-full object-cover"
-                />
-              ) : (
-                <User className="w-8 h-8" />
-              )}
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-500 to-blue-600 p-[2px] shadow-lg shadow-primary-500/20">
+              <div className="w-full h-full rounded-[14px] bg-white dark:bg-gray-900 flex items-center justify-center text-primary-600 overflow-hidden">
+                {user?.photoURL ? (
+                  <img
+                    src={user.photoURL}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User className="w-9 h-9" />
+                )}
+              </div>
             </div>
-            <button className="absolute bottom-0 right-0 w-7 h-7 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-sm hover:bg-primary-700 transition-colors">
+            <button className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-to-br from-primary-500 to-blue-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-primary-500/30 hover:scale-110 transition-transform ring-2 ring-white dark:ring-gray-900">
               <Camera className="w-3.5 h-3.5" />
             </button>
           </div>
-          <div>
-            <p className="font-semibold text-gray-900">
+          <div className="min-w-0">
+            <p className="font-bold text-gray-900 dark:text-white text-lg truncate">
               {user?.displayName || 'User'}
             </p>
-            <p className="text-sm text-gray-500">{user?.email}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
+            <span className="inline-flex items-center gap-1.5 mt-2 rounded-full bg-emerald-50 dark:bg-emerald-900/30 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Verified account
+            </span>
           </div>
         </div>
 

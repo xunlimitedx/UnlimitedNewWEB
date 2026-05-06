@@ -8,7 +8,7 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { useWishlistStore } from '@/store/wishlistStore';
 import { useCartStore } from '@/store/cartStore';
 import { formatCurrency } from '@/lib/utils';
-import { Heart, ShoppingCart, Trash2, Package } from 'lucide-react';
+import { Heart, ShoppingCart, Trash2, Package, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function WishlistPage() {
@@ -29,29 +29,44 @@ export default function WishlistPage() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen">
       <Breadcrumbs items={[{ label: 'Wishlist' }]} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">My Wishlist</h1>
-            <p className="text-gray-500 mt-1">{items.length} item{items.length !== 1 ? 's' : ''} saved</p>
+      {/* Aurora hero */}
+      <section className="relative isolate overflow-hidden bg-aurora text-white">
+        <div className="absolute inset-0 animate-aurora opacity-90 pointer-events-none" />
+        <div className="absolute inset-0 bg-grid pointer-events-none" />
+        <div className="absolute -top-32 right-1/4 w-[26rem] h-[26rem] rounded-full bg-pink-500/25 blur-3xl animate-orb pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+            <div>
+              <span className="eyebrow-chip"><Heart className="w-3.5 h-3.5" /> Saved for later</span>
+              <h1 className="mt-5 text-4xl sm:text-5xl font-extrabold tracking-tight leading-[1.05]">
+                Your <span className="text-gradient-premium">wishlist.</span>
+              </h1>
+              <p className="mt-3 text-slate-300/90">
+                {items.length} item{items.length !== 1 ? 's' : ''} saved — ready when you are.
+              </p>
+            </div>
+            {items.length > 0 && (
+              <Button variant="outline" onClick={clearWishlist} className="!border-white/20 !text-white hover:!bg-white/10">
+                Clear all
+              </Button>
+            )}
           </div>
-          {items.length > 0 && (
-            <Button variant="outline" onClick={clearWishlist}>
-              Clear All
-            </Button>
-          )}
         </div>
+      </section>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {items.length === 0 ? (
-          <div className="text-center py-20">
-            <Heart className="w-16 h-16 text-gray-200 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Your wishlist is empty</h2>
-            <p className="text-gray-500 mb-6">Save items you love to your wishlist and come back to them later.</p>
+          <div className="card-premium text-center py-20 px-6 max-w-2xl mx-auto">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500/10 to-rose-500/10 ring-1 ring-pink-500/20 mb-5">
+              <Heart className="w-7 h-7 text-pink-500" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight">Your wishlist is empty</h2>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">Save items you love and come back to them anytime.</p>
             <Link href="/products">
-              <Button>Browse Products</Button>
+              <Button className="btn-premium"><Sparkles className="w-4 h-4" /> Browse products</Button>
             </Link>
           </div>
         ) : (
@@ -59,16 +74,16 @@ export default function WishlistPage() {
             {items.map((item) => (
               <div
                 key={item.productId}
-                className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300"
+                className="group card-premium overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
-                <Link href={`/products/${item.productId}`}>
-                  <div className="relative h-56 bg-gray-100 overflow-hidden">
+                <Link href={`/products/${item.productId}`} className="block">
+                  <div className="relative h-56 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 overflow-hidden">
                     {item.image ? (
                       <Image
                         src={item.image}
                         alt={item.name}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="object-cover group-hover:scale-110 transition-transform duration-700"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                       />
                     ) : (
@@ -76,18 +91,19 @@ export default function WishlistPage() {
                         <Package className="w-12 h-12 text-gray-300" />
                       </div>
                     )}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </Link>
-                <div className="p-5">
+                <div className="p-5 flex-1 flex flex-col">
                   <Link href={`/products/${item.productId}`}>
-                    <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors line-clamp-2 mb-2">
+                    <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-2 mb-2 tracking-tight">
                       {item.name}
                     </h3>
                   </Link>
-                  <span className="text-xl font-bold text-gray-900">{formatCurrency(item.price)}</span>
-                  <div className="flex items-center gap-2 mt-4">
+                  <span className="text-xl font-extrabold text-gradient-premium">{formatCurrency(item.price)}</span>
+                  <div className="flex items-center gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
                     <Button size="sm" className="flex-1" onClick={() => handleAddToCart(item)}>
-                      <ShoppingCart className="w-4 h-4" /> Add to Cart
+                      <ShoppingCart className="w-4 h-4" /> Add to cart
                     </Button>
                     <Button
                       size="icon"
@@ -96,6 +112,7 @@ export default function WishlistPage() {
                         removeItem(item.productId);
                         toast.success('Removed from wishlist');
                       }}
+                      aria-label="Remove from wishlist"
                     >
                       <Trash2 className="w-4 h-4 text-red-500" />
                     </Button>
