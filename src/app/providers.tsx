@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider, useTheme } from '@/context/ThemeContext';
 import { QueryProvider } from '@/context/QueryProvider';
@@ -35,6 +36,14 @@ function AnnouncementBar() {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isSensitiveFlow =
+    pathname.startsWith('/checkout') ||
+    pathname.startsWith('/cart') ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/account');
+
   return (
     <AuthProvider>
       <QueryProvider>
@@ -68,9 +77,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <CookieConsent />
         <WhatsAppButton />
         <ScrollToTop />
-        <NewsletterPopup />
-        <SocialProofPopups />
-        <ExitIntentPopup />
+        {!isSensitiveFlow && <NewsletterPopup />}
+        {!isSensitiveFlow && <SocialProofPopups />}
+        {!isSensitiveFlow && <ExitIntentPopup />}
         <MobileBottomNav />
         <AbandonedCartTracker />
         <LiveChatWidget />

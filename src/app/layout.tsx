@@ -94,7 +94,7 @@ export const metadata: Metadata = {
     // google: 'your-verification-code',
   },
   alternates: {
-    canonical: 'https://unlimitedits.co.za',
+    canonical: './',
   },
 };
 
