@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { FeedProduct } from '@/types';
+import { calculateSellingPrice, type RoundingRule } from '@/lib/pricing';
 
 // Validate that the URL is a valid HTTP(S) URL
 function isValidFeedUrl(url: string): boolean {
@@ -17,17 +18,6 @@ function generateSlug(name: string): string {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '')
     .substring(0, 120);
-}
-
-function applyMarkup(
-  costPrice: number,
-  markupType: 'percentage' | 'fixed',
-  markupValue: number
-): number {
-  if (markupType === 'percentage') {
-    return Math.round((costPrice * (1 + markupValue / 100)) * 100) / 100;
-  }
-  return Math.round((costPrice + markupValue) * 100) / 100;
 }
 
 async function fetchFeedProducts(supplier: string, feedUrl: string): Promise<{ products: FeedProduct[]; categories: string[] }> {
@@ -113,6 +103,7 @@ export async function POST(request: NextRequest) {
       feedUrl,
       markupType = 'percentage',
       markupValue = 0,
+      rounding = 'none' as RoundingRule,
       excludeOutOfStock = true,
       excludeZeroPrice = true,
       selectedCategories = [],
@@ -154,7 +145,7 @@ export async function POST(request: NextRequest) {
 
     // Transform products for import
     const importProducts = products.map((p) => {
-      const sellingPrice = applyMarkup(p.costPrice, markupType, markupValue);
+      const sellingPrice = calculateSellingPrice(p.costPrice, { markupType, markupValue, rounding });
       const categorySlug = p.category
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')

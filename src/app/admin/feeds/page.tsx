@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, Button, Badge, Spinner } from '@/components/ui';
 import { addDocument, getCollection, setDocument, deleteDocument } from '@/lib/firebase';
 import { query, where } from '@/lib/firebase';
+import { calculateSellingPrice, ROUNDING_OPTIONS, type RoundingRule } from '@/lib/pricing';
 import toast from 'react-hot-toast';
 import {
   RefreshCw,
@@ -83,6 +84,7 @@ interface FeedInfo {
 interface SyncSettings {
   markupType: 'percentage' | 'fixed';
   markupValue: number;
+  rounding: RoundingRule;
   excludeOutOfStock: boolean;
   excludeZeroPrice: boolean;
   selectedCategories: string[];
@@ -163,6 +165,7 @@ export default function DataFeedsPage() {
           savedSettings[id] = {
             markupType: (doc.markupType as 'percentage' | 'fixed') || 'percentage',
             markupValue: (doc.markupValue as number) || 20,
+            rounding: (doc.rounding as RoundingRule) || 'up_49_99',
             excludeOutOfStock: doc.excludeOutOfStock !== false,
             excludeZeroPrice: doc.excludeZeroPrice !== false,
             selectedCategories: (doc.selectedCategories as string[]) || [],
@@ -194,6 +197,7 @@ export default function DataFeedsPage() {
           defaults.forEach((s) => {
             defaultSettings[s.id] = {
               markupType: 'percentage', markupValue: 20,
+              rounding: 'up_49_99',
               excludeOutOfStock: true, excludeZeroPrice: true,
               selectedCategories: [], feedUrl: '',
             };
@@ -253,6 +257,7 @@ export default function DataFeedsPage() {
           feedUrl: s.feedUrl,
           markupType: s.markupType,
           markupValue: s.markupValue,
+          rounding: s.rounding,
           excludeOutOfStock: s.excludeOutOfStock,
           excludeZeroPrice: s.excludeZeroPrice,
           selectedCategories: s.selectedCategories,
@@ -286,6 +291,7 @@ export default function DataFeedsPage() {
           feedUrl: s.feedUrl,
           markupType: s.markupType,
           markupValue: s.markupValue,
+          rounding: s.rounding,
           excludeOutOfStock: s.excludeOutOfStock,
           excludeZeroPrice: s.excludeZeroPrice,
           selectedCategories: s.selectedCategories,
@@ -442,6 +448,7 @@ export default function DataFeedsPage() {
     const defaultSettings: SyncSettings = {
       markupType: 'percentage',
       markupValue: 20,
+      rounding: 'up_49_99',
       excludeOutOfStock: true,
       excludeZeroPrice: true,
       selectedCategories: [],
@@ -848,10 +855,54 @@ export default function DataFeedsPage() {
                   <p className="text-xs text-gray-500 mb-1">Preview: R100 cost →</p>
                   <p className="text-lg font-bold text-green-600">
                     R
-                    {currentSettings.markupType === 'percentage'
-                      ? (100 * (1 + currentSettings.markupValue / 100)).toFixed(2)
-                      : (100 + currentSettings.markupValue).toFixed(2)}
+                    {calculateSellingPrice(100, {
+                      markupType: currentSettings.markupType,
+                      markupValue: currentSettings.markupValue,
+                      rounding: currentSettings.rounding,
+                    }).toFixed(2)}
                   </p>
+                </div>
+              </div>
+
+              {/* Rounding rule */}
+              <div className="mt-5 pt-5 border-t border-gray-100">
+                <label className="block text-xs font-medium text-gray-600 mb-1">
+                  Price Rounding Rule
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <select
+                    value={currentSettings.rounding}
+                    onChange={(e) =>
+                      updateSetting(activeSupplier, 'rounding', e.target.value as RoundingRule)
+                    }
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  >
+                    {ROUNDING_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-500 self-center">
+                    {ROUNDING_OPTIONS.find((o) => o.value === currentSettings.rounding)?.example}
+                  </p>
+                </div>
+
+                {/* Live examples */}
+                <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  {[123.99, 163, 249.5, 899].map((cost) => {
+                    const final = calculateSellingPrice(cost, {
+                      markupType: currentSettings.markupType,
+                      markupValue: currentSettings.markupValue,
+                      rounding: currentSettings.rounding,
+                    });
+                    return (
+                      <div key={cost} className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2">
+                        <p className="text-gray-500">Cost R{cost.toFixed(2)}</p>
+                        <p className="font-bold text-green-600">→ R{final.toFixed(2)}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </CardContent>

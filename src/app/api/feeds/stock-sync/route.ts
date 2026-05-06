@@ -1,26 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminDb } from '@/lib/firebase-admin';
 import type { FeedProduct } from '@/types';
+import { calculateSellingPrice, type RoundingRule } from '@/lib/pricing';
 
 interface FeedConfig {
   feedUrl: string;
   markupType: 'percentage' | 'fixed';
   markupValue: number;
+  rounding?: RoundingRule;
   excludeOutOfStock: boolean;
   excludeZeroPrice: boolean;
   autoSync?: boolean;
   supplierName?: string;
-}
-
-function applyMarkup(
-  costPrice: number,
-  markupType: 'percentage' | 'fixed',
-  markupValue: number
-): number {
-  if (markupType === 'percentage') {
-    return Math.round(costPrice * (1 + markupValue / 100) * 100) / 100;
-  }
-  return Math.round((costPrice + markupValue) * 100) / 100;
 }
 
 function parseFeedProducts(supplier: string, rawData: unknown): FeedProduct[] {
@@ -134,7 +125,11 @@ async function syncSupplierStock(
     try {
       if (feedItem) {
         // Product exists in feed — update stock, price, active status
-        const newPrice = applyMarkup(feedItem.costPrice, config.markupType, config.markupValue);
+        const newPrice = calculateSellingPrice(feedItem.costPrice, {
+          markupType: config.markupType,
+          markupValue: config.markupValue,
+          rounding: config.rounding || 'none',
+        });
         const updateData: Record<string, unknown> = {
           stock: feedItem.stock,
           price: newPrice,
