@@ -151,11 +151,11 @@ export default function Header() {
               className="h-9 w-auto transition-transform group-hover:scale-105"
             />
             <div className="leading-none">
-              <span className="block text-[1.05rem] sm:text-[1.15rem] font-extrabold text-gray-900 dark:text-white tracking-tight">
-                Unlimited<span className="text-primary-600">.</span>
+              <span className="block font-brand text-[1.05rem] sm:text-[1.2rem] text-gray-900 dark:text-white tracking-wider">
+                UNLIMITED<span className="text-primary-600">.</span>
               </span>
-              <span className="block text-[0.65rem] sm:text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 mt-0.5">
-                IT Solutions
+              <span className="block font-brand text-[0.7rem] sm:text-[0.78rem] text-gray-500 dark:text-gray-400 tracking-[0.25em] mt-0.5">
+                IT SOLUTIONS
               </span>
             </div>
           </Link>

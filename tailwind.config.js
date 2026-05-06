@@ -38,6 +38,7 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         heading: ['var(--font-heading)', 'cursive'],
+        brand: ['var(--font-brand)', 'Impact', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

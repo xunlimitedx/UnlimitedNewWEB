@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
+import { Inter, Plus_Jakarta_Sans, Black_Ops_One } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 import { Providers } from './providers';
@@ -16,6 +16,13 @@ const plusJakarta = Plus_Jakarta_Sans({
   variable: '--font-heading',
   display: 'swap',
   weight: ['400', '500', '600', '700', '800'],
+});
+
+const blackOpsOne = Black_Ops_One({
+  subsets: ['latin'],
+  variable: '--font-brand',
+  display: 'swap',
+  weight: ['400'],
 });
 
 
@@ -104,7 +111,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${plusJakarta.variable}`}>
+    <html lang="en" className={`${inter.variable} ${plusJakarta.variable} ${blackOpsOne.variable}`}>
       <head>
         <JsonLd />
         <meta name="theme-color" content="#2563eb" />

@@ -57,6 +57,7 @@ export default function ContactPage() {
     {
       icon: Phone,
       title: 'Phone',
+      tile: 'from-blue-500 to-cyan-500',
       lines: [
         { text: '039 314 4359', href: 'tel:0393144359' },
         { text: '082 556 9875', href: 'tel:0825569875' },
@@ -65,11 +66,13 @@ export default function ContactPage() {
     {
       icon: MapPin,
       title: 'Address',
+      tile: 'from-rose-500 to-pink-500',
       lines: [{ text: '202 Marine Drive, Ramsgate, 4285', href: '#map' }],
     },
     {
       icon: Mail,
       title: 'Email',
+      tile: 'from-violet-500 to-fuchsia-500',
       lines: [
         { text: 'info@unlimitedits.co.za', href: 'mailto:info@unlimitedits.co.za' },
       ],
@@ -77,6 +80,7 @@ export default function ContactPage() {
     {
       icon: Clock,
       title: 'Business Hours',
+      tile: 'from-emerald-500 to-teal-500',
       lines: [
         { text: 'Mon-Fri: 8am - 5pm', href: '' },
         { text: 'Sat: 8am - 1pm', href: '' },
@@ -101,29 +105,29 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Info Cards */}
-      <section className="-mt-12 relative z-10 mb-16">
+      <section className="-mt-16 relative z-10 mb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {contactInfo.map((info) => (
               <div
                 key={info.title}
-                className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center"
+                className="group card-premium p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
-                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <info.icon className="w-6 h-6 text-primary-600" />
+                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br ${info.tile} text-white shadow-lg shadow-black/5 ring-1 ring-white/30 mx-auto mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                  <info.icon className="w-6 h-6" />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">{info.title}</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-2 tracking-tight">{info.title}</h3>
                 {info.lines.map((line) =>
                   line.href ? (
                     <a
                       key={line.text}
                       href={line.href}
-                      className="block text-sm text-gray-500 hover:text-primary-600 transition-colors"
+                      className="block text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                     >
                       {line.text}
                     </a>
                   ) : (
-                    <span key={line.text} className="block text-sm text-gray-500">
+                    <span key={line.text} className="block text-sm text-gray-500 dark:text-gray-400">
                       {line.text}
                     </span>
                   )
@@ -139,38 +143,37 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-10">
             {/* Form */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+            <div className="card-premium p-8">
               {submitted ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                    <CheckCircle className="w-8 h-8 text-green-600" />
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/20">
+                    <CheckCircle className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    Message Sent!
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight">
+                    Message sent!
                   </h3>
-                  <p className="text-gray-500 mb-6">
-                    Thank you for reaching out. We&apos;ll get back to you within 24
-                    hours.
+                  <p className="text-gray-500 dark:text-gray-400 mb-6">
+                    Thank you for reaching out. We&apos;ll get back to you within 24 hours.
                   </p>
                   <Button onClick={() => {
                     setSubmitted(false);
                     setForm({ name: '', email: '', phone: '', subject: '', message: '', website: '' });
                   }} variant="outline">
-                    Send Another Message
+                    Send another message
                   </Button>
                 </div>
               ) : (
                 <>
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                      <MessageSquare className="w-5 h-5 text-primary-600" />
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-blue-600 flex items-center justify-center shadow-md shadow-primary-500/20">
+                      <MessageSquare className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-semibold text-gray-900">
+                      <h2 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
                         Send us a message
                       </h2>
-                      <p className="text-sm text-gray-500">
-                        Fill out the form and we&apos;ll respond as soon as possible.
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        We respond within 1 business hour.
                       </p>
                     </div>
                   </div>
@@ -247,7 +250,7 @@ export default function ContactPage() {
             </div>
 
             {/* Map */}
-            <div id="map" className="rounded-2xl overflow-hidden shadow-sm border border-gray-100 min-h-[400px]">
+            <div id="map" className="card-premium overflow-hidden min-h-[400px]">
               <iframe
                 src="https://maps.google.com/maps?q=202+Marine+Drive,+Ramsgate,+KwaZulu-Natal,+4285,+South+Africa&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 width="100%"

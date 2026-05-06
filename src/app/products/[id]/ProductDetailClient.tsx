@@ -130,23 +130,23 @@ export default function ProductDetailClient({ product, initialReviews }: Product
     : 0;
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen">
       {/* Breadcrumb */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white/80 dark:bg-gray-900/60 backdrop-blur-md border-b border-gray-200/70 dark:border-gray-800/70 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <nav className="flex items-center gap-2 text-sm text-gray-500">
-            <Link href="/" className="hover:text-primary-600">Home</Link>
+          <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <Link href="/" className="hover:text-primary-600 transition-colors">Home</Link>
             <ChevronRight className="w-3.5 h-3.5" />
-            <Link href="/products" className="hover:text-primary-600">Products</Link>
+            <Link href="/products" className="hover:text-primary-600 transition-colors">Products</Link>
             <ChevronRight className="w-3.5 h-3.5" />
             <Link
               href={`/products?category=${product.category}`}
-              className="hover:text-primary-600 capitalize"
+              className="hover:text-primary-600 transition-colors capitalize"
             >
               {product.category}
             </Link>
             <ChevronRight className="w-3.5 h-3.5" />
-            <span className="text-gray-900 font-medium truncate max-w-[200px]">
+            <span className="text-gray-900 dark:text-white font-semibold truncate max-w-[200px]">
               {product.name}
             </span>
           </nav>
@@ -198,15 +198,16 @@ export default function ProductDetailClient({ product, initialReviews }: Product
           {/* Images */}
           <div className="space-y-4">
             <div
-              className="relative w-full h-[400px] sm:h-[500px] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 cursor-zoom-in"
+              className="group relative w-full h-[400px] sm:h-[520px] bg-gradient-to-br from-white via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-950 rounded-3xl overflow-hidden shadow-sm ring-1 ring-gray-200/70 dark:ring-gray-800/70 cursor-zoom-in"
               onClick={() => product.images?.[selectedImage] && setZoomedImage(product.images[selectedImage])}
             >
+              <div className="pointer-events-none absolute -top-24 -right-24 w-64 h-64 rounded-full bg-gradient-to-br from-primary-500/10 to-blue-500/10 blur-3xl" />
               {product.images?.[selectedImage] ? (
                 <Image
                   src={product.images[selectedImage]}
                   alt={product.name}
                   fill
-                  className="object-contain p-4"
+                  className="object-contain p-6 transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   priority
                 />
@@ -216,7 +217,7 @@ export default function ProductDetailClient({ product, initialReviews }: Product
                 </div>
               )}
               {discount > 0 && (
-                <Badge variant="danger" className="absolute top-4 left-4 text-sm">
+                <Badge variant="danger" className="absolute top-4 left-4 text-sm shadow-lg">
                   -{discount}% OFF
                 </Badge>
               )}
@@ -248,13 +249,16 @@ export default function ProductDetailClient({ product, initialReviews }: Product
 
           {/* Product Info */}
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-3">
               <Badge>{product.category}</Badge>
               {product.brand && (
-                <span className="text-sm text-gray-500">{product.brand}</span>
+                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary-500" />
+                  {product.brand}
+                </span>
               )}
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-3 tracking-tight leading-[1.1]">
               {product.name}
             </h1>
 
@@ -284,7 +288,7 @@ export default function ProductDetailClient({ product, initialReviews }: Product
 
             {/* Price */}
             <div className="flex items-baseline gap-3 mb-6">
-              <span className="text-3xl font-bold text-gray-900">
+              <span className="text-4xl font-extrabold text-gradient-premium">
                 {formatCurrency(product.price)}
               </span>
               {product.compareAtPrice && product.compareAtPrice > product.price && (
@@ -298,10 +302,10 @@ export default function ProductDetailClient({ product, initialReviews }: Product
             </div>
 
             {/* PayFlex 4-pay messaging */}
-            <div className="flex items-center gap-2 mb-6 p-3 bg-purple-50 border border-purple-100 rounded-lg">
-              <span className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-purple-600 text-white text-xs font-bold">P4</span>
-              <p className="text-sm text-gray-700">
-                Or 4 interest-free payments of <span className="font-semibold text-gray-900">{formatCurrency(product.price / 4)}</span> with PayFlex
+            <div className="flex items-center gap-3 mb-6 p-3.5 rounded-xl bg-gradient-to-r from-purple-50 via-fuchsia-50/60 to-transparent dark:from-purple-900/30 dark:via-fuchsia-900/20 ring-1 ring-purple-500/20">
+              <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-purple-600 to-fuchsia-600 text-white text-xs font-extrabold shadow-md shadow-purple-500/20">P4</span>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                Or 4 interest-free payments of <span className="font-bold text-gray-900 dark:text-white">{formatCurrency(product.price / 4)}</span> with PayFlex
               </p>
             </div>
 
@@ -444,26 +448,32 @@ export default function ProductDetailClient({ product, initialReviews }: Product
             </div>
 
             {/* Features */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-xl">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 rounded-2xl ring-1 ring-gray-200/70 dark:ring-gray-800/70">
               <div className="flex items-center gap-3">
-                <Truck className="w-5 h-5 text-primary-600" />
+                <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md shadow-blue-500/20">
+                  <Truck className="w-5 h-5" />
+                </span>
                 <div>
-                  <p className="text-xs font-medium text-gray-900">Free Delivery</p>
-                  <p className="text-xs text-gray-500">On orders over R2,500</p>
+                  <p className="text-xs font-bold text-gray-900 dark:text-white">Free Delivery</p>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">Orders over R2,500</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <Shield className="w-5 h-5 text-primary-600" />
+                <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-md shadow-emerald-500/20">
+                  <Shield className="w-5 h-5" />
+                </span>
                 <div>
-                  <p className="text-xs font-medium text-gray-900">Warranty</p>
-                  <p className="text-xs text-gray-500">Manufacturer warranty</p>
+                  <p className="text-xs font-bold text-gray-900 dark:text-white">Warranty</p>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">Manufacturer backed</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <RotateCcw className="w-5 h-5 text-primary-600" />
+                <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-md shadow-amber-500/20">
+                  <RotateCcw className="w-5 h-5" />
+                </span>
                 <div>
-                  <p className="text-xs font-medium text-gray-900">Returns</p>
-                  <p className="text-xs text-gray-500">30-day return policy</p>
+                  <p className="text-xs font-bold text-gray-900 dark:text-white">Returns</p>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">30-day policy</p>
                 </div>
               </div>
             </div>
@@ -471,23 +481,23 @@ export default function ProductDetailClient({ product, initialReviews }: Product
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="border-b border-gray-200">
+        <div className="card-premium overflow-hidden">
+          <div className="border-b border-gray-200 dark:border-gray-800 bg-gradient-to-r from-primary-50/40 via-blue-50/30 to-transparent dark:from-primary-900/20 dark:via-blue-900/10">
             <nav className="flex">
               {(['description', 'specs', 'reviews'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-6 py-4 text-sm font-medium capitalize transition-colors relative ${
+                  className={`px-6 py-4 text-sm font-semibold capitalize transition-all relative tracking-tight ${
                     activeTab === tab
-                      ? 'text-primary-600'
-                      : 'text-gray-500 hover:text-gray-700'
+                      ? 'text-primary-600 dark:text-primary-400'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
                   }`}
                 >
                   {tab === 'specs' ? 'Specifications' : tab}
                   {tab === 'reviews' && ` (${reviews.length})`}
                   {activeTab === tab && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600" />
+                    <div className="absolute bottom-0 left-4 right-4 h-[3px] rounded-full bg-gradient-to-r from-primary-500 to-blue-600" />
                   )}
                 </button>
               ))}

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { HelpCircle, Wrench, Cpu, Truck, ShieldCheck, UserCircle, MessageCircle, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'FAQ — Computer Repairs, IT Services & CCTV Questions | Ramsgate',
@@ -144,60 +145,85 @@ function FaqJsonLd() {
 }
 
 export default function FAQPage() {
+  const categoryMeta: Record<string, { icon: any; tile: string }> = {
+    'Repairs & Services':  { icon: Wrench,      tile: 'from-blue-500 to-cyan-500' },
+    'Software & Licensing':{ icon: Cpu,         tile: 'from-violet-500 to-fuchsia-500' },
+    'Orders & Shipping':   { icon: Truck,       tile: 'from-amber-500 to-orange-500' },
+    'Returns & Warranty':  { icon: ShieldCheck, tile: 'from-emerald-500 to-teal-500' },
+    'Account & Security':  { icon: UserCircle,  tile: 'from-rose-500 to-pink-500' },
+  };
   return (
     <div>
       <FaqJsonLd />
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Frequently Asked Questions
+      {/* Aurora Hero */}
+      <section className="relative isolate overflow-hidden bg-aurora text-white">
+        <div className="absolute inset-0 animate-aurora opacity-90 pointer-events-none" />
+        <div className="absolute inset-0 bg-grid pointer-events-none" />
+        <div className="absolute -top-32 left-1/3 w-[28rem] h-[28rem] rounded-full bg-blue-500/25 blur-3xl animate-orb pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
+          <span className="eyebrow-chip mx-auto"><HelpCircle className="w-3.5 h-3.5" /> Help centre</span>
+          <h1 className="mt-6 text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[0.98]">
+            Questions, <span className="text-gradient-premium">answered.</span>
           </h1>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Find answers to common questions about our products, services, shipping, and more.
+          <p className="mt-6 text-lg md:text-xl text-slate-300/90 max-w-2xl mx-auto leading-relaxed">
+            Everything you need to know about our repairs, services, shipping and warranty — straight from the workshop.
           </p>
         </div>
       </section>
 
       {/* FAQ Content */}
-      <section className="py-20">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          {faqs.map((section) => (
-            <div key={section.category}>
-              <h2 className="text-xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-200">
-                {section.category}
-              </h2>
-              <div className="space-y-6">
-                {section.items.map((faq) => (
-                  <details
-                    key={faq.q}
-                    className="group bg-white rounded-xl border border-gray-100 shadow-sm"
-                  >
-                    <summary className="flex items-center justify-between px-6 py-4 cursor-pointer font-medium text-gray-900 hover:text-primary-600 transition-colors">
-                      {faq.q}
-                      <span className="ml-4 text-gray-400 group-open:rotate-180 transition-transform">
-                        ▾
-                      </span>
-                    </summary>
-                    <div className="px-6 pb-4 text-gray-600 text-sm leading-relaxed">
-                      {faq.a}
-                    </div>
-                  </details>
-                ))}
+      <section className="py-20 bg-gray-50 dark:bg-gray-950">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
+          {faqs.map((section) => {
+            const meta = categoryMeta[section.category] || { icon: HelpCircle, tile: 'from-primary-500 to-blue-600' };
+            const Icon = meta.icon;
+            return (
+              <div key={section.category}>
+                <div className="flex items-center gap-3 mb-6">
+                  <span className={`flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br ${meta.tile} text-white shadow-lg shadow-black/5 ring-1 ring-white/30`}>
+                    <Icon className="w-5 h-5" />
+                  </span>
+                  <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                    {section.category}
+                  </h2>
+                </div>
+                <div className="space-y-3">
+                  {section.items.map((faq) => (
+                    <details
+                      key={faq.q}
+                      className="group card-premium overflow-hidden transition-all hover:shadow-md"
+                    >
+                      <summary className="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer font-semibold text-gray-900 dark:text-white tracking-tight list-none [&::-webkit-details-marker]:hidden hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                        <span>{faq.q}</span>
+                        <span className={`flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br ${meta.tile} text-white flex items-center justify-center text-sm group-open:rotate-180 transition-transform duration-300`}>
+                          ▾
+                        </span>
+                      </summary>
+                      <div className="px-6 pb-5 -mt-1 text-gray-600 dark:text-gray-400 text-sm leading-relaxed border-t border-gray-100 dark:border-gray-800 pt-4">
+                        {faq.a}
+                      </div>
+                    </details>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           {/* CTA */}
-          <div className="text-center pt-8 border-t border-gray-200">
-            <p className="text-gray-600 mb-4">
-              Can&apos;t find what you&apos;re looking for?
+          <div className="card-premium text-center py-12 px-6 mt-16 relative overflow-hidden">
+            <div className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full bg-gradient-to-br from-primary-500/15 to-blue-500/15 blur-3xl" />
+            <div className="relative inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-blue-600 text-white shadow-lg shadow-primary-500/20 ring-1 ring-white/30 mb-4">
+              <MessageCircle className="w-6 h-6" />
+            </div>
+            <h3 className="relative text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2">Still got a question?</h3>
+            <p className="relative text-gray-500 dark:text-gray-400 mb-6">
+              Our Ramsgate team replies within 1 business hour.
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary-700 transition-colors"
+              className="relative btn-premium inline-flex"
             >
-              Contact Us
+              Contact us <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

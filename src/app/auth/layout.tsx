@@ -28,11 +28,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/logo.svg" alt="Unlimited IT Solutions" className="h-9 w-auto" />
           <div className="leading-none">
-            <span className="block text-lg font-extrabold tracking-tight">
-              Unlimited<span className="text-primary-400">.</span>
+            <span className="block font-brand text-xl tracking-wider">
+              UNLIMITED<span className="text-primary-400">.</span>
             </span>
-            <span className="block text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-slate-400 mt-0.5">
-              IT Solutions
+            <span className="block font-brand text-[0.72rem] tracking-[0.25em] text-slate-400 mt-0.5">
+              IT SOLUTIONS
             </span>
           </div>
         </Link>
@@ -63,7 +63,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         <div className="relative text-xs text-slate-500">
-          © {new Date().getFullYear()} Unlimited IT Solutions · Ramsgate, KZN
+          © {new Date().getFullYear()} <span className="font-brand tracking-wider">UNLIMITED IT SOLUTIONS</span> · Ramsgate, KZN
         </div>
       </div>
 

@@ -50,11 +50,11 @@ export default function Footer() {
                 className="h-9 w-auto invert"
               />
               <div className="leading-none">
-                <span className="block text-lg font-extrabold text-white tracking-tight">
-                  Unlimited<span className="text-primary-400">.</span>
+                <span className="block font-brand text-xl text-white tracking-wider">
+                  UNLIMITED<span className="text-primary-400">.</span>
                 </span>
-                <span className="block text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-gray-500 mt-0.5">
-                  IT Solutions
+                <span className="block font-brand text-[0.72rem] text-gray-500 tracking-[0.25em] mt-0.5">
+                  IT SOLUTIONS
                 </span>
               </div>
             </Link>
@@ -230,7 +230,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-sm text-gray-500">
-              &copy; {new Date().getFullYear()} Unlimited IT Solutions. All rights
+              &copy; {new Date().getFullYear()} <span className="font-brand tracking-wider">UNLIMITED IT SOLUTIONS</span>. All rights
               reserved.
             </p>
             <div className="flex items-center gap-4 text-sm text-gray-500">
