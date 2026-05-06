@@ -46,7 +46,13 @@
   }
 
   .font-heading {
-    font-family: var(--font-heading), 'Black Ops One', cursive;
+    font-family: var(--font-heading), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-heading), 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.025em;
   }
 }
 
@@ -74,6 +80,88 @@
   .glass-card {
     @apply bg-white/80 backdrop-blur-lg border border-white/20 shadow-xl;
   }
+
+  /* Premium card with subtle elevation */
+  .card-premium {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-[0_1px_2px_rgba(16,24,40,0.06),0_1px_3px_rgba(16,24,40,0.10)] transition-all duration-300;
+  }
+  .card-premium:hover {
+    @apply shadow-[0_12px_32px_-8px_rgba(16,24,40,0.18),0_4px_12px_-4px_rgba(16,24,40,0.10)] -translate-y-0.5;
+  }
+
+  /* Premium button — magnetic, glossy */
+  .btn-premium {
+    @apply relative inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold text-white;
+    @apply bg-gradient-to-br from-primary-600 to-primary-800 shadow-[0_8px_24px_-4px_rgba(37,99,235,0.45)];
+    @apply transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_32px_-6px_rgba(37,99,235,0.55)];
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2;
+  }
+  .btn-premium::after {
+    content: '';
+    @apply absolute inset-0 rounded-full opacity-0 transition-opacity duration-300;
+    background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 50%);
+  }
+  .btn-premium:hover::after { @apply opacity-100; }
+
+  .btn-ghost-premium {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold text-white;
+    @apply bg-white/5 border border-white/15 backdrop-blur-md;
+    @apply transition-all duration-300 hover:bg-white/10 hover:border-white/30;
+  }
+
+  /* Eyebrow chip */
+  .eyebrow-chip {
+    @apply inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.14em];
+    @apply bg-white/5 border border-white/10 text-primary-200 backdrop-blur-sm;
+  }
+
+  /* Section eyebrow (light mode) */
+  .eyebrow-light {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em];
+    @apply bg-primary-50 text-primary-700 border border-primary-100;
+  }
+
+  /* Aurora background — subtle moving gradient */
+  .bg-aurora {
+    background:
+      radial-gradient(60% 60% at 20% 20%, rgba(99,102,241,0.30) 0%, transparent 60%),
+      radial-gradient(50% 50% at 85% 30%, rgba(59,130,246,0.28) 0%, transparent 60%),
+      radial-gradient(55% 55% at 50% 90%, rgba(124,58,237,0.22) 0%, transparent 60%),
+      #0b1020;
+  }
+
+  /* Grid pattern overlay */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 35%, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 35%, black 40%, transparent 100%);
+  }
+
+  .bg-grid-light {
+    background-image:
+      linear-gradient(rgba(15,23,42,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15,23,42,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 70% 50% at 50% 30%, black 30%, transparent 90%);
+  }
+
+  /* Premium text gradient — animated */
+  .text-gradient-premium {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(110deg, #60a5fa 0%, #a78bfa 35%, #f472b6 70%, #60a5fa 100%);
+    background-size: 200% auto;
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  /* Marquee track */
+  .marquee {
+    @apply flex gap-12 whitespace-nowrap;
+    animation: marquee 38s linear infinite;
+  }
+  .marquee-pause:hover .marquee { animation-play-state: paused; }
 }
 
 @layer utilities {
@@ -188,6 +276,25 @@ main {
 .animate-scroll {
   animation: scroll 30s linear infinite;
 }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes aurora {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(2%, -1%, 0) scale(1.04); }
+}
+.animate-aurora { animation: aurora 18s ease-in-out infinite; }
+
+/* Soft floating glow orb */
+@keyframes orb-drift {
+  0%, 100% { transform: translate(0,0); }
+  33% { transform: translate(2%, -3%); }
+  66% { transform: translate(-2%, 2%); }
+}
+.animate-orb { animation: orb-drift 14s ease-in-out infinite; }
 
 /* Pulse glow for CTAs */
 @keyframes pulse-glow {

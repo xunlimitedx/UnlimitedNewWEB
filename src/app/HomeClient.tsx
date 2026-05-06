@@ -12,6 +12,8 @@ import type { Product } from '@/types';
 import BeforeAfterGallery from '@/components/BeforeAfterGallery';
 import CustomerCounter from '@/components/CustomerCounter';
 import SocialFeed from '@/components/SocialFeed';
+import PremiumHero from '@/components/home/PremiumHero';
+import BrandMarquee from '@/components/home/BrandMarquee';
 import {
   ArrowRight,
   Laptop,
@@ -397,74 +399,15 @@ export default function HomeClient({ latestProducts }: HomeClientProps) {
   return (
     <div>
       {/* ═══════════ HERO ═══════════ */}
-      <section className="relative overflow-hidden bg-gray-950">
-        {/* Background pattern */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-gray-900 to-gray-950" />
-          <div className="absolute inset-0 opacity-20" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234f46e5' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }} />
-          {/* Glow effects */}
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-600/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl" />
-        </div>
+      <PremiumHero />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-36">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-primary-500/20 border border-primary-400/30 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm text-primary-200 mb-8">
-              <Zap className="w-4 h-4" />
-              <span>IT Repairs &bull; Software &bull; Business Solutions &bull; Since 2010</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
-              Advanced Technology.
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-blue-400">
-                Complete Solutions.
-              </span>
-            </h1>
-            <p className="text-lg sm:text-xl text-gray-300 max-w-xl mb-10 leading-relaxed">
-              From IT support &amp; repairs to custom software &amp; business systems — we power your home and your business. <strong className="text-white">Mail-in repairs from anywhere in South Africa.</strong>
-            </p>
-            <div className="flex flex-wrap gap-4 mb-12">
-              <Link href="/services">
-                <Button size="xl" className="bg-primary-600 hover:bg-primary-500 text-white shadow-lg shadow-primary-600/25 text-base px-8">
-                  Our Repair Services
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button size="xl" variant="outline" className="border-gray-600 text-gray-200 hover:bg-white/10 hover:border-gray-400 text-base px-8">
-                  Get a Free Quote
-                </Button>
-              </Link>
-            </div>
+      {/* ═══════════ BRAND MARQUEE ═══════════ */}
+      <BrandMarquee />
 
-            {/* Quick contact strip */}
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-400">
-              <a href="tel:0393144359" className="flex items-center gap-2 hover:text-white transition-colors">
-                <Phone className="w-4 h-4 text-primary-400" />
-                039 314 4359
-              </a>
-              <a href="tel:0825569875" className="flex items-center gap-2 hover:text-white transition-colors">
-                <Phone className="w-4 h-4 text-primary-400" />
-                082 556 9875
-              </a>
-              <span className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-primary-400" />
-                202 Marine Drive, Ramsgate
-              </span>
-            </div>
-          </div>
-
-          {/* Stats row */}
-          <div className="mt-16 pt-10 border-t border-white/10">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
-              <AnimatedCounter end={15} suffix="+" label="Years Experience" />
-              <AnimatedCounter end={5000} suffix="+" label="Devices Repaired" />
-              <AnimatedCounter end={4.9} suffix="★" label="Google Rating" />
-              <AnimatedCounter end={100} suffix="%" label="Satisfaction" />
-            </div>
-          </div>
+      {/* ═══════════ HERO (legacy — hidden, kept for stats) ═══════════ */}
+      <section className="hidden">
+        <div className="max-w-3xl">
+          <AnimatedCounter end={15} suffix="+" label="Years" />
         </div>
       </section>
 

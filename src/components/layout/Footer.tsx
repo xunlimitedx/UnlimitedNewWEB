@@ -16,17 +16,20 @@ import NewsletterForm from '@/components/NewsletterForm';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-gray-950 text-gray-400">
       {/* Newsletter */}
-      <div className="border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="text-xl font-bold text-white mb-1">
-                Stay Updated
+      <div className="border-b border-gray-800/80 bg-gradient-to-br from-gray-900 to-gray-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <div className="max-w-xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-400 mb-2">
+                Newsletter
+              </p>
+              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2 tracking-tight">
+                Insider tech intelligence — straight to your inbox.
               </h3>
               <p className="text-gray-400 text-sm">
-                Get the latest deals and tech news delivered to your inbox.
+                Honest reviews, exclusive deals, and the occasional warning about a product we wouldn&apos;t buy ourselves. No spam.
               </p>
             </div>
             <NewsletterForm />
@@ -35,26 +38,28 @@ export default function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center gap-2 mb-4">
+            <Link href="/" className="flex items-center gap-2.5 mb-5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/logo.svg"
                 alt="Unlimited IT Solutions"
-                className="h-8 w-auto invert"
+                className="h-9 w-auto invert"
               />
-              <div>
-                <span className="text-lg font-heading text-white">Unlimited</span>
-                <span className="text-lg font-heading text-primary-400"> IT Solutions</span>
+              <div className="leading-none">
+                <span className="block text-lg font-extrabold text-white tracking-tight">
+                  Unlimited<span className="text-primary-400">.</span>
+                </span>
+                <span className="block text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-gray-500 mt-0.5">
+                  IT Solutions
+                </span>
               </div>
             </Link>
-            <p className="text-sm text-gray-400 leading-relaxed mb-4">
-              Professional IT solutions for businesses and individuals.
-              From consulting and support to hardware sales, we deliver
-              reliable technology services on the South Coast.
+            <p className="text-sm text-gray-400 leading-relaxed mb-5">
+              Enterprise-grade IT for South Africa&apos;s South Coast — repairs, hardware, networks and managed services since 2010.
             </p>
             <div className="flex gap-3">
               <a

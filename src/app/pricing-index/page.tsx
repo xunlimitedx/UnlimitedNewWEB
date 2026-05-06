@@ -32,8 +32,8 @@ async function loadStats(): Promise<CategoryStat[]> {
       buckets.get(cat)!.push(price);
     });
     const stats: CategoryStat[] = [];
-    for (const [category, prices] of buckets.entries()) {
-      if (prices.length < 3) continue;
+    buckets.forEach((prices, category) => {
+      if (prices.length < 3) return;
       const sum = prices.reduce((a, b) => a + b, 0);
       stats.push({
         category,
@@ -42,7 +42,7 @@ async function loadStats(): Promise<CategoryStat[]> {
         max: Math.max(...prices),
         avg: sum / prices.length,
       });
-    }
+    });
     stats.sort((a, b) => b.count - a.count);
     return stats;
   } catch (err) {

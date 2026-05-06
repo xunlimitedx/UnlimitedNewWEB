@@ -48,10 +48,18 @@ export default function Header() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [scrolled, setScrolled] = useState(false);
   const itemCount = getItemCount();
   const wishlistCount = useWishlistStore((s) => s.items.length);
   const compareCount = useCompareStore((s) => s.items.length);
   const megaMenuTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -105,27 +113,27 @@ export default function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
+    <header className={`sticky top-0 z-40 transition-all duration-300 ${scrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-sm border-b border-gray-200/60 dark:border-gray-800/60' : 'bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800'}`}>
       {/* Top bar */}
-      <div className="bg-primary-900 text-primary-100 text-xs py-1.5">
+      <div className="bg-gray-950 text-gray-300 text-xs py-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3 h-3" />
+            <span className="flex items-center gap-1.5 text-gray-400">
+              <MapPin className="w-3 h-3 text-primary-400" />
               202 Marine Drive, Ramsgate, 4285
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-4">
             <OpenClosedBadge />
-            <span className="text-primary-700">|</span>
+            <span className="text-gray-700">|</span>
             <a href="tel:0393144359" className="hover:text-white transition-colors">
               039 314 4359
             </a>
-            <span className="text-primary-700">|</span>
+            <span className="text-gray-700">|</span>
             <a href="tel:0825569875" className="hover:text-white transition-colors">
               082 556 9875
             </a>
-            <span className="text-primary-700">|</span>
+            <span className="text-gray-700">|</span>
             <LanguageToggle />
           </div>
         </div>
@@ -135,16 +143,20 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/logo.svg"
               alt="Unlimited IT Solutions"
-              className="h-9 w-auto"
+              className="h-9 w-auto transition-transform group-hover:scale-105"
             />
-            <div className="leading-tight">
-              <span className="text-xl sm:text-2xl font-heading text-gray-900 dark:text-white tracking-wide">Unlimited</span>
-              <span className="text-xl sm:text-2xl font-heading text-primary-600 tracking-wide"> IT Solutions</span>
+            <div className="leading-none">
+              <span className="block text-[1.05rem] sm:text-[1.15rem] font-extrabold text-gray-900 dark:text-white tracking-tight">
+                Unlimited<span className="text-primary-600">.</span>
+              </span>
+              <span className="block text-[0.65rem] sm:text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 mt-0.5">
+                IT Solutions
+              </span>
             </div>
           </Link>
 
