@@ -28,6 +28,7 @@ import {
   ShoppingCart,
   Gift,
   UserCheck,
+  Image,
 } from 'lucide-react';
 
 const adminLinks = [
@@ -45,6 +46,7 @@ const adminLinks = [
   { href: '/admin/questions', label: 'Questions', icon: MessageCircle },
   { href: '/admin/reports', label: 'Sales Reports', icon: BarChart3 },
   { href: '/admin/blog', label: 'Blog', icon: Newspaper },
+  { href: '/admin/before-after', label: 'Before & After', icon: Image },
   { href: '/admin/feeds', label: 'Data Feeds', icon: Truck },
   { href: '/admin/import', label: 'Data Import', icon: Upload },
   { href: '/admin/ai-tools', label: 'AI Tools', icon: Sparkles },

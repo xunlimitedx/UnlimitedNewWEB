@@ -100,7 +100,11 @@ service cloud.firestore {
       allow read: if true;
       allow create, update, delete: if isAdmin();
     }
-
+    // ─── Before/After Gallery ─────────────────
+    match /beforeAfter/{itemId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
     // ─── Newsletter Subscriptions ─────────────────────────
     // Anyone can create, admin can read
     match /newsletter/{subId} {
