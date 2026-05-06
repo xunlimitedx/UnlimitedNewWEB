@@ -336,21 +336,35 @@ export default function Header() {
               Services <ChevronDown className={`w-3.5 h-3.5 transition-transform ${megaMenuOpen === 'services' ? 'rotate-180' : ''}`} />
             </Link>
             {megaMenuOpen === 'services' && (
-              <div className="absolute left-0 top-full mt-1 w-[420px] bg-white rounded-xl shadow-xl border border-gray-200 p-4 grid grid-cols-2 gap-1 z-50 animate-scale-in">
-                {serviceItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
-                    onClick={() => setMegaMenuOpen(null)}
-                  >
-                    <item.icon className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <div className="text-sm font-medium text-gray-900 group-hover:text-primary-600">{item.name}</div>
-                      <div className="text-xs text-gray-500">{item.desc}</div>
-                    </div>
-                  </Link>
-                ))}
+              <div className="absolute left-0 top-full pt-2 w-[560px] z-50 animate-scale-in">
+                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-slate-200/70 dark:border-gray-800 overflow-hidden">
+                  <div className="px-5 pt-4 pb-2 border-b border-slate-100 dark:border-gray-800">
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                      Specialised Services
+                    </p>
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white mt-0.5">
+                      Repairs · Installation · Networking
+                    </p>
+                  </div>
+                  <div className="p-3 grid grid-cols-2 gap-1">
+                    {serviceItems.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="flex items-start gap-3 p-3 rounded-xl hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 dark:hover:bg-gray-800 transition-all group"
+                        onClick={() => setMegaMenuOpen(null)}
+                      >
+                        <span className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-primary-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-sm">
+                          <item.icon className="w-4 h-4 text-white" />
+                        </span>
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary-600">{item.name}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{item.desc}</div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -368,31 +382,55 @@ export default function Header() {
               Shop <ChevronDown className={`w-3.5 h-3.5 transition-transform ${megaMenuOpen === 'shop' ? 'rotate-180' : ''}`} />
             </Link>
             {megaMenuOpen === 'shop' && (
-              <div className="absolute left-0 top-full mt-1 w-[480px] bg-white rounded-xl shadow-xl border border-gray-200 p-4 z-50 animate-scale-in">
-                <div className="grid grid-cols-2 gap-1">
-                  {productCategories.map((cat) => (
+              <div className="absolute left-0 top-full pt-2 w-[640px] z-50 animate-scale-in">
+                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-slate-200/70 dark:border-gray-800 overflow-hidden">
+                  <div className="px-5 pt-4 pb-2 border-b border-slate-100 dark:border-gray-800 flex items-baseline justify-between">
+                    <div>
+                      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        Shop By Category
+                      </p>
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white mt-0.5">
+                        Curated tech for every workflow
+                      </p>
+                    </div>
                     <Link
-                      key={cat.name}
-                      href={cat.href}
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                      href="/products"
                       onClick={() => setMegaMenuOpen(null)}
+                      className="text-xs font-semibold text-primary-600 hover:text-primary-700 inline-flex items-center gap-1"
                     >
-                      <cat.icon className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <div className="text-sm font-medium text-gray-900 group-hover:text-primary-600">{cat.name}</div>
-                        <div className="text-xs text-gray-500">{cat.desc}</div>
-                      </div>
+                      View all <ChevronDown className="w-3 h-3 -rotate-90" />
                     </Link>
-                  ))}
-                </div>
-                <div className="border-t border-gray-100 mt-2 pt-2">
-                  <Link
-                    href="/products"
-                    onClick={() => setMegaMenuOpen(null)}
-                    className="flex items-center gap-2 p-3 rounded-lg hover:bg-primary-50 text-sm font-medium text-primary-600 transition-colors"
-                  >
-                    <Package className="w-4 h-4" /> Browse All Products
-                  </Link>
+                  </div>
+                  <div className="p-3 grid grid-cols-2 gap-1">
+                    {productCategories.map((cat) => (
+                      <Link
+                        key={cat.name}
+                        href={cat.href}
+                        className="flex items-start gap-3 p-3 rounded-xl hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 dark:hover:bg-gray-800 transition-all group"
+                        onClick={() => setMegaMenuOpen(null)}
+                      >
+                        <span className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-primary-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-sm">
+                          <cat.icon className="w-4 h-4 text-white" />
+                        </span>
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary-600">{cat.name}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{cat.desc}</div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="bg-gradient-to-r from-slate-50 to-blue-50/50 dark:from-gray-800 dark:to-gray-800 border-t border-slate-100 dark:border-gray-800 px-5 py-3 flex items-center justify-between">
+                    <div className="text-xs text-slate-600 dark:text-gray-400">
+                      <span className="font-semibold text-slate-900 dark:text-white">Free shipping</span> on orders over R2,500
+                    </div>
+                    <Link
+                      href="/products?sort=newest"
+                      onClick={() => setMegaMenuOpen(null)}
+                      className="text-xs font-semibold text-primary-600 hover:text-primary-700"
+                    >
+                      New arrivals →
+                    </Link>
+                  </div>
                 </div>
               </div>
             )}

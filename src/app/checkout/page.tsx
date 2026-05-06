@@ -393,27 +393,35 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="bg-gradient-to-b from-slate-50 via-white to-slate-50 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        {/* Page Header */}
+        <div className="text-center mb-8">
+          <span className="eyebrow-chip eyebrow-light mb-3">Secure Checkout</span>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+            Complete your order
+          </h1>
+        </div>
+
         {/* Step Indicator */}
-        <div className="mb-8">
+        <div className="mb-10">
           <div className="flex items-center justify-center gap-2 sm:gap-4">
             {steps.map((s, i) => (
               <React.Fragment key={s.key}>
                 <div
-                  className={`flex items-center gap-2 ${
+                  className={`flex items-center gap-2 transition-colors ${
                     i <= currentStepIndex
-                      ? 'text-primary-600'
+                      ? 'text-primary-700'
                       : 'text-gray-400'
                   }`}
                 >
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                    className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 ${
                       i < currentStepIndex
-                        ? 'bg-primary-600 text-white'
+                        ? 'bg-gradient-to-br from-blue-600 to-primary-600 text-white shadow-md shadow-primary-500/30'
                         : i === currentStepIndex
-                        ? 'bg-primary-100 text-primary-600 ring-2 ring-primary-600'
-                        : 'bg-gray-100 text-gray-400'
+                        ? 'bg-white text-primary-600 ring-2 ring-primary-600 shadow-lg shadow-primary-500/20 scale-110'
+                        : 'bg-slate-100 text-gray-400'
                     }`}
                   >
                     {i < currentStepIndex ? (
@@ -422,16 +430,18 @@ export default function CheckoutPage() {
                       i + 1
                     )}
                   </div>
-                  <span className="hidden sm:block text-sm font-medium">
+                  <span className="hidden sm:block text-sm font-semibold">
                     {s.label}
                   </span>
                 </div>
                 {i < steps.length - 1 && (
-                  <div
-                    className={`w-12 sm:w-24 h-0.5 ${
-                      i < currentStepIndex ? 'bg-primary-600' : 'bg-gray-200'
-                    }`}
-                  />
+                  <div className="relative w-12 sm:w-24 h-0.5 bg-slate-200 rounded-full overflow-hidden">
+                    <div
+                      className={`absolute inset-y-0 left-0 bg-gradient-to-r from-blue-600 to-primary-600 transition-all duration-500 ${
+                        i < currentStepIndex ? 'w-full' : 'w-0'
+                      }`}
+                    />
+                  </div>
                 )}
               </React.Fragment>
             ))}
