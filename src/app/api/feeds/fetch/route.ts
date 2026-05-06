@@ -28,7 +28,9 @@ function transformEsquireItem(item: Record<string, unknown>): FeedProduct {
     category: (item.category as string) || 'Uncategorized',
     price: (item.price as number) || 0,
     costPrice: (item.price as number) || 0,
-    stock: inStock ? 1 : 0,
+    // Esquire only exposes a yes/no flag — use null when in stock so the UI
+    // doesn't lie with "1 remaining".
+    stock: inStock ? null : 0,
     inStock,
     isActive: (item.status as number) === 1,
     imageUrl: (item.image as string) || '',

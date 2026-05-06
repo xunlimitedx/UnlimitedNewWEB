@@ -453,6 +453,8 @@ export default function CheckoutPage() {
                     <Input
                       label="First Name *"
                       placeholder="John"
+                      name="given-name"
+                      autoComplete="given-name"
                       value={shippingAddress.firstName}
                       onChange={(e) =>
                         setShippingAddress({
@@ -465,6 +467,8 @@ export default function CheckoutPage() {
                     <Input
                       label="Last Name *"
                       placeholder="Doe"
+                      name="family-name"
+                      autoComplete="family-name"
                       value={shippingAddress.lastName}
                       onChange={(e) =>
                         setShippingAddress({
@@ -478,6 +482,8 @@ export default function CheckoutPage() {
                   <Input
                     label="Street Address *"
                     placeholder="123 Main Street"
+                    name="address-line1"
+                    autoComplete="address-line1"
                     value={shippingAddress.street}
                     onChange={(e) =>
                       setShippingAddress({
@@ -490,6 +496,8 @@ export default function CheckoutPage() {
                   <Input
                     label="Apartment / Suite (optional)"
                     placeholder="Apt 4B"
+                    name="address-line2"
+                    autoComplete="address-line2"
                     value={shippingAddress.apartment}
                     onChange={(e) =>
                       setShippingAddress({
@@ -502,6 +510,8 @@ export default function CheckoutPage() {
                     <Input
                       label="City *"
                       placeholder="Johannesburg"
+                      name="address-level2"
+                      autoComplete="address-level2"
                       value={shippingAddress.city}
                       onChange={(e) =>
                         setShippingAddress({
@@ -513,6 +523,8 @@ export default function CheckoutPage() {
                     />
                     <Select
                       label="Province *"
+                      name="address-level1"
+                      autoComplete="address-level1"
                       value={shippingAddress.province}
                       onChange={(e) =>
                         setShippingAddress({
@@ -529,6 +541,9 @@ export default function CheckoutPage() {
                     <Input
                       label="Postal Code *"
                       placeholder="2000"
+                      name="postal-code"
+                      autoComplete="postal-code"
+                      inputMode="numeric"
                       value={shippingAddress.postalCode}
                       onChange={(e) =>
                         setShippingAddress({
@@ -543,6 +558,8 @@ export default function CheckoutPage() {
                     label="Phone Number *"
                     type="tel"
                     placeholder="082 000 0000"
+                    name="tel"
+                    autoComplete="tel"
                     value={shippingAddress.phone}
                     onChange={(e) =>
                       setShippingAddress({

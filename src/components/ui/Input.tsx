@@ -29,6 +29,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             id={inputId}
             ref={ref}
+            // Default name to the generated id when not explicitly set so that
+            // browser autofill works on forms like /checkout shipping.
+            name={props.name || inputId}
             autoComplete={
               props.autoComplete ||
               (props.type === 'email' ? 'email' :

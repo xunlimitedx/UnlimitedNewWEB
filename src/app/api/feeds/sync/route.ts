@@ -61,6 +61,9 @@ async function fetchFeedProducts(supplier: string, feedUrl: string): Promise<{ p
     const items: Record<string, unknown>[] = Array.isArray(rawData) ? rawData : [];
     products = items.map((item) => {
       const inStock = ((item.availableQty as string) || '').toLowerCase() === 'yes';
+      // Esquire only exposes a yes/no availability flag, not a real count.
+      // Use null when in stock so the storefront says "In Stock" without the
+      // misleading "1 remaining" copy. Use 0 only when truly out of stock.
       return {
         sku: (item.productCode as string) || '',
         name: (item.productName as string) || '',
@@ -68,7 +71,7 @@ async function fetchFeedProducts(supplier: string, feedUrl: string): Promise<{ p
         category: (item.category as string) || 'Uncategorized',
         price: (item.price as number) || 0,
         costPrice: (item.price as number) || 0,
-        stock: inStock ? 1 : 0,
+        stock: inStock ? null : 0,
         inStock,
         isActive: (item.status as number) === 1,
         imageUrl: (item.image as string) || '',

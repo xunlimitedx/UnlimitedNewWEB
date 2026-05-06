@@ -297,6 +297,14 @@ export default function ProductDetailClient({ product, initialReviews }: Product
               )}
             </div>
 
+            {/* PayFlex 4-pay messaging */}
+            <div className="flex items-center gap-2 mb-6 p-3 bg-purple-50 border border-purple-100 rounded-lg">
+              <span className="inline-flex items-center justify-center w-8 h-8 rounded-md bg-purple-600 text-white text-xs font-bold">P4</span>
+              <p className="text-sm text-gray-700">
+                Or 4 interest-free payments of <span className="font-semibold text-gray-900">{formatCurrency(product.price / 4)}</span> with PayFlex
+              </p>
+            </div>
+
             {/* Short Description */}
             <p className="text-gray-600 leading-relaxed mb-6">
               {product.shortDescription || product.description?.substring(0, 200)}

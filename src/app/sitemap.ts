@@ -10,8 +10,18 @@ async function getBlogSlugs(): Promise<string[]> {
       initializeApp();
     }
     const db = getFirestore();
-    const snap = await db.collection('blog-posts').where('published', '==', true).get();
-    return snap.docs.map((doc) => doc.data().slug as string).filter(Boolean);
+    // Read both legacy 'blog-posts' and current 'blog' collections so any
+    // historical content keeps showing up in the sitemap.
+    const [a, b] = await Promise.all([
+      db.collection('blog').where('published', '==', true).get().catch(() => ({ docs: [] as any[] })),
+      db.collection('blog-posts').where('published', '==', true).get().catch(() => ({ docs: [] as any[] })),
+    ]);
+    const slugs = new Set<string>();
+    [...(a as any).docs, ...(b as any).docs].forEach((d: any) => {
+      const s = (d.data() && d.data().slug) || d.id;
+      if (s) slugs.add(String(s));
+    });
+    return Array.from(slugs);
   } catch {
     return [];
   }
@@ -44,6 +54,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/faq`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BASE_URL}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${BASE_URL}/business/quote`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE_URL}/pricing-index`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.6 },
+    { url: `${BASE_URL}/locations/ramsgate`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/locations/margate`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/locations/port-shepstone`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${BASE_URL}/locations/hibberdene`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE_URL}/locations/scottburgh`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${BASE_URL}/terms`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
     { url: `${BASE_URL}/privacy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
     { url: `${BASE_URL}/cookies`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },

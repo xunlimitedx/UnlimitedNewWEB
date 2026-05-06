@@ -53,7 +53,8 @@ function parseFeedProducts(supplier: string, rawData: unknown): FeedProduct[] {
         category: (item.category as string) || 'Uncategorized',
         price: (item.price as number) || 0,
         costPrice: (item.price as number) || 0,
-        stock: inStock ? 1 : 0,
+        // Use null when in stock to avoid the misleading "1 remaining" copy.
+        stock: inStock ? null : 0,
         inStock,
         isActive: (item.status as number) === 1,
         imageUrl: (item.image as string) || '',

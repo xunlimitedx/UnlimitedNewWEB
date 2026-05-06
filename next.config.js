@@ -31,6 +31,22 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'esquire.co.za',
       },
+      {
+        protocol: 'https',
+        hostname: '*.xyz.co.za',
+      },
+      {
+        protocol: 'https',
+        hostname: 'xyz.co.za',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'unlimitedits.co.za',
+      },
     ],
   },
   async headers() {
