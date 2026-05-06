@@ -87,14 +87,15 @@ export default function ContactPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="gradient-hero text-white py-20 sm:py-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl sm:text-5xl font-extrabold mb-4">
-            Get in <span className="text-primary-300">Touch</span>
+      <section className="relative isolate overflow-hidden bg-aurora text-white">
+        <div className="absolute inset-0 animate-aurora opacity-90 pointer-events-none" />
+        <div className="absolute inset-0 bg-grid pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[0.98]">
+            Let&apos;s <span className="text-gradient-premium">talk shop.</span>
           </h1>
-          <p className="text-lg text-primary-100 max-w-lg mx-auto">
-            Have a question or need assistance? We&apos;d love to hear from you.
-            Our team is ready to help.
+          <p className="mt-6 text-lg sm:text-xl text-slate-300/90 max-w-2xl mx-auto leading-relaxed">
+            Walk in, call, message, email — every channel is monitored by a real human in Ramsgate within 1 business hour.
           </p>
         </div>
       </section>

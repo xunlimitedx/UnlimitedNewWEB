@@ -68,30 +68,48 @@ export default function AboutPage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative gradient-hero text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight mb-6">
-                About <span className="text-primary-300">Unlimited IT</span>
+      <section className="relative isolate overflow-hidden bg-aurora text-white">
+        <div className="absolute inset-0 animate-aurora opacity-90 pointer-events-none" />
+        <div className="absolute inset-0 bg-grid pointer-events-none" />
+        <div className="absolute -top-32 -left-32 w-[28rem] h-[28rem] rounded-full bg-blue-500/25 blur-3xl animate-orb pointer-events-none" />
+        <div className="absolute -bottom-32 right-0 w-[32rem] h-[32rem] rounded-full bg-purple-500/20 blur-3xl animate-orb pointer-events-none" style={{ animationDelay: '-7s' }} />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
+          <div className="grid lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-7">
+              <span className="eyebrow-chip">
+                <Award className="w-3.5 h-3.5" />
+                Established 2010
+              </span>
+              <h1 className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[0.98] tracking-tight">
+                Built for South Africans <span className="text-gradient-premium">who can&apos;t afford downtime.</span>
               </h1>
-              <p className="text-lg text-primary-100 max-w-lg leading-relaxed">
-                Unlimited4all T/A Unlimited IT Solutions is a premier provider of
-                comprehensive IT services in Ramsgate, KwaZulu-Natal. From computer
-                and laptop repairs to CCTV installations, networking, and managed IT
-                services — our skilled technicians deliver tailored solutions for
-                individuals, small businesses, and enterprises.
+              <p className="mt-7 text-lg sm:text-xl text-slate-300/90 max-w-2xl leading-relaxed">
+                We&apos;re a Ramsgate-based IT firm engineered around one principle: enterprise-grade rigour with the speed of a local technician. Every repair, every device sold, every cable run — held to the standard of a billion-rand business.
               </p>
+              <div className="mt-10 grid grid-cols-3 gap-4 max-w-lg">
+                {[
+                  { k: '15+', v: 'Years' },
+                  { k: '5,000+', v: 'Repairs' },
+                  { k: '4.9★', v: 'Rating' },
+                ].map((s) => (
+                  <div key={s.v} className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-md px-4 py-3">
+                    <div className="text-2xl font-extrabold text-white">{s.k}</div>
+                    <div className="text-[0.7rem] uppercase tracking-wider text-slate-400 mt-0.5">{s.v}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="hidden lg:block">
-              <div className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="hidden lg:block lg:col-span-5">
+              <div className="relative w-full h-[460px] rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10">
                 <Image
-                  src="https://images.unsplash.com/photo-1580106815433-a5b1d1d53d85?w=800&q=80"
+                  src="https://images.unsplash.com/photo-1580106815433-a5b1d1d53d85?w=900&q=85"
                   alt="Our team working together"
                   fill
                   className="object-cover"
                   sizes="50vw"
                 />
+                <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent" />
               </div>
             </div>
           </div>

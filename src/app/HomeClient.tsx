@@ -197,15 +197,18 @@ function ProductCard({ product }: { product: Product }) {
     : 0;
 
   return (
-    <div className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div className="group relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-[0_1px_2px_rgba(16,24,40,0.06),0_1px_3px_rgba(16,24,40,0.10)] transition-all duration-500 hover:shadow-[0_20px_40px_-12px_rgba(16,24,40,0.18),0_8px_16px_-8px_rgba(16,24,40,0.10)] hover:-translate-y-1 hover:border-primary-200 dark:hover:border-primary-700">
+      {/* Premium gradient corner accent on hover */}
+      <div className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.20), transparent 40%)' }} />
+
       <Link href={`/products/${product.id}`}>
-        <div className="relative h-52 bg-gray-100 dark:bg-gray-700 overflow-hidden">
+        <div className="relative h-56 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 overflow-hidden">
           {product.images?.[0] ? (
             <Image
               src={product.images[0]}
               alt={product.name}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              className="object-contain p-4 group-hover:scale-110 transition-transform duration-700 ease-out"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             />
           ) : (
@@ -214,16 +217,15 @@ function ProductCard({ product }: { product: Product }) {
             </div>
           )}
           {discount > 0 && (
-            <Badge variant="danger" className="absolute top-3 left-3">
-              -{discount}%
-            </Badge>
+            <span className="absolute top-3 left-3 inline-flex items-center rounded-full bg-gradient-to-r from-rose-500 to-red-600 text-white text-xs font-bold px-2.5 py-1 shadow-md">
+              −{discount}%
+            </span>
           )}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-          <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute top-3 right-3 flex flex-col gap-2 translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
             <button
               onClick={handleToggleWishlist}
-              className={`w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-colors ${
-                wishlisted ? 'bg-red-500 text-white' : 'bg-white text-gray-600 hover:bg-red-50 hover:text-red-500'
+              className={`w-9 h-9 rounded-full flex items-center justify-center shadow-md backdrop-blur-md transition-all ${
+                wishlisted ? 'bg-red-500 text-white' : 'bg-white/90 text-gray-700 hover:bg-red-50 hover:text-red-500'
               }`}
               aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
             >
@@ -231,7 +233,7 @@ function ProductCard({ product }: { product: Product }) {
             </button>
             <Link
               href={`/products/${product.id}`}
-              className="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-md text-gray-600 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+              className="w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center shadow-md text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
               aria-label="Quick view"
             >
               <Eye className="w-4 h-4" />
@@ -239,9 +241,12 @@ function ProductCard({ product }: { product: Product }) {
           </div>
         </div>
       </Link>
-      <div className="p-4">
+      <div className="p-4 relative">
+        {product.brand && (
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-gray-400 mb-1.5">{product.brand}</p>
+        )}
         <Link href={`/products/${product.id}`}>
-          <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors line-clamp-2 mb-2 text-sm">
+          <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors line-clamp-2 mb-2 text-sm leading-snug">
             {product.name}
           </h3>
         </Link>
@@ -260,9 +265,9 @@ function ProductCard({ product }: { product: Product }) {
             )}
           </div>
         )}
-        <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center justify-between mt-3">
           <div>
-            <span className="text-lg font-bold text-gray-900 dark:text-white">
+            <span className="text-lg font-extrabold text-gray-900 dark:text-white tracking-tight">
               {formatCurrency(product.price)}
             </span>
             {product.compareAtPrice && product.compareAtPrice > product.price && (
@@ -271,14 +276,14 @@ function ProductCard({ product }: { product: Product }) {
               </span>
             )}
           </div>
-          <Button
-            size="icon"
+          <button
             onClick={handleAddToCart}
             disabled={(product.stock ?? 999) <= 0}
             aria-label="Add to cart"
+            className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-600 to-primary-800 text-white flex items-center justify-center shadow-md hover:shadow-lg hover:scale-110 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             <ShoppingCart className="w-4 h-4" />
-          </Button>
+          </button>
         </div>
       </div>
     </div>

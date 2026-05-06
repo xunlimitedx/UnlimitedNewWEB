@@ -244,37 +244,48 @@ export default function ServicesPage() {
         { name: 'Services' },
       ]} />
       {/* Hero */}
-      <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-primary-400 font-semibold text-sm uppercase tracking-wider mb-3">Advanced Technology. Complete Business Solutions.</p>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Services</h1>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            From IT support and repairs to custom software and full business systems —
-            we deliver end-to-end technology solutions from our shop in Ramsgate, KZN.
+      <section className="relative isolate overflow-hidden bg-aurora text-white">
+        <div className="absolute inset-0 animate-aurora opacity-90 pointer-events-none" />
+        <div className="absolute inset-0 bg-grid pointer-events-none" />
+        <div className="absolute -top-32 left-1/4 w-[28rem] h-[28rem] rounded-full bg-blue-500/25 blur-3xl animate-orb pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
+          <span className="eyebrow-chip mx-auto"><Rocket className="w-3.5 h-3.5" /> End-to-end IT</span>
+          <h1 className="mt-6 text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[0.98]">
+            Engineered services. <span className="text-gradient-premium">Human delivery.</span>
+          </h1>
+          <p className="mt-7 text-lg md:text-xl text-slate-300/90 max-w-2xl mx-auto leading-relaxed">
+            From a cracked screen to a multi-site network rollout — we cover the full IT lifecycle for homes and businesses across South Africa&apos;s South Coast.
           </p>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <Link href="/business/quote" className="btn-premium">Request a quote <ArrowRight className="w-5 h-5" /></Link>
+            <Link href="/contact" className="btn-ghost-premium">Talk to a technician</Link>
+          </div>
         </div>
       </section>
 
       {/* Services by Category */}
       {serviceCategories.map((category) => (
-        <section key={category.heading} className="py-16 odd:bg-gray-50 even:bg-white">
+        <section key={category.heading} className="py-16 odd:bg-gray-50 even:bg-white dark:odd:bg-gray-900 dark:even:bg-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8 pb-3 border-b border-gray-200">
-              {category.heading}
-            </h2>
+            <div className="flex items-end justify-between mb-10">
+              <div>
+                <p className="eyebrow-light mb-3">{category.heading}</p>
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                  {category.heading}
+                </h2>
+              </div>
+            </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {category.services.map((service) => {
                 const Card = (
-                  <div
-                    className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md hover:border-primary-100 transition-all group"
-                  >
-                    <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary-100 transition-colors">
+                  <div className="card-premium p-6 h-full group">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-gradient-to-br from-primary-50 to-blue-50 dark:from-primary-900/30 dark:to-blue-900/30 group-hover:scale-110 transition-transform">
                       <service.icon className="w-6 h-6 text-primary-600" />
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-2">{service.title}</h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-2 tracking-tight">{service.title}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{service.description}</p>
                     {service.href && (
-                      <span className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-primary-600">
+                      <span className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-primary-600 group-hover:gap-2 transition-all">
                         Learn more <ArrowRight className="w-3 h-3" />
                       </span>
                     )}
